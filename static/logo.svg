@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64">
+  <!--
+    nirva.sell wordmark. Crescent moon = the "n" stem cap, hinting at the
+    Sanskrit "nirvana" root. Sage green (#4d6c5c) matches the app theme.
+  -->
+  <defs>
+    <style>
+      .wordmark { font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+                  font-weight: 500; font-size: 38px; letter-spacing: -1.2px; }
+      .ink { fill: #1f1f1f; }
+      .sage { fill: #4d6c5c; }
+      .muted { fill: #6b6b6b; }
+    </style>
+  </defs>
+
+  <!-- Crescent — sage accent over the leading 'n' -->
+  <path d="M 22 18
+           a 14 14 0 1 0 0 28
+           a 11 11 0 1 1 0 -28 z"
+        class="sage" />
+
+  <!-- Wordmark -->
+  <text x="44" y="46" class="wordmark ink">nirva</text>
+  <text x="146" y="46" class="wordmark sage">.sell</text>
+
+  <!-- Subtle dot baseline -->
+  <circle cx="140" cy="46" r="1.6" class="muted" />
+</svg>

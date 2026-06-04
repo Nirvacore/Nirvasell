@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Crescent on a paper-cream tile — favicon scale -->
+  <rect width="64" height="64" rx="14" fill="#f7f4ec"/>
+  <path d="M 32 14
+           a 18 18 0 1 0 0 36
+           a 14 14 0 1 1 0 -36 z"
+        fill="#4d6c5c"/>
+</svg>

@@ -1,0 +1,39 @@
+.env
+.env.local
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local data — must NOT be committed (user DBs, scraped images)
+data/
+*.db
+*.db-journal
+*.sqlite
+
+# Streamlit secrets (use secrets.toml.example as template)
+.streamlit/secrets.toml
+
+# Build artifacts
+out/
+build/
+dist/
+*.log
+
+# OS clutter
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Backup tarballs (created by scripts/backup.sh)
+backups/
+
+# Cloudinary-uploaded image cache (regenerated on demand)
+images/

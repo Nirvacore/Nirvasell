@@ -1,0 +1,19 @@
+# nirva — Streamlit config
+[theme]
+base = "light"
+primaryColor = "#4d6c5c"
+backgroundColor = "#f7f4ec"
+secondaryBackgroundColor = "#fbf9f3"
+textColor = "#1f1f1f"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
+runOnSave = false
+
+[client]
+showSidebarNavigation = true
+toolbarMode = "minimal"

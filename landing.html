@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nirva.sell — AI Sales Workspace · Free Forever</title>
+<meta name="description" content="อัปโหลด pricelist → AI เขียน listing 13 ภาษา → ขาย Shopee/Lazada/TikTok/Amazon/Shopify ทั่วโลก · ฟรีตลอด · pay what you can">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a28; --border: #2a2a3f;
+    --accent: #00d4ff; --accent2: #7c3aed; --accent3: #10b981; --accent4: #f59e0b;
+    --text: #e8e8f0; --muted: #6b6b8a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 60px; }
+  .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: grid; place-items: center; }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 24px; font-size: 14px; }
+  nav a:hover { color: var(--text); }
+
+  .hero { text-align: center; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 .grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 640px; margin: 0 auto 32px; line-height: 1.6; }
+  .cta { display: inline-flex; gap: 12px; }
+  .btn { padding: 14px 28px; border-radius: 10px; border: none; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #0099cc); color: #000; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,212,255,0.3); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .badge { display: inline-block; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--accent3); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 24px; }
+
+  section { margin-top: 100px; }
+  h2 { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 12px; }
+  .sub { text-align: center; color: var(--muted); margin-bottom: 48px; }
+
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .flow-step { padding: 28px 20px; border-right: 1px solid var(--border); position: relative; }
+  .flow-step:last-child { border-right: none; }
+  .flow-step::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 22px; z-index: 2; background: var(--bg); padding: 2px; }
+  .flow-step:last-child::after { display: none; }
+  .step-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); margin-bottom: 8px; }
+  .step-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .compare { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 16px; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  td { padding: 16px; border-bottom: 1px solid rgba(42,42,63,0.5); }
+  tr:last-child td { border-bottom: none; }
+  .ours td { background: rgba(0,212,255,0.04); }
+  .ours .name { color: var(--accent); font-weight: 700; }
+  .chk { color: var(--accent3); font-size: 16px; }
+  .cross { color: #ef4444; font-size: 16px; }
+  .price { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+
+  .pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 720px; margin: 0 auto; }
+  .plan { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
+  .plan.featured { border-color: var(--accent); background: linear-gradient(180deg, rgba(0,212,255,0.04), var(--surface)); position: relative; }
+  .plan.featured::before { content: 'แนะนำ'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+  .plan h3 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; }
+  .plan .amount { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; margin: 20px 0; }
+  .plan .amount small { font-size: 16px; color: var(--muted); font-weight: 400; }
+  .plan ul { list-style: none; text-align: left; margin: 24px 0; }
+  .plan li { padding: 8px 0; color: var(--muted); font-size: 14px; }
+  .plan li::before { content: '✓ '; color: var(--accent3); font-weight: 700; }
+
+  footer { margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 800px) {
+    .hero h1 { font-size: 36px; }
+    .flow { grid-template-columns: 1fr; }
+    .flow-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .flow-step::after { display: none; }
+    .pricing { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <nav>
+    <div class="logo"><div class="logo-icon">⚡</div>nirva.sell</div>
+    <div>
+      <a href="#how">How it works</a>
+      <a href="#compare">Compare</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/app" class="btn btn-outline" style="padding:8px 16px;font-size:13px">เปิดแอป</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">⚡ AI listings ภาษาไทย · CSV bulk-upload</div>
+    <h1>Pricelist เป็น Excel.<br><span class="grad">Listing พร้อมขาย</span> ใน 30 วินาที</h1>
+    <p>อัปโหลด pricelist จาก dealer → Claude AI เขียน title + description ภาษาไทยให้ทุก SKU → ดาวน์โหลด CSV พร้อมอัปขึ้น Shopee, Lazada, TikTok Shop. ไม่ต้องเขียน listing เอง ไม่ต้อง copy-paste</p>
+    <div class="cta">
+      <a href="/app" class="btn btn-primary">ลองฟรี 10 SKU →</a>
+      <a href="#how" class="btn btn-outline">ดูวิธีทำงาน</a>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>4 ขั้นตอน เปลี่ยน Excel → CSV ขาย</h2>
+    <div class="sub">เฉลี่ย ~30 วินาทีต่อ 100 SKU</div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-name">อัปโหลด</div>
+        <div class="step-desc">ลาก-วาง Excel / CSV จาก dealer Auto-detect คอลัมน์ให้</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-name">ตั้งราคา</div>
+        <div class="step-desc">บวก markup % ที่ต้องการ ปัดขึ้นใกล้สุดอัตโนมัติ</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-name">AI เขียน Listing</div>
+        <div class="step-desc">Claude สร้าง title + description + SEO tags ทุกชิ้น (parallel × 8)</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">STEP 04</div>
+        <div class="step-name">ดาวน์โหลด CSV</div>
+        <div class="step-desc">3 ไฟล์พร้อมอัปขึ้น Shopee / Lazada / TikTok bulk upload</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="compare">
+    <h2>ทำไม nirva.sell ไม่ใช่ Linnworks / Sellbrite</h2>
+    <div class="sub">คู่แข่งทำ inventory management ทั่วโลก เราโฟกัสที่ขั้นเริ่มต้นที่ปวดหัวที่สุด — เขียน listing ไทย</div>
+    <div class="compare">
+      <table>
+        <thead>
+          <tr>
+            <th>แอป</th>
+            <th>ราคา/เดือน</th>
+            <th>AI Thai Listing</th>
+            <th>Shopee/Lazada/TikTok TH</th>
+            <th>Setup time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Linnworks</b></td>
+            <td class="price">$499+</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="price">หลายสัปดาห์</td>
+          </tr>
+          <tr>
+            <td><b>ChannelAdvisor</b></td>
+            <td class="price">$800+</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="price">หลายสัปดาห์</td>
+          </tr>
+          <tr>
+            <td><b>Sellbrite</b></td>
+            <td class="price">$19+</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="price">2-3 ชม.</td>
+          </tr>
+          <tr class="ours">
+            <td><span class="name">⚡ nirva.sell</span></td>
+            <td class="price" style="color:var(--accent3)">ฟรี / เท่าที่ไหว</td>
+            <td><span class="chk">✓</span></td>
+            <td><span class="chk">✓</span></td>
+            <td class="price" style="color:var(--accent3)">2 นาที</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>ฟรี · ตลอดไป</h2>
+    <div class="sub">ไม่มี trial หมดอายุ · ไม่ล็อกฟีเจอร์ · ใช้ฟรีก็ไม่ต้องรู้สึกผิด</div>
+    <div class="pricing">
+      <div class="plan">
+        <h3>ใช้ฟรี</h3>
+        <div class="amount">฿0<small>/ตลอดไป</small></div>
+        <ul>
+          <li>ทุกฟีเจอร์ครบ — ไม่มีล็อก</li>
+          <li>SKU ไม่จำกัด</li>
+          <li>8 AI tasks + global marketplaces</li>
+          <li>BYOK — คุณจ่าย Anthropic เอง ไม่บวกกลาง</li>
+          <li>Self-host ก็ได้ (open source MIT)</li>
+        </ul>
+        <a href="/app" class="btn btn-outline" style="width:100%;display:block">เริ่มเลย</a>
+      </div>
+      <div class="plan featured">
+        <h3>💝 สมทบเท่าที่ไหว</h3>
+        <div class="amount">PWYC<small>/เดือน</small></div>
+        <ul>
+          <li>ใช้ฟีเจอร์เดียวกัน — ไม่ต่างจาก Free</li>
+          <li>ช่วยให้นักขายตัวเล็กรายต่อไปได้ใช้ฟรี</li>
+          <li>฿99 = ค่ากาแฟ + โฮสติ้ง</li>
+          <li>฿199 = ช่วยพัฒนาฟีเจอร์ใหม่</li>
+          <li>฿499+ = sponsor · feature priority</li>
+        </ul>
+        <a href="/Support" class="btn btn-primary" style="width:100%;display:block">ดูช่องทาง</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;color:var(--muted);font-size:14px;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.7">
+      <em>"เครื่องมือขายของควรเข้าถึงได้สำหรับทุกคน — ถ้าค่าใช้แอปทำให้ reseller รายเล็กเริ่มไม่ได้ ก็ตัดโอกาสตั้งแต่ต้น"</em>
+    </div>
+  </section>
+
+  <footer>
+    nirva.sell · open source (MIT) · made with 💚 in Bangkok
+  </footer>
+
+</main>
+</body>
+</html>

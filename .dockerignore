@@ -1,0 +1,60 @@
+# Keep image small + avoid leaking local data into the build context.
+
+# Python cruft
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Local data — must NOT be baked into the image (volume-mounted at runtime)
+data/
+*.db
+*.db-journal
+
+# Local secrets — env values come through --env-file at run time
+.env
+.env.local
+.env.*.local
+
+# Git + OS clutter
+.git/
+.gitignore
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Build artifacts
+build/
+dist/
+*.log
+
+# Docs + dev-only files
+DEPLOY.md
+CHANGELOG.md
+README.md
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+.dockerignore
+
+# Notebooks / experiments
+*.ipynb
+.ipynb_checkpoints/
+
+# Test fixtures large enough to bloat the build context
+samples/large_*
+images/
+out/
