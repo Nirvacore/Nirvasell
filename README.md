@@ -1,141 +1,144 @@
 # nirva.sell
 
-**AI Sales Workspace** สำหรับนักขาย "ซื้อมาขายไป" — drop ไฟล์ → 1 ปุ่ม → ได้เนื้อหาขายทุกอย่าง + รู้กำไรจริงต่อแพลตฟอร์มทั่วโลก
+**ระบบปฏิบัติการสำหรับแม่ค้าออนไลน์** — จัดการทุกอย่างตั้งแต่สต็อก ออเดอร์ กำไร โปรโมชั่น ไลฟ์สด ไปจนถึงใบกำกับภาษี ในแอปเดียว
 
-🌐 **7 UI languages · 13 AI output languages · 17 currencies · 10 marketplaces**
+🌐 **140 หน้า · 19 ภาษา UI · 17 สกุลเงิน · SQLite per-user · Self-host ได้**
 
 ## ฟรีตลอด · MIT License
 
 ```
 ✓ ทุกฟีเจอร์ครบ — ไม่มี trial หมดอายุ ไม่ล็อกฟีเจอร์
-✓ SKU ไม่จำกัด
+✓ SKU ไม่จำกัด · ออเดอร์ไม่จำกัด · ผู้ใช้ไม่จำกัด
 ✓ BYOK (คุณจ่าย Anthropic เอง ไม่บวกกลาง)
-✓ Self-host ได้ (Streamlit Cloud / Docker / VPS)
+✓ Self-host ได้ (Streamlit Cloud / Docker / VPS / Local)
 ✓ Open source — fork ได้ ใช้ในเชิงพาณิชย์ได้
 ```
-
-**ทำไม:** เครื่องมือขายของควรเข้าถึงได้สำหรับทุกคน. ค่าใช้แอปไม่ควรเป็นด่านแรกที่ทำให้ reseller รายเล็กเริ่มไม่ได้.
-
-**ถ้าอยากช่วยให้ระบบอยู่ต่อ:** Pay-what-you-can ที่หน้า [💝 Support](pages/A_💝_Support.py). ฿20 ก็ขอบคุณ ฿2,000 ก็ขอบคุณ ใช้ฟรีก็ขอบคุณเหมือนกัน
-
-## Workflow ครบสำหรับ Reseller
-
-```
-1. วาง pricelist (Excel/CSV/PDF/text paste)
-            ↓
-2. AI สกัดสินค้า + auto-mapping คอลัมน์
-            ↓
-3. เห็นกำไรสุทธิแต่ละแพลตฟอร์ม (หัก fee แล้ว) → รู้ขายที่ไหนคุ้มที่สุด
-            ↓
-4. กดปุ่ม "✨ ทำให้หมด" — 1 AI call ต่อสินค้า → ได้ 7 เนื้อหา:
-   🛒 Listing  💚 LINE  📘 Facebook  🎵 TikTok  ✉️ Email  💬 Q&A  🔥 Promo
-            ↓
-5. ดาวน์โหลด CSV ไป bulk-upload Shopee/Lazada/TikTok ทันที
-```
-
-## What you get (8 AI tasks)
-
-| | Task | จุดเด่นสำหรับ reseller |
-|---|---|---|
-| 🛒 | **Marketplace Listing** | Title + Description + Tags → Shopee/Lazada/TikTok CSV bulk |
-| 💚 | **LINE Broadcast** | ข้อความสั้นๆ สำหรับ LINE OA — ปั่นยอดกลุ่ม VIP |
-| 📘 | **Facebook Post** | Story-style + hashtags — feed traffic ฟรี |
-| 🎵 | **TikTok 30s Script** | Hook + shot list — UGC-ready |
-| ✉️ | **Email Blast** | Subject + preheader + body HTML — รักษาฐานลูกค้าเก่า |
-| 💬 | **Customer Q&A** | 8 คำถาม-คำตอบสำเร็จรูป — ลดเวลาตอบแชต |
-| 🔥 | **Promo / Flash Sale** | Urgency copy + ราคาหลังลดอัตโนมัติ |
-| 📦 | **Bundle Proposal** | รวมหลายชิ้น + ส่วนลด + คำขาย |
-
-## 💰 Profit Math จริง (ไม่ใช่แค่ markup %)
-
-Sidebar slider บอกแค่ markup % — แต่ Workspace แสดง **กำไรสุทธิหักค่า fee** ของแต่ละแพลตฟอร์ม:
-
-```
-ตัวอย่าง: cost ฿15,200 → sell ฿17,480 (markup 15%)
-
-  Shopee   fee ฿1,801 (10.3%)  →  net ฿479    (2.7% margin) 😱 เกือบขาดทุน
-  Lazada   fee ฿1,309 (7.5%)   →  net ฿971    (5.6% margin) ✓
-  TikTok   fee ฿1,309 (7.5%)   →  net ฿971    (5.6% margin) ✓
-```
-
-ปรับ fee เองได้ใน `data/fee_overrides.json` ตาม category / seller tier
 
 ## Setup
 
 ```bash
-cd /Users/machd/Claude/nirva
+git clone https://github.com/Nirvacore/Nirvasell.git
+cd Nirvasell
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
-cp .env.example .env  # ใส่ ANTHROPIC_API_KEY
-streamlit run app.py
+cp .env.example .env   # ใส่ ANTHROPIC_API_KEY (optional — ต้องการเฉพาะ AI features)
+python3 -m streamlit run app.py --server.port 8501
 ```
 
-เปิด http://localhost:8501
+เปิด **http://localhost:8501**
 
-## Pages
+8 วิธี sign in: Email · Magic link · Google · Apple · Microsoft · GitHub · Facebook · LINE
 
-```
-ทำงาน (app)        → drop / paste → 1 click → ทุกอย่าง
-สินค้าของฉัน        → browse / filter, รูปสินค้า, edit รายตัว
-ให้ AI ทำให้        → เลือก task เฉพาะ (ถ้าไม่ใช้ all-in-one)
-ของที่ทำไว้แล้ว     → edit inline, regenerate, download
-ดึงจาก reseller    → import จาก scraper (Synnex/VSTECS)
-```
+---
 
-## รับ input หลายแบบ
+## หน้าทั้งหมด (140 หน้า)
 
-- **Excel / CSV / TSV** — auto-detect คอลัมน์ Thai/English
-- **PDF pricelist** — สกัด text + Claude แปลงเป็นตาราง
-- **Paste text** — คัดลอกตารางจาก email dealer วางได้เลย
-- **reseller/ DB** — bridge อ่านโดยตรง พร้อมรูปจาก Cloudinary
+### 📊 Dashboard & Core
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 🏠 Dashboard | KPI รวม รายได้วันนี้ / สัปดาห์ / เดือน |
+| 🌅 Daily Briefing | Morning digest: เมื่อวาน + alerts + งานวันนี้ |
+| 🏆 KPIs | 16 ตัวชี้วัด พร้อม health score 0–100 |
+| 🔔 Alerts | แจ้งเตือนอัจฉริยะ 6 ประเภท ตั้ง threshold ได้ |
 
-## เปลี่ยนภาษา
+### 🛍 Products & Inventory
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 📦 Catalog | รายการสินค้าทั้งหมด ค้นหา แก้ไข |
+| 🔄 Stock Turnover | อัตราหมุนเวียน + days-on-hand |
+| ☠ Dead Stock | ตรวจสินค้าค้างสต็อก + แนะนำแก้ไข |
+| 📈 SKU Trends | Rising stars, declining, สินค้าใหม่ |
+| 🔤 ABC Analysis | Pareto 80/15/5 ต่อรายได้ |
+| ⭐ Product Score | คะแนนสุขภาพรวม + BCG quadrant |
 
-URL: `?lang=th` | `?lang=en` | `?lang=zh` | `?lang=ja` | `?lang=ko` | `?lang=vi` | `?lang=id`
+### 📦 Orders & Fulfillment
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 🛒 Orders | ออเดอร์ทั้งหมด, status, แพลตฟอร์ม |
+| 📋 Pick & Pack | Pick list + pack slips copy-ready |
+| 🚀 Fulfillment | ยืนยันจัดส่ง บันทึกเลขพัสดุ bulk update |
+| 🚚 Shipping | เปรียบ carrier ทุกเจ้า + true margin หลังค่าส่ง |
+| 🔄 Returns | บันทึกคืนสินค้า วิเคราะห์เหตุผล loss |
 
-## โครงสร้าง
+### 💰 Finance
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 📊 P&L | งบกำไรขาดทุน: รายเดือน / ไตรมาส / ปี |
+| 💹 SKU Profit | กำไรต่อ SKU พร้อม health flag |
+| 💵 Cash Flow | เงินเข้า/ออก รายวัน/เดือน + forecast |
+| 🗓 Profit Calendar | กำไรรายวัน + วันดี/แย่สุด |
+| 💰 Expenses | บันทึกค่าใช้จ่าย แยกหมวดหมู่ |
+| 💰 Budget Tracker | งบประมาณรายเดือน + progress bar |
+
+### 🧾 Documents
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 🧾 Invoices | ใบแจ้งหนี้ dynamic line items |
+| 📄 Tax Invoice | ใบกำกับภาษี VAT 7% + running number |
+| 📱 PromptPay QR | สร้าง QR รับเงิน EMVCo standard |
+
+### 📣 Marketing & Promotions
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 📢 Promotions | โปรโมชั่น 6 ประเภท activate/pause |
+| 🎟 Vouchers | โค้ดส่วนลด + เทมเพลต 8 เทศกาล |
+| 💡 Price Optimizer | ราคาขายที่เหมาะสมต่อแพลตฟอร์ม |
+| ⚡ Flash Sale | จัดการ flash sale + active-now banner |
+| 📣 Ad Tracker | ติดตาม ROAS ทุกแคมเปญ |
+| 📡 Channel Perf | เปรียบรายได้/growth แต่ละแพลตฟอร์ม |
+
+### 👥 Customers
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 👥 Customers | รายชื่อ VIP/dormant tier Bronze→Diamond |
+| 🎯 RFM | RFM segmentation 9 กลุ่ม |
+| 🎁 Loyalty | ระบบแต้ม 5 tier rewards catalogue |
+| 🌟 Influencers | CRM อินฟลู + commission tracking |
+
+### 📦 Purchasing & Stock
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 🛒 Purchase Orders | สร้าง PO + send + receive stock |
+| 📦 Restock Planner | วางแผนสั่งซื้อ critical/urgent/soon |
+| 🔮 Demand Forecast | พยากรณ์ความต้องการ 30/60/90 วัน |
+| 🏭 Wholesale | ราคาขายส่งขั้นบันได + quick quote |
+
+### 📝 Operations
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 📅 Content Calendar | ปฏิทินโพสต์ 7 แพลตฟอร์ม |
+| 🔴 Live Sell | บันทึกออเดอร์ระหว่างไลฟ์สด |
+| 💬 Quick Replies | เทมเพลตตอบแชต + variable substitution |
+| ⭐ Reviews | ติดตามรีวิว reply workflow |
+| 📝 Notes | โน้ต/task/reminder/issue/idea |
+| 📈 Analytics | AOV trend, hourly heatmap, repeat buyers |
+| 📤 Export | ดาวน์โหลดข้อมูลทั้งร้านเป็น ZIP |
+
+---
+
+## โครงสร้างไฟล์
 
 ```
 nirva/
-├── app.py                  # Workspace (single-page flow)
-├── _sidebar.py / _theme.py / _components.py
-├── i18n.py                 # 7 ภาษา ทั้งหมดในไฟล์เดียว
-├── db.py                   # SQLite store
-├── parser.py               # Excel/CSV → DataFrame + auto column mapping
-├── intake.py               # universal reader (Excel/CSV/PDF/text)
-├── generate.py             # Claude batch + parallel + all-in-one runner
-├── fees.py                 # Shopee/Lazada/TikTok fee math
-├── bridge_reseller.py      # import จาก reseller/ scraper
-├── tasks/                  # 8 AI tasks (+ 1 all-in-one mega task)
-│   ├── listing.py  line_post.py  fb_post.py  tiktok_script.py
-│   ├── email_blast.py  bundle.py  customer_qa.py  promotion.py
-│   └── all_in_one.py
-├── exporters/              # Shopee / Lazada / TikTok CSV writers
-├── pages/                  # Catalog · Generate · History · Import
-└── landing.html
+├── app.py                  # Entry point
+├── _sidebar.py             # Sidebar shared component
+├── _theme.py               # Zen minimal CSS theme
+├── i18n.py                 # 3,749 keys · 19 ภาษา
+├── auth.py                 # Multi-provider auth (8 วิธี)
+├── db.py                   # SQLite multi-tenant
+├── pages/                  # 140 หน้า (A0–H9 + เดิม)
+├── *.py                    # 80+ backend modules
+└── data/users/             # Per-user SQLite databases
 ```
 
-## เพิ่ม Task ใหม่
+## Security
 
-ทำไฟล์ `tasks/my_task.py`:
+- **SQLite per-user** — ข้อมูลแต่ละ user แยกไฟล์กัน `data/users/{id}.db`
+- **BYOK** — API key ส่งตรงถึง Anthropic ไม่ผ่าน server กลาง
+- **ENV only** — credentials ทั้งหมดใน `.env` ไม่อยู่ใน code
+- Port 8501 ไม่เปิด internet โดยตรง — ใช้ reverse proxy
 
-```python
-TASK = {"key": "my_task", "label": "...", "icon": "🎁", "blurb": "...",
-        "output_fields": ["a", "b"]}
+## License
 
-def build_prompt(row): ...
-def parse(text) -> dict: ...
-```
-
-เพิ่มชื่อใน `tasks/__init__.py` — UI ทุกหน้า auto-pick-up
-
-## Roadmap
-
-- [ ] Competitor URL scan (paste Shopee link → คู่แข่งราคาเท่าไหร่)
-- [ ] Performance dashboard (อะไรขายดี / ไม่ดี)
-- [ ] Inventory sync (alert when stock < N)
-- [ ] Repricing suggestions (อายุ stock + market trend)
-- [ ] Stripe subscription gate (free 10 / pro unlimited)
+MIT — ใช้ฟรี ใช้เชิงพาณิชย์ได้ fork ได้ ไม่ต้องขออนุญาต
