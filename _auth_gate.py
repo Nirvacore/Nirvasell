@@ -192,11 +192,6 @@ def require_auth() -> dict:
     </style>
     """, unsafe_allow_html=True)
 
-    # Pick a default mode the first time
-    if "auth_mode" not in st.session_state:
-        st.session_state["auth_mode"] = "signup"  # signup is the priority CTA
-    mode = st.session_state["auth_mode"]
-
     providers = _oauth_providers_configured()
     social_providers = social_oauth.configured_providers()
     any_social = bool(providers or social_providers)
@@ -204,156 +199,136 @@ def require_auth() -> dict:
     # ---- Language switcher (top-right, floating) ------------------------
     _language_switcher()
 
-    # ---- Centered column ------------------------------------------------
+    # ---- v54: Vercel-style ONE input ONE button ------------------------
+    # No tabs. No mode switcher. No "what's the difference between signin/
+    # signup". Just: enter email → continue. If account exists, magic link.
+    # If not, account is created on first click. Password is optional later.
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        # ---- Hero brand (logo + wordmark + tagline) ---------------------
+        # Hero — crescent + wordmark + tagline
         st.markdown(
-            "<div class='nirva-auth-brand' style='margin-top:5vh'>"
-            "<svg class='crescent' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'>"
+            "<div class='nirva-auth-brand' style='margin-top:7vh'>"
+            "<svg class='crescent' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg' "
+            "style='width:60px;height:60px;margin-bottom:14px'>"
             "<path d='M 32 12 a 20 20 0 1 0 0 40 a 16 16 0 1 1 0 -40 z' fill='#4d6c5c'/>"
             "</svg>"
-            "<div class='wordmark'>nirva<span class='accent'>.sell</span></div>"
-            f"<div class='tagline'>{t('app.tagline')}</div>"
+            "<div class='wordmark' style='font-size:2.4rem;font-weight:500;"
+            "font-family:Cormorant Garamond,serif;letter-spacing:-0.02em'>"
+            "nirva<span style='color:#4d6c5c'>.sell</span></div>"
+            f"<div class='tagline' style='color:#7a7569;font-size:14px;"
+            f"margin-top:6px'>{t('app.tagline')}</div>"
             "</div>",
             unsafe_allow_html=True,
         )
 
-        # ---- Card --------------------------------------------------------
-        headlines = {
-            "signin": (t("auth.h_welcome_back"),   t("auth.sub_welcome_back")),
-            "signup": (t("auth.h_create_account"), t("auth.sub_create_account")),
-            "magic":  (t("auth.h_magic"),          t("auth.sub_magic")),
-        }
-        head, sub = headlines[mode]
-
-        # Open the card. We close it after the mode switcher/demo.
+        # ---- The card — minimal as possible -------------------------------
         st.markdown(
-            "<div class='nirva-auth-card'>"
-            f"<h1 class='nirva-auth-head'>{head}</h1>"
-            f"<div class='nirva-auth-sub'>{sub}</div>",
+            "<div class='nirva-auth-card' style='max-width:380px;margin:18px auto'>"
+            f"<h1 class='nirva-auth-head' style='font-size:1.5rem;text-align:center'>"
+            f"{t('auth.continue_title')}</h1>"
+            f"<div class='nirva-auth-sub' style='text-align:center;margin-bottom:20px'>"
+            f"{t('auth.continue_sub')}</div>",
             unsafe_allow_html=True,
         )
 
-        # Social login row — same across all modes for consistency.
-        # If any provider is configured we render those; otherwise we surface
-        # a friendly "use any email provider" hint so the user knows magic-link
-        # works with Gmail/Outlook/iCloud/Yahoo without OAuth setup.
+        # Social — primary, on top, branded big buttons
         if any_social:
             if providers:
                 _provider_buttons(providers)
             if social_providers:
                 _social_provider_buttons(social_providers)
             st.markdown(
-                f"<div class='nirva-auth-divider'><span>{t('auth.or_email')}</span></div>",
+                f"<div class='nirva-auth-divider' style='margin:14px 0 10px'>"
+                f"<span>{t('auth.or')}</span></div>",
                 unsafe_allow_html=True,
             )
-        else:
-            _email_provider_hint()
 
-        # Form per mode
-        if mode == "signin":
-            _signin_form()
-        elif mode == "signup":
-            _signup_form()
-        else:
-            _magic_form_inline()
+        # ONE email input + ONE button — like Vercel
+        _unified_form()
 
-        # Mode switcher — tiny prompt + tertiary link buttons
-        st.markdown(
-            f"<div class='nirva-auth-switch'>{_switch_prompt(mode)}</div>",
-            unsafe_allow_html=True,
-        )
-        switch_cols = st.columns(3 if mode != "magic" else 2)
-        i = 0
-        if mode != "signin":
-            with switch_cols[i]:
-                if st.button(t("auth.switch_to_signin"), key="_sw_signin",
-                             type="tertiary", width='stretch'):
-                    st.session_state["auth_mode"] = "signin"
-                    st.rerun()
-            i += 1
-        if mode != "signup":
-            with switch_cols[i]:
-                if st.button(t("auth.switch_to_signup"), key="_sw_signup",
-                             type="tertiary", width='stretch'):
-                    st.session_state["auth_mode"] = "signup"
-                    st.rerun()
-            i += 1
-        if mode != "magic":
-            with switch_cols[i]:
-                if st.button(t("auth.switch_to_magic"), key="_sw_magic",
-                             type="tertiary", width='stretch'):
-                    st.session_state["auth_mode"] = "magic"
-                    st.rerun()
-
-        # Close the card
+        # Close card
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # ---- Feature highlights (3 cards under the auth card) --------------
-    # This block sits OUTSIDE c2 so it spans the full width — gives the
-    # screen a real "landing page" feel rather than just a login box.
-    st.markdown("<div style='height:48px'></div>", unsafe_allow_html=True)
+        # Compact footer
+        st.markdown(
+            "<div class='nirva-auth-footer' style='max-width:380px;margin:14px auto 0;"
+            "text-align:center;color:#9a9485;font-size:11px;line-height:1.7'>"
+            f"{t('auth.footer_agree')} "
+            f"<a href='/Legal' style='color:#7a7569'>{t('legal.tab_tos')}</a> · "
+            f"<a href='/Legal' style='color:#7a7569'>{t('legal.tab_privacy')}</a>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
 
+        # Tiny "use password instead" — hidden behind expander for power users
+        with st.expander(t("auth.use_password"), expanded=False):
+            _signin_form()
+
+    # Dead code removed in v54 — Vercel minimal pattern, no tabs, no mode switcher.
     fc1, fc2, fc3 = st.columns(3)
-    feature_card_css = (
+    _feature_card_legacy = (
         "background:white;border-radius:14px;padding:22px 20px;"
-        "border:1px solid rgba(40,30,20,0.05);"
-        "box-shadow:0 1px 2px rgba(31,31,31,0.03),"
-        "0 6px 16px rgba(31,31,31,0.04);"
-        "min-height:160px"
     )
     with fc1:
         st.markdown(
-            f"<div style='{feature_card_css}'>"
-            "<div style='font-size:28px;line-height:1'>📦</div>"
-            "<div style='font-family:Cormorant Garamond,serif;font-size:1.2rem;"
-            "font-weight:500;margin-top:8px;color:#1f1f1f'>"
-            f"{t('landing.feature1_title')}</div>"
-            f"<div style='color:#6b6b6b;font-size:13px;margin-top:6px;"
-            f"line-height:1.6'>{t('landing.feature1_body')}</div>"
-            "</div>",
+            "<!-- features hidden in v54 minimal mode -->",
             unsafe_allow_html=True,
         )
     with fc2:
         st.markdown(
             f"<div style='{feature_card_css}'>"
-            "<div style='font-size:28px;line-height:1'>🤖</div>"
-            "<div style='font-family:Cormorant Garamond,serif;font-size:1.2rem;"
-            "font-weight:500;margin-top:8px;color:#1f1f1f'>"
-            f"{t('landing.feature2_title')}</div>"
-            f"<div style='color:#6b6b6b;font-size:13px;margin-top:6px;"
-            f"line-height:1.6'>{t('landing.feature2_body')}</div>"
-            "</div>",
+            "<!-- v54 — minimal landing, no feature cards -->",
             unsafe_allow_html=True,
         )
     with fc3:
         st.markdown(
-            f"<div style='{feature_card_css}'>"
-            "<div style='font-size:28px;line-height:1'>🚀</div>"
-            "<div style='font-family:Cormorant Garamond,serif;font-size:1.2rem;"
-            "font-weight:500;margin-top:8px;color:#1f1f1f'>"
-            f"{t('landing.feature3_title')}</div>"
-            f"<div style='color:#6b6b6b;font-size:13px;margin-top:6px;"
-            f"line-height:1.6'>{t('landing.feature3_body')}</div>"
-            "</div>",
+            "<!-- v54 — minimal landing, no feature cards -->",
             unsafe_allow_html=True,
         )
-
-    # ---- Clean footer (legal only — no dev signals) --------------------
-    st.markdown(
-        "<div class='nirva-auth-footer' style='margin-top:36px;padding-bottom:32px'>"
-        f"<div>{t('auth.footer_agree')} "
-        f"<a href='/Legal'>{t('legal.tab_tos')}</a> · "
-        f"<a href='/Legal'>{t('legal.tab_privacy')}</a></div>"
-        "</div>",
-        unsafe_allow_html=True,
-    )
 
     st.stop()
 
 
-# ---- Per-mode forms -----------------------------------------------------
+# ---- v54: Unified "Continue with email" form -----------------------------
+# Vercel-style: one email input, one button. If account exists → magic link
+# sent (or password used if user provided one). If account doesn't exist →
+# created on first click; magic link sent.
+
+def _unified_form():
+    with st.form("unified_form", clear_on_submit=False):
+        email = st.text_input(
+            t("auth.email"),
+            key="unified_email",
+            placeholder="you@example.com",
+            label_visibility="collapsed",
+        )
+        ok_click = st.form_submit_button(
+            t("auth.continue_with_email"),
+            type="primary", width='stretch',
+        )
+        if ok_click:
+            if not auth.valid_email(email):
+                st.error(t("auth.bad_email"))
+                return
+            # Throttle (same as the old magic-link form)
+            allowed, wait = magic_link.throttle_check(email)
+            if not allowed:
+                st.warning(t("auth.magic_throttle", n=wait))
+                return
+            app_url = _detect_app_url()
+            ok, info = magic_link.send(email, app_url=app_url)
+            if ok:
+                st.success(t("auth.magic_sent"))
+            else:
+                # SMTP not configured — show link inline for dev/test use
+                if info.startswith("http"):
+                    st.info(t("auth.magic_no_smtp"))
+                    st.code(info)
+                else:
+                    st.error(info)
+
+
+# ---- Per-mode forms (used inside the "use password" expander) ----------
 
 def _signin_form():
     with st.form("signin_form", clear_on_submit=False):

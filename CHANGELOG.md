@@ -1,9 +1,77 @@
 # nirva.sell — Changelog
 
-Built iteratively across ~30 versions over one session. Final stats:
-**17,400+ lines · 91 files · 21 pages · 10 AI tasks + custom · 14 marketplace integrations · 3 supplier scrapers · 4 payment methods · 8 carriers · 8 sign-in methods · 7 UI languages · 13 AI output languages · 17 currencies**
+Built iteratively. Current stats:
+**140 pages · 3,749 i18n keys · 19 languages · 8 sign-in methods · SQLite per-user isolation**
 
 ---
+
+## v79 — Inventory Intelligence Pack (H4–H9)
+- `H4_☠_DeadStock.py` — slow/dead SKU detector, capital-at-risk warning, action suggestions
+- `H5_🔄_StockTurnover.py` — turnover ratio + days-on-hand per SKU, reorder list
+- `H6_📈_SKUTrends.py` — rising stars, declining, new products (14-day window), weekly sparklines
+- `H7_🔤_ABC.py` — ABC/Pareto analysis (80/15/5 revenue rule), investment advice
+- `H8_⭐_ProductScore.py` — composite health score (sales × margin × reviews) + BCG quadrant
+- `H9_🏭_Wholesale.py` — tiered wholesale prices, quick quote calculator, auto price lookup
+- 571 i18n keys added across v76–v79 (total 3,749)
+
+## v78 — Finance & Docs Pack (G8–H3)
+- `G8_🧾_Invoices.py` — customer invoices with dynamic line items, text render
+- `G9_📄_TaxInvoice.py` — VAT 7% tax invoices with INV-YYYYMM-NNNN running serial
+- `H0_💵_CashFlow.py` — daily/monthly inflow vs outflow bar chart, current-month forecast
+- `H1_📱_PromptPay.py` — EMVCo QR payload + PNG (qrcode lib), payment account settings
+- `H2_🗓_ProfitCalendar.py` — daily profit heatmap, weekly summary, best/worst 5 days
+- `H3_📤_Export.py` — full store data export as ZIP (CSV per table), size estimate
+
+## v77 — Content & Operations Pack (G2–G7)
+- `G2_📅_ContentCalendar.py` — post scheduler across 7 platforms, status tracking, today alerts
+- `G3_📋_PickPack.py` — pick list + pack slips for pending orders, copy-to-clipboard text
+- `G4_🚀_Fulfillment.py` — mark shipped with tracking number, bulk CSV update
+- `G5_📝_Notes.py` — notes/tasks/reminders/issues/ideas, resolve, pin-to-top
+- `G6_🔴_LiveSell.py` — live session manager, real-time order logging, session summary
+- `G7_🌅_DailyBriefing.py` — morning digest: yesterday KPIs + alerts + today's tasks
+
+## v76 — Sales & Promotions Pack (F6–G1)
+- `F6_📢_Promotions.py` — create/activate/pause/delete promotions (6 types)
+- `F7_🎟_Vouchers.py` — voucher/coupon codes + 8 festival templates (Songkran, 11.11, etc.)
+- `F8_💡_PriceOpt.py` — optimal price calculator per platform, cross-platform comparison table
+- `F9_📣_AdTracker.py` — ROAS tracking per campaign, update spent/revenue inline
+- `G0_📡_ChannelPerf.py` — platform revenue comparison + MoM growth by channel
+- `G1_💰_BudgetTracker.py` — monthly budget limits per category, % progress bars, over-budget alert
+
+## v75 — Financial Intelligence Pack (F0–F5)
+- `F0_📊_PnL.py` — P&L statement: monthly / quarterly / annual / 6-month trend
+- `F1_💹_SKUProfit.py` — per-SKU profitability with health flags (healthy/warning/thin/losing)
+- `F2_🔮_Forecast.py` — demand forecast 30/60/90-day horizon, stockout risk radar
+- `F3_📦_Restock.py` — restock planner: critical/urgent/soon tiers, record + receive orders
+- `F4_🔔_Alerts.py` — smart alert engine (6 alert types), dismiss, configurable thresholds
+- `F5_🎁_Loyalty.py` — points system, 5 membership tiers, rewards catalogue, leaderboard
+
+## v74 — Customer & Operations Pack (E3–E8)
+- `E3_👥_Customers.py` — customer list, VIP/dormant views, tier badges (Bronze→Diamond)
+- `E4_🔄_Returns.py` — return logging, loss tracking, by-reason/platform/SKU analysis
+- `E5_🛒_PurchaseOrders.py` — PO creation with line items, send/receive stock flow
+- `E6_💬_QuickReplies.py` — reply templates with variable substitution, bump-use tracking
+- `E7_🚚_Shipping.py` — carrier comparison, COD fee calc, true margin after shipping
+- `E8_🎯_RFM.py` — RFM segmentation (9 segments), segment heatmap, customer drill-down
+
+## v73 — Reviews, Expenses & Analytics Pack (D7–E2)
+- `D7_⭐_Reviews.py` — review tracker with reply workflow, by-SKU and by-platform views
+- `D8_💰_Expenses.py` — expense logger, monthly summary, category chart
+- `D9_🌟_Influencers.py` — influencer CRM, commission tracking, mark-paid flow
+- `E0_⚡_FlashSale.py` — flash sale manager with active-now banner
+- `E1_📈_Analytics.py` — AOV trend, hourly/daily heatmaps, platform growth, repeat rate
+- `E2_🏆_KPIs.py` — 16-metric health scorecard with colour-coded health score 0–100
+
+## v72 — COD, Restock & Supplier Pack (D1–D6)
+- Sourcing, COD management, restock planner, supplier ledger, notes pages
+
+## v71 — Core Operations Pack (C5–D0)
+- Orders, inventory, stock history, customer management
+
+## v53–v70 — AI Content Engine + Marketplace Integrations
+- AI tasks: listing, LINE, Facebook, TikTok, email, Q&A, promotion, bundle, all-in-one
+- Marketplace exporters: Shopee, Lazada, TikTok Shop, Amazon, eBay, Etsy, Shopify
+- Vision intake (image → product data), QR code scanner
 
 ## v30 — GitHub / Facebook / LINE login (no-file-edit setup)
 - `oauth.py` — generic OAuth2 client for GitHub, Facebook, LINE (the 3 popular non-OIDC providers)

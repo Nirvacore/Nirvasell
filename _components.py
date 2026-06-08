@@ -325,21 +325,25 @@ def metric_with_hint(label: str, value, *, hint: str = "",
 
 
 def page_header(*, icon: str, title: str, subtitle: str = "") -> None:
-    """Polished page header in Cormorant Garamond serif — matches the
-    landing/auth aesthetic so the app feels like one cohesive product, not
-    a Streamlit demo. Drop in instead of `st.title() + st.caption()`."""
+    """Polished Zen page header — Cormorant Garamond serif + wabi-sabi
+    brush divider below. Matches the landing/auth aesthetic so the app
+    feels like one cohesive product, not a Streamlit demo.
+
+    v57: dramatic serif size + airy line-height + brush mark."""
     sub_html = (
-        f"<div style='color:#7a7569;font-size:14px;margin-top:2px'>{subtitle}</div>"
+        f"<div style='color:#7a7569;font-size:14px;margin-top:6px;"
+        f"line-height:1.6'>{subtitle}</div>"
         if subtitle else ""
     )
     st.markdown(
-        "<div style='margin:6px 0 22px'>"
-        "<div style='display:flex;align-items:center;gap:14px'>"
-        f"<div style='font-size:32px;line-height:1'>{icon}</div>"
-        "<div>"
+        "<div class='nirva-mark' style='margin:6px 0 12px'>"
+        "<div style='display:flex;align-items:flex-start;gap:16px'>"
+        f"<div style='font-size:34px;line-height:1;margin-top:8px;"
+        f"opacity:0.92'>{icon}</div>"
+        "<div style='flex:1;min-width:0'>"
         "<div style='font-family:\"Cormorant Garamond\",\"EB Garamond\",Georgia,serif;"
-        "font-size:2rem;font-weight:500;letter-spacing:-0.01em;line-height:1.15;"
-        f"color:#1f1f1f'>{title}</div>"
+        "font-size:2.4rem;font-weight:500;letter-spacing:-0.018em;line-height:1.15;"
+        f"color:#1c1c1c'>{title}</div>"
         f"{sub_html}"
         "</div></div></div>",
         unsafe_allow_html=True,

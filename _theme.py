@@ -26,67 +26,136 @@ CSS = """
     --bg: #f7f4ec;
     --surface: #ffffff;
     --surface-alt: #fbf9f3;
-    --border: rgba(40,30,20,0.10);
-    --border-strong: rgba(40,30,20,0.18);
-    --text: #1f1f1f;
+    --border: rgba(40,30,20,0.07);          /* v57: hairline */
+    --border-strong: rgba(40,30,20,0.14);
+    --text: #1c1c1c;                          /* v57: deeper ink */
     --text-soft: #3d3d3d;
-    --muted: #6b6b6b;
+    --muted: #7a7569;                          /* v57: warmer mute */
     --accent: #4d6c5c;
-    --accent-bg: rgba(77,108,92,0.08);
+    --accent-bg: rgba(77,108,92,0.06);
     --accent-strong: #2d4a3e;
+    --ease: cubic-bezier(0.32, 0.72, 0.28, 1);   /* v57: zen ease */
   }
 
   html, body, .stApp, [class*="css"] {
     font-family: 'Inter', 'IBM Plex Sans Thai', 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', system-ui, sans-serif !important;
     color: var(--text-soft);
+    font-feature-settings: 'tnum' 1, 'kern' 1, 'liga' 1;   /* v57: tabular nums + ligatures */
   }
 
-  .stApp { background: var(--bg); }
+  /* v57: Paper-grain background — barely perceptible noise for warmth.
+     Inline SVG = no extra HTTP request. */
+  .stApp {
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.13  0 0 0 0 0.08  0 0 0 0.025 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+      linear-gradient(180deg, #faf7ef 0%, #f4f0e6 100%);
+    background-attachment: fixed, fixed;
+  }
 
   /* Typography — high contrast for readability */
   .stMarkdown, p, label, [data-testid="stCaptionContainer"] {
     color: var(--text-soft) !important;
     font-size: 0.95rem;
-    line-height: 1.6;
+    line-height: 1.7;                         /* v57: more breathing room */
   }
-  [data-testid="stCaptionContainer"] { color: var(--muted) !important; font-size: 0.88rem; }
+  [data-testid="stCaptionContainer"] {
+    color: var(--muted) !important;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
 
   h1, h2, h3, h4 {
     color: var(--text) !important;
     font-weight: 600 !important;
     letter-spacing: -0.012em;
   }
+  /* v57: dramatic serif hero — Cormorant at 2.6rem with airy line-height */
   h1 {
-    font-family: 'Cormorant Garamond', 'IBM Plex Sans Thai', serif !important;
-    font-size: 2rem !important;
+    font-family: 'Cormorant Garamond', 'EB Garamond', 'IBM Plex Sans Thai', serif !important;
+    font-size: 2.6rem !important;
     font-weight: 500 !important;
-    margin-bottom: 0.2rem !important;
-    letter-spacing: -0.01em !important;
+    margin-bottom: 0.3rem !important;
+    letter-spacing: -0.018em !important;
+    line-height: 1.15 !important;
     color: var(--text) !important;
   }
   h2 {
-    font-size: 0.78rem !important;
-    margin-top: 1.8rem !important;
+    font-size: 0.76rem !important;
+    margin-top: 2.2rem !important;            /* v57: 2.2rem from 1.8 */
+    margin-bottom: 0.7rem !important;
     font-weight: 600 !important;
     color: var(--muted) !important;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.10em;                   /* v57: 0.10 — wider tracking */
   }
-  h3 { font-size: 1rem !important; font-weight: 600 !important; color: var(--text) !important; }
+  h3 {
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    color: var(--text) !important;
+    margin-top: 1.4rem !important;
+    letter-spacing: -0.005em !important;
+  }
 
-  /* Metrics — refined */
+  /* v57: Wabi-sabi brush divider — a quiet horizontal mark below hero h1.
+     Subtle 60px line, off-center, sage accent — Japanese empty-space feel. */
+  .nirva-mark::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+    margin: 12px 0 24px;
+    opacity: 0.7;
+  }
+
+  /* Metrics — refined, serif numerals + tabular */
   div[data-testid="stMetricLabel"] {
     color: var(--muted) !important;
-    font-size: 0.72rem !important;
+    font-size: 0.68rem !important;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.10em;
     font-weight: 500;
   }
   div[data-testid="stMetricValue"] {
     color: var(--text) !important;
-    font-family: 'Cormorant Garamond', Inter, serif !important;
-    font-size: 1.6rem !important;
+    font-family: 'Cormorant Garamond', 'EB Garamond', Inter, serif !important;
+    font-size: 1.9rem !important;             /* v57: bigger serif numerals */
     font-weight: 500 !important;
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  div[data-testid="stMetricDelta"] { font-size: 0.72rem !important; }
+
+  /* v57: All buttons share zen ease */
+  .stButton button,
+  .stFormSubmitButton button,
+  .stLinkButton a {
+    transition: transform 280ms var(--ease), box-shadow 280ms var(--ease),
+                background 200ms var(--ease), color 200ms var(--ease) !important;
+  }
+
+  /* v57: Card refinement — flatter, paper-on-paper, hairline only */
+  .nirva-zen-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 30px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset,
+                0 0.5px 0 rgba(40,30,20,0.04);
+  }
+
+  /* v57: Breathing — main block container has more side air */
+  .block-container { padding-top: 2.5rem !important; padding-bottom: 4rem !important; }
+
+  /* v57: Expander — quieter, lower opacity divider */
+  details summary {
+    color: var(--text-soft) !important;
+    font-weight: 500 !important;
+  }
+  [data-testid="stExpander"] {
+    border-color: var(--border) !important;
+    background: var(--surface-alt) !important;
   }
 
   /* Buttons — Zen minimal */

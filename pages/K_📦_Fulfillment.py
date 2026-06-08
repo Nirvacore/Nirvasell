@@ -14,7 +14,7 @@ import user_settings as us
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from _components import empty_state, toast
+from _components import page_header, empty_state, toast
 from i18n import t
 
 st.set_page_config(page_title="nirva.sell · Fulfillment", page_icon="📦", layout="wide")
@@ -208,6 +208,72 @@ with tab_history:
         )
         with st.expander(t("fulfill.preview_labels")):
             st.components.v1.html(labels_html, height=600, scrolling=True)
+
+        # ---- v60: Customer notification composer ----
+        # Turn each shipment into a ready-to-paste message with the carrier's
+        # public tracking URL filled in. Solves "what do I write to customer?"
+        st.divider()
+        st.markdown(f"### 💬 {t('fulfill.notify_title')}")
+        st.caption(t("fulfill.notify_caption"))
+
+        import tracking as _tracking
+        n1, n2, n3 = st.columns([1, 1, 2])
+        with n1:
+            n_tone = st.selectbox(
+                t("fulfill.notify_tone"),
+                ["friendly", "formal", "short"],
+                format_func=lambda k: {
+                    "friendly": "😊 " + t("fulfill.tone_friendly"),
+                    "formal":   "👔 " + t("fulfill.tone_formal"),
+                    "short":    "✂ "  + t("fulfill.tone_short"),
+                }.get(k, k),
+            )
+        with n2:
+            n_lang = st.selectbox(
+                t("fulfill.notify_lang"),
+                ["th", "en", "zh"],
+                format_func=lambda l: {"th": "🇹🇭 ไทย", "en": "🇬🇧 English",
+                                       "zh": "🇨🇳 中文"}.get(l, l),
+            )
+        with n3:
+            shop_name = us.get("fulfill.seller_name", "") or "เรา"
+            st.caption(t("fulfill.notify_using_shop", name=shop_name))
+
+        # Compose for the 10 most recent shipments
+        recent_for_msg = shipped[:10]
+        messages = _tracking.compose_batch(
+            recent_for_msg, tone=n_tone, lang=n_lang, shop_name=shop_name,
+        )
+        for m in messages:
+            with st.expander(
+                f"📦 {m['order_id']} · {m['platform']}",
+                expanded=False,
+            ):
+                st.text_area(
+                    "msg",
+                    value=m["message"],
+                    height=180,
+                    label_visibility="collapsed",
+                    key=f"_notif_{m['order_id']}",
+                )
+
+        # Bulk export — CSV of all messages so seller can paste-process via
+        # any mass-messaging tool / LINE OA admin / etc.
+        if messages:
+            import csv as _csv
+            import io as _io
+            buf = _io.StringIO()
+            w = _csv.writer(buf)
+            w.writerow(["order_id", "platform", "customer", "message"])
+            for m in messages:
+                w.writerow([m["order_id"], m["platform"], m["customer"], m["message"]])
+            st.download_button(
+                f"⬇ {t('fulfill.notify_download')}",
+                data=buf.getvalue().encode("utf-8-sig"),
+                file_name=f"nirva_messages_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                type="tertiary",
+            )
 
         # Full history table
         st.divider()

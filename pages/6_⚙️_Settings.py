@@ -75,6 +75,72 @@ with c_reset:
         st.rerun()
 
 
+# ----- LINE Notify --------------------------------------------------------
+
+st.divider()
+st.subheader(f"💚 {t('line.title')}")
+st.caption(t("line.caption"))
+
+import user_settings as us
+us.init()
+import line_notify
+
+token = us.get("line_notify_token", "")
+if token:
+    status = line_notify.check_token(token)
+    if status["ok"]:
+        st.success(f"✓ {t('line.connected')} → {status['target']}")
+    else:
+        st.warning(t("line.not_connected"))
+
+with st.form("line_setup"):
+    n_token = st.text_input(
+        t("line.token_label"),
+        value=token or "",
+        type="password",
+        help=t("line.token_help"),
+    )
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        if st.form_submit_button(t("common.save"), type="primary"):
+            us.set("line_notify_token", n_token.strip())
+            st.success(t("common.saved"))
+            st.rerun()
+    with c2:
+        if st.form_submit_button(t("line.test_btn")):
+            if n_token.strip():
+                result = line_notify.send(n_token.strip(),
+                    "\n🧪 nirva.sell test\nระบบแจ้งเตือนทำงานปกติ!")
+                if result["ok"]:
+                    st.success(t("line.test_ok"))
+                else:
+                    st.error(f"{t('line.test_fail')} ({result['message']})")
+            else:
+                st.warning(t("line.token_help"))
+
+with st.expander(t("line.setup_title")):
+    st.markdown(t("line.setup_steps"))
+
+st.markdown(f"#### {t('line.alerts_title')}")
+alert_cols = st.columns(4)
+with alert_cols[0]:
+    al_orders = st.checkbox(t("line.alert_orders"),
+        value=us.get("line_alert_orders", True) if us.get("line_alert_orders") is not None else True)
+    us.set("line_alert_orders", al_orders)
+with alert_cols[1]:
+    al_stock = st.checkbox(t("line.alert_stock"),
+        value=us.get("line_alert_stock", True) if us.get("line_alert_stock") is not None else True)
+    us.set("line_alert_stock", al_stock)
+with alert_cols[2]:
+    al_daily = st.checkbox(t("line.alert_daily"),
+        value=us.get("line_alert_daily", False) if us.get("line_alert_daily") is not None else False)
+    us.set("line_alert_daily", al_daily)
+with alert_cols[3]:
+    al_slips = st.checkbox(t("line.alert_slips"),
+        value=us.get("line_alert_slips", False) if us.get("line_alert_slips") is not None else False)
+    us.set("line_alert_slips", al_slips)
+
+
 # ----- Markup presets ----------------------------------------------------
 
 st.divider()

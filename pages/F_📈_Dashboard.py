@@ -136,8 +136,35 @@ margin = (total_profit / total_rev * 100) if total_rev else 0
 order_count = len(orders_df)
 unit_count = int(orders_df["qty"].sum())
 
+# v58: Factor in actual expenses for TRUE profit
+total_expenses = 0
+try:
+    import expenses as _exp
+    _exp.init()
+    _es = _exp.stats()
+    total_expenses = _es.get("all_time", 0)
+except Exception:
+    pass
+
+# v60: Factor in return losses
+total_return_loss = 0
+try:
+    import returns as _ret
+    _ret.init()
+    with db.conn() as c:
+        _rl = c.execute(
+            "SELECT COALESCE(SUM(refund_amount),0) + COALESCE(SUM(shipping_cost),0) "
+            "FROM returns"
+        ).fetchone()[0]
+        total_return_loss = float(_rl or 0)
+except Exception:
+    pass
+
+true_profit = total_profit - total_expenses - total_return_loss
+true_margin = (true_profit / total_rev * 100) if total_rev else 0
+
 # v49: Etsy-style — every KPI carries an actionable hint underneath
-m1, m2, m3, m4, m5 = st.columns(5)
+m1, m2, m3, m4, m5, m6, m7 = st.columns(7)
 with m1:
     metric_with_hint(
         t("dashboard.kpi_revenue"), f"฿{total_rev:,.0f}",
@@ -154,22 +181,37 @@ with m2:
     )
 with m3:
     metric_with_hint(
-        t("dashboard.kpi_profit"), f"฿{total_profit:,.0f}",
-        hint=t("dashboard.hint_loss") if total_profit < 0 else "",
-        hint_tone="danger" if total_profit < 0 else "info",
+        t("dashboard.kpi_expenses"), f"฿{total_expenses:,.0f}",
+        hint=t("dashboard.hint_expenses") if total_expenses == 0 else "",
+        hint_target="pages/V_💸_Expenses.py" if total_expenses == 0 else None,
+        hint_tone="warn" if total_expenses == 0 else "info",
     )
 with m4:
-    # Margin tone tiers: <5 danger, <10 warn, ≥10 ok
-    m_tone = "danger" if margin < 5 else ("warn" if margin < 10 else "ok")
-    m_hint = (t("dashboard.hint_margin_low") if margin < 10
-              else t("dashboard.hint_margin_ok") if margin >= 20 else "")
+    tp_tone = "danger" if true_profit < 0 else "info"
     metric_with_hint(
-        t("dashboard.kpi_margin"), f"{margin:.1f}%",
-        hint=m_hint,
-        hint_target="pages/D_🔀_Sourcing.py" if margin < 10 else None,
-        hint_tone=m_tone,
+        t("dashboard.kpi_true_profit"), f"฿{true_profit:,.0f}",
+        hint=t("dashboard.hint_loss") if true_profit < 0 else "",
+        hint_tone=tp_tone,
     )
 with m5:
+    m_tone = "danger" if true_margin < 5 else ("warn" if true_margin < 10 else "ok")
+    m_hint = (t("dashboard.hint_margin_low") if true_margin < 10
+              else t("dashboard.hint_margin_ok") if true_margin >= 20 else "")
+    metric_with_hint(
+        t("dashboard.kpi_margin"), f"{true_margin:.1f}%",
+        hint=m_hint,
+        hint_target="pages/D_🔀_Sourcing.py" if true_margin < 10 else None,
+        hint_tone=m_tone,
+    )
+with m6:
+    ret_tone = "danger" if total_return_loss > 1000 else "info"
+    metric_with_hint(
+        t("dashboard.kpi_returns"), f"฿{total_return_loss:,.0f}",
+        hint=t("dashboard.hint_returns") if total_return_loss > 0 else "",
+        hint_target="pages/W_↩_Returns.py" if total_return_loss > 0 else None,
+        hint_tone=ret_tone,
+    )
+with m7:
     metric_with_hint(
         t("dashboard.kpi_orders"), f"{order_count} / {unit_count}u",
         hint=t("dashboard.hint_no_orders") if order_count == 0 else "",

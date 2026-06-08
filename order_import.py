@@ -26,6 +26,9 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "total_price": ["total amount", "ยอดรวม", "subtotal"],
         "order_date":  ["order creation date", "วันที่สั่งซื้อ", "create time"],
         "status":      ["order status", "สถานะ"],
+        "buyer_name":  ["ชื่อผู้ซื้อ", "buyer name", "recipient name", "ชื่อผู้รับ"],
+        "buyer_phone": ["เบอร์โทรผู้ซื้อ", "buyer phone", "phone"],
+        "product_name": ["ชื่อสินค้า", "product name", "item name"],
     },
     "lazada": {
         "order_id":    ["orderitemid", "order number", "เลขออเดอร์", "order id"],
@@ -35,6 +38,9 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "total_price": ["paid price", "order total", "total"],
         "order_date":  ["created at", "create time", "order date"],
         "status":      ["status", "order status"],
+        "buyer_name":  ["customer name", "buyer name", "customer first name"],
+        "buyer_phone": ["phone", "customer phone"],
+        "product_name": ["item name", "product name"],
     },
     "tiktok": {
         "order_id":    ["order id", "order number"],
@@ -44,6 +50,9 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "total_price": ["order amount", "sub total"],
         "order_date":  ["created time", "order created time"],
         "status":      ["order status"],
+        "buyer_name":  ["buyer name", "recipient name", "recipient"],
+        "buyer_phone": ["buyer phone", "phone number"],
+        "product_name": ["product name", "sku name"],
     },
     "shopify": {
         "order_id":    ["name", "order id"],
@@ -53,6 +62,9 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "total_price": ["total", "subtotal"],
         "order_date":  ["created at", "processed at"],
         "status":      ["financial status", "fulfillment status"],
+        "buyer_name":  ["shipping name", "billing name", "customer name"],
+        "buyer_phone": ["shipping phone", "billing phone", "phone"],
+        "product_name": ["lineitem name"],
     },
     "amazon": {
         "order_id":    ["amazon-order-id", "order-id"],
@@ -62,6 +74,9 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "total_price": ["item-price"],
         "order_date":  ["purchase-date"],
         "status":      ["order-status"],
+        "buyer_name":  ["buyer-name", "recipient-name"],
+        "buyer_phone": ["buyer-phone-number", "ship-phone-number"],
+        "product_name": ["product-name", "item-name"],
     },
 }
 
@@ -214,6 +229,42 @@ def save_orders(df: pd.DataFrame) -> int:
             except Exception:
                 continue
 
+    # v58: Auto-create/update customer records from order data
+    if n_inserted:
+        try:
+            import customers as cust
+            cust.init()
+            for _, r in df.iterrows():
+                buyer = str(r.get("buyer_name") or "").strip()
+                if not buyer:
+                    continue
+                phone = str(r.get("buyer_phone") or "").strip()
+                cid = cust.find_or_create(
+                    name=buyer, phone=phone, platform=r.get("platform", ""),
+                )
+                total_val = 0
+                try:
+                    total_val = float(r.get("total_price") or 0)
+                except (TypeError, ValueError):
+                    pass
+                date_val = r.get("order_date")
+                date_str = ""
+                if pd.notna(date_val):
+                    try:
+                        date_str = pd.Timestamp(date_val).strftime("%Y-%m-%d")
+                    except Exception:
+                        date_str = str(date_val)[:10]
+                cust.record_order(
+                    customer_id=cid,
+                    order_id=str(r.get("order_id", "")),
+                    platform=r.get("platform", ""),
+                    amount=total_val,
+                    order_date=date_str,
+                    product=str(r.get("product_name") or r.get("sku") or ""),
+                )
+        except Exception:
+            pass
+
     # v50: Emit a single event for the batch — not one per order (would spam)
     if n_inserted:
         try:
@@ -222,10 +273,27 @@ def save_orders(df: pd.DataFrame) -> int:
                 category="order",
                 severity="success",
                 title=f"📦 {n_inserted} ออเดอร์ใหม่",
-                body=f"Import เรียบร้อย · stock ลดอัตโนมัติแล้ว",
+                body="Import เรียบร้อย · stock ลดอัตโนมัติแล้ว",
                 target_page="pages/F_📈_Dashboard.py",
                 meta={"n_inserted": n_inserted},
             )
+        except Exception:
+            pass
+
+        # v58: LINE Notify — alert seller about new orders
+        try:
+            import user_settings as _us
+            _us.init()
+            token = _us.get("line_notify_token", "")
+            if token and _us.get("line_alert_orders", True):
+                import line_notify
+                total_rev = df["total_price"].sum() if "total_price" in df.columns else 0
+                platforms = ", ".join(df["platform"].unique()) if "platform" in df.columns else ""
+                line_notify.send(token,
+                    "\n🛒 ออเดอร์ใหม่ " + str(n_inserted) + " รายการ!"
+                    "\n🏪 " + platforms +
+                    "\n💰 รวม ฿{:,.0f}".format(float(total_rev or 0))
+                )
         except Exception:
             pass
 

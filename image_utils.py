@@ -80,3 +80,51 @@ def remove_bg_then_white(raw: bytes) -> bytes:
     bg = Image.new("RGB", img.size, "white")
     bg.paste(img, mask=img.split()[-1])
     return to_bytes(bg)
+
+
+# ---- v59: Studio pipeline (bulk-process product photos) ----------------
+
+def studio_process(raw: bytes, *, size: int = 1080, bg: str = "white",
+                   padding: float = 0.06) -> bytes:
+    """One-pass marketplace-ready output:
+       remove background → square crop with subject centered →
+       resize to NxN (default 1080) → composite onto solid bg.
+
+    `padding` (0.06 = 6% margin around the subject) — Shopee/Lazada like a
+    little breathing room, not edge-to-edge.
+
+    Returns JPEG bytes ready to upload. Falls back gracefully if rembg
+    isn't available (just re-frames the original).
+    """
+    transparent = remove_bg(raw)
+    img = _open(transparent)
+    has_alpha = img.mode == "RGBA"
+
+    # Crop to subject bounding box (alpha-aware)
+    if has_alpha:
+        bbox = img.split()[-1].getbbox()
+    else:
+        # Without alpha, use full frame
+        bbox = img.getbbox()
+    if bbox:
+        img = img.crop(bbox)
+
+    # Pad to square
+    w, h = img.size
+    side = max(w, h)
+    pad_px = int(side * padding * 2)   # padding on both sides
+    canvas_side = side + pad_px
+    bg_color = (255, 255, 255) if bg == "white" else (
+        (251, 249, 243) if bg == "cream" else (0, 0, 0)
+    )
+    canvas = Image.new("RGB", (canvas_side, canvas_side), bg_color)
+    paste_x = (canvas_side - w) // 2
+    paste_y = (canvas_side - h) // 2
+    if has_alpha:
+        canvas.paste(img, (paste_x, paste_y), mask=img.split()[-1])
+    else:
+        canvas.paste(img, (paste_x, paste_y))
+
+    # Final resize to target size (LANCZOS = high quality)
+    canvas = canvas.resize((size, size), Image.LANCZOS)
+    return to_bytes(canvas, fmt="JPEG", quality=92)

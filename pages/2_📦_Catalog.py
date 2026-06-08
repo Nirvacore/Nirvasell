@@ -333,3 +333,53 @@ else:
                 file_name=f"{sku}.md",
                 mime="text/markdown",
             )
+
+
+# ---- v59: Smart Restock Predictions ------------------------------------
+
+st.divider()
+st.markdown(f"### 📊 {t('restock.title')}")
+st.caption(t("restock.caption"))
+
+try:
+    import smart_restock as sr
+    predictions = sr.all_predictions()
+    active = [p for p in predictions if p["status"] != "no_sales"]
+    if not active:
+        st.info(t("restock.all_ok"))
+    else:
+        for p in active[:15]:
+            days = int(p["days_until_out"])
+            if p["status"] == "critical":
+                color = "#c54c4c"
+                badge = "🔴 " + t("restock.critical")
+            elif p["status"] == "warning":
+                color = "#c5963d"
+                badge = "🟡"
+            elif p["status"] == "watch":
+                color = "#4d6c5c"
+                badge = "🟢"
+            else:
+                color = "#7a7569"
+                badge = "✓"
+
+            name_str = (p.get("name") or "")[:40]
+            daily_str = str(p["daily_sales"])
+            reorder_str = str(p.get("reorder_qty", 0))
+            days_str = t("restock.days_out", n=days)
+
+            st.markdown(
+                "<div style='display:flex;justify-content:space-between;align-items:center;"
+                "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
+                "<div><strong>" + p["sku"] + "</strong>"
+                " <span style='color:#7a7569;font-size:12px'>" + name_str + "</span></div>"
+                "<div style='display:flex;gap:18px;align-items:center;font-size:13px'>"
+                "<span>" + t("restock.daily_sales") + ": " + daily_str + "</span>"
+                "<span style='color:" + color + ";font-weight:600'>" + badge + " " + days_str + "</span>"
+                "<span style='background:rgba(77,108,92,0.08);padding:2px 8px;"
+                "border-radius:6px;font-size:12px'>" + t("restock.reorder") + ": " + reorder_str + "</span>"
+                "</div></div>",
+                unsafe_allow_html=True,
+            )
+except Exception:
+    pass
