@@ -116,7 +116,7 @@ for s in sources:
 
         if fetch_btn:
             with st.spinner(t("policy.fetching")):
-                fetch_result = pw.fetch_policy_text(url)
+                fetch_result = pw.fetch_source(s)
             if not fetch_result.get("ok"):
                 st.warning(t("policy.fetch_failed", status=fetch_result.get("status")))
                 st.caption(t("policy.fetch_failed_hint"))

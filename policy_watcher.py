@@ -52,13 +52,19 @@ DEFAULT_SOURCES: list[dict] = [
     {
         "platform": "tiktok",
         "label": "TikTok Shop TH — Fees",
-        "url": "https://seller-th.tiktok.com/university/essay?knowledge_id=10005775",
+        "url": "https://seller-th.tiktok.com/university/article/10005775",
+        "fallback_urls": [
+            "https://seller.tiktokglobalshop.com/university/essay?knowledge_id=10005775",
+        ],
         "language": "th",
     },
     {
         "platform": "amazon_us",
         "label": "Amazon US — Selling Fees",
-        "url": "https://sellercentral.amazon.com/help/hub/reference/G200336920",
+        "url": "https://sell.amazon.com/pricing",
+        "fallback_urls": [
+            "https://sellercentral.amazon.com/help/hub/reference/G200336920",
+        ],
         "language": "en",
     },
     {
@@ -89,28 +95,90 @@ def save_sources(sources: list[dict]):
 
 _TAG_RX = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.S | re.I)
 _HTML_RX = re.compile(r"<[^>]+>")
+_FETCH_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9,th;q=0.8",
+}
+_SPA_MARKERS = (
+    "react app doesn't work properly without javascript",
+    "please enable javascript",
+    "please enable cookies to continue",
+)
+_MIN_USEFUL_LEN = 200
 
 
-def fetch_policy_text(url: str) -> dict:
+def _clean_html(html: str) -> str:
+    clean = _TAG_RX.sub(" ", html)
+    clean = _HTML_RX.sub(" ", clean)
+    return re.sub(r"\s+", " ", clean).strip()
+
+
+def _is_usable_policy_text(text: str) -> bool:
+    if len(text) < _MIN_USEFUL_LEN:
+        return False
+    low = text.lower()
+    return not any(marker in low for marker in _SPA_MARKERS)
+
+
+def fetch_policy_text(url: str, *, retries: int = 2) -> dict:
     """GET a URL and strip to readable text. Returns {ok, text, hash, status}."""
-    try:
-        r = httpx.get(
-            url,
-            timeout=12.0,
-            follow_redirects=True,
-            headers={"User-Agent": "Mozilla/5.0 nirva.sell/1.0 PolicyWatcher"},
-        )
-        if not r.is_success:
-            return {"ok": False, "status": r.status_code, "text": "", "hash": ""}
-        html = r.text
-        # Strip script/style/everything-non-text
-        clean = _TAG_RX.sub(" ", html)
-        clean = _HTML_RX.sub(" ", clean)
-        clean = re.sub(r"\s+", " ", clean).strip()
-        h = hashlib.sha256(clean.encode()).hexdigest()[:16]
-        return {"ok": True, "status": r.status_code, "text": clean, "hash": h}
-    except Exception as e:
-        return {"ok": False, "status": -1, "text": "", "hash": "", "error": str(e)}
+    last: dict = {"ok": False, "status": -1, "text": "", "hash": ""}
+    for attempt in range(retries + 1):
+        try:
+            r = httpx.get(
+                url,
+                timeout=20.0,
+                follow_redirects=True,
+                headers=_FETCH_HEADERS,
+            )
+            if not r.is_success:
+                last = {"ok": False, "status": r.status_code, "text": "", "hash": ""}
+                if r.status_code >= 500 and attempt < retries:
+                    continue
+                return last
+
+            clean = _clean_html(r.text)
+            h = hashlib.sha256(clean.encode()).hexdigest()[:16]
+            if not _is_usable_policy_text(clean):
+                return {
+                    "ok": False,
+                    "status": r.status_code,
+                    "text": clean,
+                    "hash": h,
+                    "reason": "spa_or_empty",
+                }
+
+            return {"ok": True, "status": r.status_code, "text": clean, "hash": h}
+        except (httpx.TimeoutException, httpx.ConnectError) as e:
+            last = {"ok": False, "status": -1, "text": "", "hash": "", "error": str(e)}
+            if attempt < retries:
+                continue
+            return last
+        except Exception as e:
+            return {"ok": False, "status": -1, "text": "", "hash": "", "error": str(e)}
+    return last
+
+
+def fetch_source(source: dict) -> dict:
+    """Try a source URL plus optional fallbacks. Returns the first usable result."""
+    urls: list[str] = []
+    primary = source.get("url")
+    if primary:
+        urls.append(primary)
+    urls.extend(source.get("fallback_urls") or [])
+
+    last: dict = {"ok": False, "status": -1, "text": "", "hash": ""}
+    for url in urls:
+        result = fetch_policy_text(url)
+        result["url_used"] = url
+        if result.get("ok"):
+            return result
+        last = result
+    return last
 
 
 # ---- Claude-powered fee extraction --------------------------------------

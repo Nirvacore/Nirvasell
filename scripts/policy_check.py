@@ -59,15 +59,17 @@ def main():
         if not platform or not url:
             continue
 
-        result = pw.fetch_policy_text(url)
+        result = pw.fetch_source(s)
         if not result.get("ok"):
-            print(f"  [{platform}] fetch FAIL status={result.get('status')}")
+            reason = result.get("reason", "")
+            print(f"  [{platform}] fetch FAIL status={result.get('status')} reason={reason or '-'}")
             log_alert({
                 "at": datetime.now().isoformat(),
                 "platform": platform,
                 "kind": "fetch_failed",
                 "status": result.get("status"),
-                "url": url,
+                "reason": reason,
+                "url": result.get("url_used", url),
             })
             continue
 
