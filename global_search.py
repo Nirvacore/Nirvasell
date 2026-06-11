@@ -7,9 +7,18 @@ import db
 
 def search(query: str, limit: int = 50) -> dict:
     if not query or len(query.strip()) < 2:
-        return {"products": [], "orders": [], "customers": []}
+        return {"products": [], "orders": [], "customers": [], "knowledge": []}
 
     q = "%" + query.strip() + "%"
+
+    # Knowledge Hub — the ecosystem Source of Truth reads OUT through here.
+    # Guarded: the table only exists once a user has opened the Hub.
+    knowledge = []
+    try:
+        import knowledge_hub as kh
+        knowledge = kh.search(query.strip(), limit=limit)
+    except Exception:
+        knowledge = []
 
     with db.conn() as c:
         products = c.execute("""
@@ -47,6 +56,7 @@ def search(query: str, limit: int = 50) -> dict:
         "products": [dict(r) for r in products],
         "orders": [dict(r) for r in orders],
         "customers": [dict(r) for r in customers],
+        "knowledge": knowledge,
     }
 
 
