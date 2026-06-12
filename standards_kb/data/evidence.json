@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "description": "Universal Evidence Matrix — realizes 'One Evidence, Many Standards'. Each evidence artifact is collected ONCE and satisfies multiple controls/standards. `controls` references controls.json IDs; `auto_collectable` flags whether the Nirva engine can harvest it from a system automatically.",
+  "evidence": [
+    {"id": "EV-POLICY", "name": "Approved Policy Document (versioned, signed)", "controls": ["UC-AC","UC-CM","UC-RM","UC-PM","UC-AIG","UC-ESG"], "source": "Document/GRC system", "auto_collectable": true, "satisfies_requirements": ["REQ-POLICY","REQ-DOCINFO"]},
+    {"id": "EV-RACI", "name": "Roles/RACI & Org Chart with control ownership", "controls": ["UC-AC","UC-RM","UC-AIG","UC-DG"], "source": "HRIS / GRC", "auto_collectable": true, "satisfies_requirements": ["REQ-ROLES"]},
+    {"id": "EV-RISKREG", "name": "Risk Register with assessments & treatments", "controls": ["UC-RM","UC-SUP","UC-BCM","UC-AIG","UC-VULN"], "source": "GRC / risk tool", "auto_collectable": true, "satisfies_requirements": ["REQ-RISK","REQ-IMPACT"]},
+    {"id": "EV-TRAINLOG", "name": "Training completion & awareness records", "controls": ["UC-TRN"], "source": "LMS", "auto_collectable": true, "satisfies_requirements": ["REQ-COMPETENCE","REQ-AWARENESS"]},
+    {"id": "EV-ACCESSREVIEW", "name": "Periodic access review / recertification logs", "controls": ["UC-AC","UC-LOG"], "source": "IdP / IAM", "auto_collectable": true, "satisfies_requirements": ["REQ-MONITORING","REQ-EVIDENCE"]},
+    {"id": "EV-CHANGETICKET", "name": "Change tickets with approvals & rollback", "controls": ["UC-CM","UC-VULN"], "source": "ITSM / CI-CD", "auto_collectable": true, "satisfies_requirements": ["REQ-OPCONTROL","REQ-DOCINFO"]},
+    {"id": "EV-INCIDENT", "name": "Incident/breach records with timeline & RCA", "controls": ["UC-IM","UC-BCM","UC-LOG"], "source": "ITSM / SIEM", "auto_collectable": true, "satisfies_requirements": ["REQ-INCIDENT","REQ-NONCONFORMITY"]},
+    {"id": "EV-VENDORDD", "name": "Vendor due-diligence & contracts (DPA/SLAs)", "controls": ["UC-SUP","UC-PM"], "source": "Procurement / VRM", "auto_collectable": true, "satisfies_requirements": ["REQ-DUEDILIGENCE"]},
+    {"id": "EV-LOGS", "name": "System/audit logs (retained, tamper-evident)", "controls": ["UC-LOG","UC-AC","UC-IM"], "source": "SIEM / cloud logging", "auto_collectable": true, "satisfies_requirements": ["REQ-MONITORING","REQ-EVIDENCE"]},
+    {"id": "EV-SCAN", "name": "Vulnerability scan & pen-test reports", "controls": ["UC-VULN","UC-CRYPTO"], "source": "Scanner / pentest", "auto_collectable": true, "satisfies_requirements": ["REQ-MONITORING"]},
+    {"id": "EV-AUDITREPORT", "name": "Internal audit reports & management review minutes", "controls": ["UC-AUD","UC-FIN"], "source": "GRC / minutes", "auto_collectable": false, "satisfies_requirements": ["REQ-INTAUDIT","REQ-MGMTREVIEW"]},
+    {"id": "EV-DSAR", "name": "DSAR/consent records & RoPA (Art.30)", "controls": ["UC-PM","UC-DG"], "source": "Privacy platform", "auto_collectable": true, "satisfies_requirements": ["REQ-DOCINFO","REQ-EVIDENCE"]},
+    {"id": "EV-MODELCARD", "name": "Model card, AI impact assessment & eval results", "controls": ["UC-AIG"], "source": "ML platform / model registry", "auto_collectable": true, "satisfies_requirements": ["REQ-IMPACT","REQ-DOCINFO"]},
+    {"id": "EV-BCPTEST", "name": "BC/DR test & exercise results, RTO/RPO evidence", "controls": ["UC-BCM"], "source": "BCM tool / DR runbooks", "auto_collectable": false, "satisfies_requirements": ["REQ-OPCONTROL","REQ-MONITORING"]},
+    {"id": "EV-GHG", "name": "GHG inventory & ESG data with assurance trail", "controls": ["UC-ENV","UC-ESG"], "source": "ESG/carbon platform", "auto_collectable": true, "satisfies_requirements": ["REQ-MONITORING","REQ-EVIDENCE"]},
+    {"id": "EV-FINCTRL", "name": "ICFR control evidence (reconciliations, approvals)", "controls": ["UC-FIN","UC-AUD"], "source": "ERP / finance", "auto_collectable": true, "satisfies_requirements": ["REQ-EVIDENCE","REQ-MONITORING"]},
+    {"id": "EV-ASSETINV", "name": "Asset/CMDB inventory with classification", "controls": ["UC-AM","UC-DG"], "source": "CMDB / cloud", "auto_collectable": true, "satisfies_requirements": ["REQ-DOCINFO","REQ-MONITORING"]},
+    {"id": "EV-HAZARD", "name": "Hazard assessments & safety incident logs", "controls": ["UC-OHS"], "source": "EHS system", "auto_collectable": false, "satisfies_requirements": ["REQ-RISK","REQ-INCIDENT"]}
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "description": "Competitive landscape by category. Rather than fabricate 100 shallow company profiles (10 countries x 10), this is a defensible synthesis of well-known global leaders per category (which collectively span US/CN/JP/KR/SG/DE/UK/FR/IN/AU) plus the recurring, widely-reported customer complaints and the resulting NIRVA opportunity. Specific pricing/features must be re-validated before use in sales material.",
+  "disclaimer": "Company names are illustrative market references from public knowledge; 'common_complaints' are generalized industry themes, not claims about any specific firm's current product.",
+  "categories": [
+    {
+      "category": "ERP", "domain_focus": "core enterprise",
+      "leaders": ["SAP (DE)", "Oracle (US)", "Microsoft Dynamics (US)", "Workday (US)", "Infor (US)", "Odoo (BE)", "Zoho (IN)", "Sage (UK)"],
+      "strengths": ["Deep functionality", "Scale", "Ecosystem"],
+      "common_complaints": ["Expensive & slow to implement", "Rigid", "Poor UX for frontline", "Not built for blue-collar/site workforce", "Integration hell"],
+      "nirva_opportunity": "Frontline-first, fast-to-deploy OS for labour-intensive service businesses; 'bring your mess' migration vs 6-18 month ERP projects."
+    },
+    {
+      "category": "Compliance / GRC", "domain_focus": "audit, ISO, security compliance",
+      "leaders": ["ServiceNow GRC (US)", "Vanta (US)", "Drata (US)", "OneTrust (US)", "AuditBoard (US)", "LogicGate (US)", "SAP GRC (DE)"],
+      "strengths": ["Automated evidence (tech compliance)", "SOC2/ISO automation", "Workflow"],
+      "common_complaints": ["Tech-only (cloud SaaS focus)", "Weak for physical/workforce/field ops", "Expensive", "Not localized for Thai/SEA (PDPA, มอก.)"],
+      "nirva_opportunity": "Compliance for physical, labour-intensive operations (cleaning/FM/security) + PDPA/Thai localization + one-evidence-many-standards engine (standards_kb)."
+    },
+    {
+      "category": "Workforce / Field Service", "domain_focus": "attendance, deskless workforce",
+      "leaders": ["Connecteam (IL)", "Deputy (AU)", "When I Work (US)", "Quinyx (SE)", "Workforce.com (AU)", "ZKTeco (CN)", "Jibble (MY)"],
+      "strengths": ["Mobile check-in", "Scheduling", "Affordable"],
+      "common_complaints": ["Weak fraud-proofing (buddy punching)", "No contract-headcount verification", "No audit/integrity layer", "Point solution, not integrated"],
+      "nirva_opportunity": "Integrity-grade verification (geo+liveness+device) tied to CONTRACT headcount + audit trail + executive view — not just a timeclock."
+    },
+    {
+      "category": "Facility Management (CAFM/IWMS)", "domain_focus": "assets, maintenance",
+      "leaders": ["IBM Maximo (US)", "Planon (NL)", "FSI Concept (UK)", "Fracttal (CL)", "UpKeep (US)", "Archibus (US)"],
+      "strengths": ["Asset lifecycle", "PPM", "Space mgmt"],
+      "common_complaints": ["Heavy & costly", "Hard for SME service contractors", "Disconnected from workforce/compliance"],
+      "nirva_opportunity": "Unified workforce + asset + compliance for the FM SERVICE PROVIDER (not just the asset owner)."
+    },
+    {
+      "category": "AI / Agents", "domain_focus": "AI workforce",
+      "leaders": ["OpenAI (US)", "Anthropic (US)", "Google Gemini (US)", "Microsoft Copilot (US)", "Cursor (US)", "Glean (US)", "Moveworks (US)"],
+      "strengths": ["Powerful general AI", "Coding/knowledge assistants"],
+      "common_complaints": ["Generic, not domain-grounded", "No org memory/governance", "Hallucination risk", "No compliance guardrails"],
+      "nirva_opportunity": "NOVA = domain-grounded agents (HR/ISO/Procurement/Finance) on a governed knowledge graph with audit trail and AI governance (ISO 42001)."
+    },
+    {
+      "category": "Executive Intelligence / BI", "domain_focus": "dashboards, analytics",
+      "leaders": ["Power BI (US)", "Tableau (US)", "Qlik (US)", "Looker (US)", "ThoughtSpot (US)", "Domo (US)"],
+      "strengths": ["Visualization", "Self-serve analytics"],
+      "common_complaints": ["Needs clean data first (most SMEs lack it)", "Backward-looking", "No early-warning/risk semantics", "Requires analysts"],
+      "nirva_opportunity": "Decision-ready executive layer with AI briefing + early-warning on data NIRVA itself captures clean at the edge — no data-engineering project required."
+    },
+    {
+      "category": "Knowledge Management", "domain_focus": "org memory, SOPs",
+      "leaders": ["Notion (US)", "Confluence (AU)", "Guru (US)", "Bloomfire (US)", "NotebookLM (US)", "Document360 (IN)"],
+      "strengths": ["Docs/wiki", "Search", "AI Q&A"],
+      "common_complaints": ["Becomes a graveyard of stale docs", "No link to operations/compliance", "Knowledge still leaves with people"],
+      "nirva_opportunity": "Knowledge tied to live operations & evidence (SOP→task→proof), lessons-learned loop, succession/handover — ISO 30401 in practice."
+    },
+    {
+      "category": "Operational Excellence / QMS", "domain_focus": "quality, process",
+      "leaders": ["MasterControl (US)", "ETQ (US)", "Intelex (CA)", "Qualio (US)", "Greenlight Guru (US)", "Effivity (IN)"],
+      "strengths": ["QMS/CAPA", "Document control", "Audit mgmt"],
+      "common_complaints": ["Manufacturing-centric", "Expensive", "Heavy for service SMEs", "Siloed from workforce/finance"],
+      "nirva_opportunity": "Service-industry QMS integrated with workforce verification and the universal control library."
+    }
+  ],
+  "meta_gap": "Across every category the recurring gap is the SAME: point solutions that don't connect operations → integrity → compliance → intelligence, and that ignore the deskless, labour-intensive service workforce in emerging markets. That whitespace is NIRVA's wedge."
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "description": "Phase 3 — Universal 20-domain taxonomy. Every standard maps to one or more domains via the `taxonomy` array in standards.json. These domains are the spine of the knowledge graph and the navigation model for the Nirva Universal Compliance Engine.",
+  "domains": [
+    {"id": "L1",  "name": "Governance",          "th": "การกำกับดูแล",            "definition": "Direction-setting, accountability, policy, leadership, organizational structure.", "anchor_standards": ["ISO38500","COBIT","COSOIC","ISO37301"]},
+    {"id": "L2",  "name": "Risk",                "th": "ความเสี่ยง",              "definition": "Identification, assessment, treatment and monitoring of uncertainty.", "anchor_standards": ["ISO31000","COSOERM","NISTAIRMF","NISTCSF"]},
+    {"id": "L3",  "name": "Compliance",          "th": "การปฏิบัติตามข้อกำหนด",     "definition": "Meeting legal, regulatory, contractual and voluntary obligations.", "anchor_standards": ["ISO37301","GDPR","SOX","PCIDSS"]},
+    {"id": "L4",  "name": "People",              "th": "บุคลากร",                 "definition": "Competence, training, awareness, roles, human capital, culture.", "anchor_standards": ["ISO30414","ISO45001","ISO9001"]},
+    {"id": "L5",  "name": "Finance",             "th": "การเงิน",                 "definition": "Financial reporting, internal control over financial reporting, accounting.", "anchor_standards": ["COSOIC","SOX","SOC1","IFRS_ACC"]},
+    {"id": "L6",  "name": "Operation",           "th": "การปฏิบัติการ",            "definition": "Process management, service delivery, production, change & incident mgmt.", "anchor_standards": ["ISO9001","ITIL","ISO20000"]},
+    {"id": "L7",  "name": "Asset",               "th": "สินทรัพย์",                "definition": "Lifecycle management of physical, information and intangible assets.", "anchor_standards": ["ISO55001","ISO27001"]},
+    {"id": "L8",  "name": "Customer",            "th": "ลูกค้า",                  "definition": "Customer focus, satisfaction, accessibility, service experience.", "anchor_standards": ["ISO9001","ITIL","WCAG"]},
+    {"id": "L9",  "name": "Supplier",            "th": "ผู้จัดหา",                 "definition": "Third-party/supply-chain risk, procurement, vendor management.", "anchor_standards": ["NIST800171","DORA","CSACCM"]},
+    {"id": "L10", "name": "Environment",         "th": "สิ่งแวดล้อม",              "definition": "Environmental aspects, emissions, energy, pollution, resources.", "anchor_standards": ["ISO14001","ISO50001","GHGP_CORP"]},
+    {"id": "L11", "name": "Safety",              "th": "ความปลอดภัย (อาชีวอนามัย)", "definition": "Occupational health, physical & product safety, hazard control.", "anchor_standards": ["ISO45001","ISO22000","TISI_OHS"]},
+    {"id": "L12", "name": "Security",            "th": "ความมั่นคงปลอดภัยสารสนเทศ",  "definition": "Information / cyber / physical security controls.", "anchor_standards": ["ISO27001","NIST80053","CISV8","SOC2"]},
+    {"id": "L13", "name": "Privacy",             "th": "ความเป็นส่วนตัว",           "definition": "Personal data protection, data subject rights, privacy by design.", "anchor_standards": ["ISO27701","GDPR","PDPA_TH","NISTPF"]},
+    {"id": "L14", "name": "AI",                  "th": "ปัญญาประดิษฐ์",            "definition": "Responsible / trustworthy AI governance, ML risk, model lifecycle.", "anchor_standards": ["ISO42001","NISTAIRMF","EUAIACT","OECDAI"]},
+    {"id": "L15", "name": "Knowledge",           "th": "ความรู้",                 "definition": "Knowledge management, documented information, records, competence retention.", "anchor_standards": ["ISO9001","ISO30401"]},
+    {"id": "L16", "name": "Improvement",         "th": "การปรับปรุง",              "definition": "Continual improvement, corrective action, nonconformity, PDCA.", "anchor_standards": ["ISO9001","ITIL","ISO20000"]},
+    {"id": "L17", "name": "Sustainability",      "th": "ความยั่งยืน / ESG",        "definition": "ESG, social responsibility, sustainability reporting, net-zero.", "anchor_standards": ["ESRS","GRISTD","IFRSS2","ISO26000"]},
+    {"id": "L18", "name": "Audit",               "th": "การตรวจสอบ",               "definition": "Internal/external audit, assurance, attestation, management review.", "anchor_standards": ["ISO19011","SOC2","ISO27001"]},
+    {"id": "L19", "name": "BusinessContinuity",  "th": "ความต่อเนื่องทางธุรกิจ",    "definition": "Resilience, BIA, continuity, disaster recovery, crisis management.", "anchor_standards": ["ISO22301","DORA","NISTCSF"]},
+    {"id": "L20", "name": "Legal",               "th": "กฎหมาย",                  "definition": "Legal obligations, contracts, IP, regulatory law, liability.", "anchor_standards": ["GDPR","ISO37001","CSRD"]}
+  ],
+  "mapping_note": "A standard's presence in multiple domains is the primary edge type 'COVERS' in the graph: (Standard)-[:COVERS]->(Domain). The 'One Data, One Evidence, Many Standards' principle is realized because controls (controls.json) attach to domains and requirements, not to a single standard."
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "description": "The 7-layer NIRVA OS stack. Each layer builds on the one below: you cannot have trustworthy Executive Intelligence (L5) without Integrity (L2) on top of clean Operations (L1). `domains` link to standards_kb taxonomy IDs; `controls` link to standards_kb control IDs.",
+  "layers": [
+    {"id": "LY1", "name": "Operations", "th": "การปฏิบัติการ", "purpose": "Run the day-to-day: capture reality once, at the edge.", "capabilities": ["People", "Time", "Tasks", "Fleet", "Procurement", "Documents"], "domains": ["L4","L6","L7","L9"], "controls": ["UC-AM","UC-CM","UC-SUP","UC-DOC"]},
+    {"id": "LY2", "name": "Integrity", "th": "ความซื่อตรง", "purpose": "Make the captured reality verifiable and tamper-evident — trust by evidence, not by surveillance.", "capabilities": ["Audit", "Verification", "Contract Compliance", "Evidence Management"], "domains": ["L18","L3","L2"], "controls": ["UC-AUD","UC-LOG"]},
+    {"id": "LY3", "name": "Compliance", "th": "การปฏิบัติตามมาตรฐาน", "purpose": "Turn evidence into proven conformance across standards & law.", "capabilities": ["ISO", "PDPA", "Privacy", "Safety", "Legal"], "domains": ["L3","L11","L12","L13","L20"], "controls": ["UC-PM","UC-OHS","UC-RM","UC-DG"]},
+    {"id": "LY4", "name": "Knowledge", "th": "องค์ความรู้", "purpose": "Decouple know-how from individuals — organizational memory that outlives staff.", "capabilities": ["SOP", "Lessons Learned", "Training", "Organizational Memory"], "domains": ["L15","L4","L16"], "controls": ["UC-DOC","UC-TRN"]},
+    {"id": "LY5", "name": "Executive Intelligence", "th": "ปัญญาผู้บริหาร", "purpose": "Give leaders a true, real-time picture and early warning — see around corners.", "capabilities": ["Dashboard", "Risk", "Forecast", "Early Warning"], "domains": ["L1","L2","L5"], "controls": ["UC-RM","UC-AUD"]},
+    {"id": "LY6", "name": "Human Growth", "th": "การเติบโตของคน", "purpose": "Develop people with dignity — appreciation, learning, reflection.", "capabilities": ["Learning", "Appreciation", "Development", "Reflection"], "domains": ["L4","L15"], "controls": ["UC-TRN"]},
+    {"id": "LY7", "name": "Collective Wisdom", "th": "ปัญญารวมหมู่", "purpose": "Compound learning across the organization — transfer, resolve, improve.", "capabilities": ["Knowledge Transfer", "Conflict Resolution", "Organizational Learning"], "domains": ["L15","L16","L4"], "controls": ["UC-DOC","UC-AUD"]}
+  ],
+  "philosophy": "NIRVA is built to increase transparency, trust, fairness; to reduce conflict, rework and loss; to preserve workers' dignity, transfer knowledge, help people grow, and let the organization improve without being hostage to any individual. It is NOT built to catch, surveil, control, or instill fear."
+}

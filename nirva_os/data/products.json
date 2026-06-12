@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "description": "NIRVA product suite. These are the go-to-market PRODUCTS (how NIRVA is sold), which package the platform MODULES (NirvaOS/Core/Gov/Procure...). `solves` references problem IDs in problems.json; `controls` references standards_kb control IDs; `standards` references standards_kb standard IDs. `mvp_priority` 1=first. `ttr` = time-to-revenue.",
+  "products": [
+    {
+      "id": "CHECK", "name": "NIRVA CHECK", "layer": "LY1", "module": "NirvaOS.Workforce",
+      "tagline": "Digital check-in & workforce verification you can trust",
+      "capabilities": ["Digital Check-in", "Attendance", "Workforce Verification", "Contract Headcount Verification", "Site Verification"],
+      "solves": ["GHOST_EMPLOYEE", "FAKE_ATTENDANCE", "CONTRACT_RISK", "WORKFORCE_SHORTAGE"],
+      "controls": ["UC-AC","UC-LOG","UC-AM"], "standards": ["ISO9001","ISO27001","PDPA_TH"],
+      "target_buyer": "Ops Director / FM company / outsource workforce provider",
+      "pricing_tier": "per-active-worker / month", "mvp_priority": 1, "ttr": "days-weeks",
+      "best_fit_pilot": "BEST SERVICE — 1,356 workers, 256 sites, replaces LINE check-in"
+    },
+    {
+      "id": "AUDIT", "name": "NIRVA AUDIT", "layer": "LY2", "module": "NirvaGov.Audit",
+      "tagline": "Internal audit & evidence management with an unbreakable trail",
+      "capabilities": ["Internal Audit", "Evidence Management", "Audit Trail", "Integrity Verification", "Risk Detection"],
+      "solves": ["PROCUREMENT_FRAUD", "PAYROLL_FRAUD", "COMPLIANCE_FAILURE", "POOR_DOCUMENTATION"],
+      "controls": ["UC-AUD","UC-LOG","UC-RM"], "standards": ["ISO19011","ISO27001","SOC2","ISO37001"],
+      "target_buyer": "Internal Auditor / CFO / Compliance Officer",
+      "pricing_tier": "per-org + per-auditor", "mvp_priority": 4, "ttr": "weeks"
+    },
+    {
+      "id": "EXECUTIVE", "name": "NIRVA EXECUTIVE", "layer": "LY5", "module": "NirvaOS.ExecutiveDashboard",
+      "tagline": "One screen of truth + AI daily briefing + early warning",
+      "capabilities": ["Executive Dashboard", "AI Daily Briefing", "Business Health", "Risk Monitoring", "Early Warning"],
+      "solves": ["OPERATIONAL_BLIND_SPOT", "LEADERSHIP_DEPENDENCY", "SINGLE_POINT_OF_FAILURE"],
+      "controls": ["UC-RM","UC-AUD"], "standards": ["ISO31000","COBIT","NISTCSF"],
+      "target_buyer": "CEO / MD / Board",
+      "pricing_tier": "per-org (premium)", "mvp_priority": 2, "ttr": "weeks"
+    },
+    {
+      "id": "PROCURE", "name": "NIRVA PROCURE", "layer": "LY1", "module": "NirvaProcure",
+      "tagline": "Request-to-PO with budget control and a clean audit trail",
+      "capabilities": ["Request", "Approval", "Budget", "Vendor", "PO", "Procurement Audit"],
+      "solves": ["PROCUREMENT_FRAUD", "CONTRACT_RISK", "OPERATIONAL_BLIND_SPOT"],
+      "controls": ["UC-SUP","UC-CM","UC-AUD"], "standards": ["ISO9001","ISO37001","NIST800171"],
+      "target_buyer": "Procurement Manager / CFO",
+      "pricing_tier": "per-org + transaction", "mvp_priority": 5, "ttr": "weeks-months"
+    },
+    {
+      "id": "DOCS", "name": "NIRVA DOCS", "layer": "LY4", "module": "NirvaCore.Document",
+      "tagline": "Living SOPs, policies & contracts with version control",
+      "capabilities": ["SOP", "Policy", "Contract", "Knowledge Base", "Document Control"],
+      "solves": ["KNOWLEDGE_LOSS", "POOR_DOCUMENTATION", "LEADERSHIP_DEPENDENCY", "SINGLE_POINT_OF_FAILURE"],
+      "controls": ["UC-DOC","UC-TRN"], "standards": ["ISO9001","ISO30401","ISO27001"],
+      "target_buyer": "QMR / ISO Manager / Ops",
+      "pricing_tier": "per-org", "mvp_priority": 6, "ttr": "weeks"
+    },
+    {
+      "id": "COMPLIANCE", "name": "NIRVA COMPLIANCE", "layer": "LY3", "module": "NirvaGov",
+      "tagline": "ISO + PDPA + Safety, run from one body of evidence",
+      "capabilities": ["ISO", "PDPA", "Privacy", "Safety", "Risk Register", "CAPA", "Audit Program", "Training Matrix"],
+      "solves": ["COMPLIANCE_FAILURE", "DATA_BREACH", "SAFETY_INCIDENT", "CONTRACT_RISK", "CUSTOMER_COMPLAINT"],
+      "controls": ["UC-PM","UC-RM","UC-OHS","UC-AUD","UC-TRN","UC-DG"], "standards": ["ISO27001","ISO27701","ISO45001","ISO9001","PDPA_TH","ISO37301"],
+      "target_buyer": "Compliance Officer / QMR / DPO",
+      "pricing_tier": "per-standard + per-org", "mvp_priority": 7, "ttr": "months"
+    },
+    {
+      "id": "DIAGNOSIS", "name": "NIRVA DIAGNOSIS", "layer": "LY5", "module": "NirvaResearch",
+      "tagline": "Organizational CT scan — see the whole body in one assessment",
+      "capabilities": ["Organizational CT Scan", "Business Health Scan", "Digital Readiness", "Risk Assessment", "Process Assessment"],
+      "solves": ["OPERATIONAL_BLIND_SPOT", "POOR_DOCUMENTATION", "COMPLIANCE_FAILURE", "HIGH_TURNOVER"],
+      "controls": ["UC-RM","UC-AUD"], "standards": ["ISO31000","ISO9001","COBIT"],
+      "target_buyer": "CEO / Board / new management",
+      "pricing_tier": "fixed-fee assessment (consulting)", "mvp_priority": 3, "ttr": "days (cash today)"
+    },
+    {
+      "id": "LIFE", "name": "NIRVA LIFE", "layer": "LY6", "module": "NirvaAcademy",
+      "tagline": "Human growth — appreciation, learning, development",
+      "capabilities": ["Human Growth", "Appreciation", "Learning", "Development"],
+      "solves": ["HIGH_TURNOVER", "KNOWLEDGE_LOSS", "CUSTOMER_COMPLAINT"],
+      "controls": ["UC-TRN"], "standards": ["ISO30414","ISO30401","ISO45001"],
+      "target_buyer": "HR Director / People & Culture",
+      "pricing_tier": "per-employee / month", "mvp_priority": 8, "ttr": "months"
+    },
+    {
+      "id": "WISDOM", "name": "NIRVA WISDOM", "layer": "LY7", "module": "NirvaResearch",
+      "tagline": "Organizational learning — lessons, conflict resolution, transfer",
+      "capabilities": ["Organizational Learning", "Lessons Learned", "Conflict Resolution", "Knowledge Transfer"],
+      "solves": ["KNOWLEDGE_LOSS", "LEADERSHIP_DEPENDENCY", "SINGLE_POINT_OF_FAILURE", "HIGH_TURNOVER"],
+      "controls": ["UC-DOC","UC-TRN","UC-AUD"], "standards": ["ISO30401","ISO9001"],
+      "target_buyer": "CEO / HR / Knowledge Officer",
+      "pricing_tier": "per-org (premium)", "mvp_priority": 9, "ttr": "long"
+    }
+  ]
+}

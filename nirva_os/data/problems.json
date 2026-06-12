@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "description": "The Problem Atlas — the failures executives fear most. Each is analyzed for root cause, multi-dimensional impact, early-warning signals, prevention, and mapped to the NIRVA products (`nirva`), standards_kb controls (`controls`) and standards (`standards`) that address it. This is the demand-side argument for the whole platform.",
+  "problems": [
+    {
+      "id": "GHOST_EMPLOYEE", "name": "Ghost Employee", "fear": "Paying for people who don't exist or don't work",
+      "root_cause": "No tamper-proof link between a paid headcount and a verified human at a real place/time. Paper/Excel/LINE rosters are trivially padded.",
+      "impact": {"financial": "Direct salary leakage 2-8% of payroll; in a 1,356-staff firm even 1% ≈ millions/yr", "legal": "Fraud, false invoicing to clients, contract breach on headcount SLAs", "reputation": "Client trust collapse if a site is found understaffed"},
+      "early_warning": ["Attendance always 100%", "Check-ins clustered at one device/location", "Headcount billed > headcount verified on site", "No photo/geo evidence"],
+      "prevention": ["Geo + liveness + device-bound check-in", "Reconcile billed vs verified headcount per site", "Random site verification"],
+      "best_practice": "Biometric/geo-fenced verification with immutable evidence and periodic contract-headcount reconciliation",
+      "nirva": ["CHECK", "AUDIT", "EXECUTIVE"], "controls": ["UC-AC","UC-LOG","UC-AUD"], "standards": ["ISO9001","ISO37001"]
+    },
+    {
+      "id": "PAYROLL_FRAUD", "name": "Payroll Fraud", "fear": "Manipulated hours, rates, or phantom overtime",
+      "root_cause": "Payroll computed from un-auditable inputs; same person enters, approves and pays.",
+      "impact": {"financial": "Inflated payroll & overtime", "legal": "Tax/labour violations, embezzlement", "reputation": "Internal trust breakdown"},
+      "early_warning": ["Overtime spikes without ops reason", "Edits to time records after cutoff", "Approver = preparer", "Round-number anomalies"],
+      "prevention": ["Segregation of duties", "Time records locked & logged", "Exception analytics on OT"],
+      "best_practice": "SoD + immutable time source + analytics flags feeding internal audit",
+      "nirva": ["CHECK", "AUDIT"], "controls": ["UC-AC","UC-FIN","UC-AUD","UC-LOG"], "standards": ["COSOIC","SOC1","ISO27001"]
+    },
+    {
+      "id": "FAKE_ATTENDANCE", "name": "Fake Attendance / Buddy Punching", "fear": "Check-ins that don't reflect real presence",
+      "root_cause": "Shared logins, photos of photos, location spoofing; LINE check-in has no integrity guarantees.",
+      "impact": {"financial": "Paying absent labour, SLA penalties", "legal": "Client contract breach", "reputation": "Service quality complaints"},
+      "early_warning": ["Same selfie reused", "Impossible travel between sites", "Check-in from off-site IP/GPS"],
+      "prevention": ["Liveness detection", "Geo-fence + time window", "Device binding"],
+      "best_practice": "Multi-signal verification (geo + liveness + device) with anomaly scoring",
+      "nirva": ["CHECK"], "controls": ["UC-AC","UC-LOG"], "standards": ["ISO27001","ISO9001"]
+    },
+    {
+      "id": "PROCUREMENT_FRAUD", "name": "Procurement Fraud / Kickbacks", "fear": "Inflated prices, fake vendors, split POs",
+      "root_cause": "Opaque approvals, no vendor due diligence, no spend analytics, weak SoD.",
+      "impact": {"financial": "5-15% spend leakage", "legal": "Anti-bribery (ISO 37001), criminal exposure", "reputation": "Governance failure headlines"},
+      "early_warning": ["PO splitting under approval limits", "Single-source awards", "Vendor bank = employee bank", "Price drift vs market"],
+      "prevention": ["Three-way match", "Vendor screening", "Approval thresholds & SoD", "Spend analytics"],
+      "best_practice": "Closed-loop request→PO→receipt→pay with anti-bribery controls and audit trail",
+      "nirva": ["PROCURE", "AUDIT"], "controls": ["UC-SUP","UC-AUD","UC-FIN"], "standards": ["ISO37001","ISO9001","COSOIC"]
+    },
+    {
+      "id": "COMPLIANCE_FAILURE", "name": "Compliance Failure", "fear": "Failing an audit, losing certification or a contract",
+      "root_cause": "Evidence scattered in Excel/PDF; controls not monitored; surprise at audit time.",
+      "impact": {"financial": "Lost tenders, fines, remediation cost", "legal": "Regulatory action, license loss", "reputation": "De-listing from approved-vendor lists"},
+      "early_warning": ["Last-minute audit scrambles", "Overdue CAPAs", "Expired certs/training", "No live control status"],
+      "prevention": ["Continuous control monitoring", "One evidence base, many standards", "Training matrix & CAPA tracking"],
+      "best_practice": "Always-audit-ready posture via continuous monitoring (the standards_kb engine)",
+      "nirva": ["COMPLIANCE", "AUDIT", "DIAGNOSIS"], "controls": ["UC-AUD","UC-RM","UC-DOC","UC-TRN"], "standards": ["ISO9001","ISO27001","ISO45001","ISO37301"]
+    },
+    {
+      "id": "DATA_BREACH", "name": "Data Breach / Privacy Violation", "fear": "Leaking client or employee personal data",
+      "root_cause": "Personal data in unsecured Excel/LINE/email; no access control, no RoPA, no consent records.",
+      "impact": {"financial": "PDPA fines up to ฿5M/offence, breach response cost", "legal": "PDPA/GDPR liability, lawsuits", "reputation": "Loss of client confidence"},
+      "early_warning": ["PII in shared sheets", "No access logs", "No data inventory", "Unmanaged third-party data sharing"],
+      "prevention": ["Access control + encryption", "RoPA & consent", "Data minimization", "Breach response plan"],
+      "best_practice": "Privacy-by-design with ISO 27701/PDPA controls and a single privacy data store",
+      "nirva": ["COMPLIANCE", "DOCS"], "controls": ["UC-PM","UC-AC","UC-CRYPTO","UC-DG","UC-IM"], "standards": ["ISO27701","PDPA_TH","GDPR","ISO27001"]
+    },
+    {
+      "id": "KNOWLEDGE_LOSS", "name": "Knowledge Loss", "fear": "Know-how walks out the door when people leave",
+      "root_cause": "Knowledge lives in individuals' heads and private chats, not in the organization.",
+      "impact": {"financial": "Rework, slow onboarding, repeated mistakes", "legal": "Lost evidence/contracts", "reputation": "Inconsistent service"},
+      "early_warning": ["Only one person knows X", "No SOPs", "Onboarding takes months", "Tribal knowledge in LINE"],
+      "prevention": ["Living SOPs", "Lessons-learned capture", "Knowledge graph", "Structured handover"],
+      "best_practice": "Decouple knowledge from people via ISO 30401 KMS + organizational memory",
+      "nirva": ["DOCS", "WISDOM", "LIFE"], "controls": ["UC-DOC","UC-TRN"], "standards": ["ISO30401","ISO9001"]
+    },
+    {
+      "id": "HIGH_TURNOVER", "name": "High Turnover", "fear": "Losing staff faster than you can replace them",
+      "root_cause": "Low dignity/recognition, unfair treatment, no growth path, surveillance culture.",
+      "impact": {"financial": "Recruitment & training cost 50-200% of salary", "legal": "Labour disputes", "reputation": "Hard to win labour-intensive contracts"},
+      "early_warning": ["Rising attrition", "Falling engagement", "Grievance spikes", "Overtime burnout"],
+      "prevention": ["Appreciation & recognition", "Fair, transparent processes", "Development paths", "Listen & reflect"],
+      "best_practice": "Dignity-first people practices + human-capital metrics (ISO 30414)",
+      "nirva": ["LIFE", "WISDOM"], "controls": ["UC-TRN"], "standards": ["ISO30414","ISO45001"]
+    },
+    {
+      "id": "CONTRACT_RISK", "name": "Contract Risk", "fear": "Breaching SLAs/headcount terms without knowing",
+      "root_cause": "Contract terms not linked to operational reality; no live SLA tracking.",
+      "impact": {"financial": "Penalties, clawbacks, lost renewals", "legal": "Breach claims", "reputation": "Client churn"},
+      "early_warning": ["Manual SLA reporting", "Headcount disputes with client", "Missed deliverables surface late"],
+      "prevention": ["Contract→SLA→evidence linkage", "Headcount reconciliation", "Live SLA dashboards"],
+      "best_practice": "Contract compliance layer that ties obligations to verified operational evidence",
+      "nirva": ["CHECK", "PROCURE", "COMPLIANCE"], "controls": ["UC-SUP","UC-AUD","UC-DOC"], "standards": ["ISO9001","ISO37301"]
+    },
+    {
+      "id": "OPERATIONAL_BLIND_SPOT", "name": "Operational Blind Spot", "fear": "Not seeing problems until they're disasters",
+      "root_cause": "Data fragmented across Excel/PDF/LINE; no single source of truth; reporting is backward-looking.",
+      "impact": {"financial": "Late reaction multiplies cost", "legal": "Missed incidents", "reputation": "Avoidable failures"},
+      "early_warning": ["Reports take days to compile", "Numbers disagree across teams", "Surprises in board meetings"],
+      "prevention": ["Single source of truth", "Real-time dashboard", "Early-warning analytics"],
+      "best_practice": "Executive intelligence layer with leading indicators and AI daily briefing",
+      "nirva": ["EXECUTIVE", "DIAGNOSIS"], "controls": ["UC-RM","UC-AUD"], "standards": ["ISO31000","COBIT"]
+    },
+    {
+      "id": "SAFETY_INCIDENT", "name": "Safety Incident", "fear": "A worker is injured or killed on site",
+      "root_cause": "Hazards not assessed/controlled; no near-miss reporting; training gaps.",
+      "impact": {"financial": "Compensation, downtime, insurance", "legal": "OH&S prosecution, criminal liability", "reputation": "Severe brand & contract damage"},
+      "early_warning": ["Rising near-misses", "Overdue safety training", "Skipped inspections", "PPE non-compliance"],
+      "prevention": ["Hazard assessment", "Near-miss reporting", "Training matrix", "Worker participation"],
+      "best_practice": "ISO 45001 OH&S management with proactive hazard & incident workflows",
+      "nirva": ["COMPLIANCE", "CHECK"], "controls": ["UC-OHS","UC-IM","UC-TRN"], "standards": ["ISO45001","TISI_OHS"]
+    },
+    {
+      "id": "CUSTOMER_COMPLAINT", "name": "Customer Complaint Spiral", "fear": "Quality issues escalating into lost contracts",
+      "root_cause": "Complaints not captured/resolved systematically; no root-cause loop.",
+      "impact": {"financial": "Churn, penalties", "legal": "Breach claims", "reputation": "Negative references"},
+      "early_warning": ["Repeat complaints same site", "Slow resolution", "No complaint data", "Falling CSAT"],
+      "prevention": ["Structured complaints handling", "CSAT monitoring", "CAPA loop"],
+      "best_practice": "ISO 10002/10004 complaints & satisfaction loop feeding improvement",
+      "nirva": ["COMPLIANCE", "DOCS", "EXECUTIVE"], "controls": ["UC-AUD","UC-DOC"], "standards": ["ISO10002","ISO10004","ISO9001"]
+    },
+    {
+      "id": "POOR_DOCUMENTATION", "name": "Poor Documentation", "fear": "No reliable records when it matters",
+      "root_cause": "Documents uncontrolled, multiple versions, no retention; evidence missing at audit/legal moments.",
+      "impact": {"financial": "Lost claims & tenders", "legal": "No defensible evidence", "reputation": "Looks unprofessional/unreliable"},
+      "early_warning": ["Multiple file versions", "Can't find the latest", "No retention rules", "Evidence gaps"],
+      "prevention": ["Document control", "Versioning & approval", "Retention schedule"],
+      "best_practice": "ISO 9001 §7.5 documented-information discipline with controlled repository",
+      "nirva": ["DOCS", "AUDIT"], "controls": ["UC-DOC","UC-LOG"], "standards": ["ISO9001","ISO27001"]
+    },
+    {
+      "id": "WORKFORCE_SHORTAGE", "name": "Workforce Shortage / No-Show", "fear": "Sites understaffed against contract",
+      "root_cause": "No real-time visibility of who's actually on site vs required; reactive scheduling.",
+      "impact": {"financial": "SLA penalties, emergency labour cost", "legal": "Contract breach", "reputation": "Client escalations"},
+      "early_warning": ["Last-minute scrambles", "Chronic no-shows certain sites", "Required vs actual gap"],
+      "prevention": ["Real-time required-vs-actual", "No-show alerts", "Standby pool management"],
+      "best_practice": "Live staffing dashboard with required-vs-verified gap alerts",
+      "nirva": ["CHECK", "EXECUTIVE"], "controls": ["UC-AM","UC-LOG"], "standards": ["ISO9001"]
+    },
+    {
+      "id": "LEADERSHIP_DEPENDENCY", "name": "Leadership / Key-Person Dependency", "fear": "The business stops if one person is gone",
+      "root_cause": "Decisions, relationships and knowledge concentrated in a few heads.",
+      "impact": {"financial": "Value destruction on departure", "legal": "Continuity gaps", "reputation": "Buyer/investor red flag"},
+      "early_warning": ["'Only X can decide'", "No documented decisions", "No succession plan"],
+      "prevention": ["Document decisions & SOPs", "Cross-training", "Succession & delegation"],
+      "best_practice": "Institutionalize know-how & decisions so the org outlives individuals",
+      "nirva": ["DOCS", "WISDOM", "EXECUTIVE"], "controls": ["UC-DOC","UC-TRN","UC-AUD"], "standards": ["ISO30401","ISO22301"]
+    },
+    {
+      "id": "SINGLE_POINT_OF_FAILURE", "name": "Single Point of Failure", "fear": "One system/person/site failing takes everything down",
+      "root_cause": "No redundancy, no continuity plan, critical processes undocumented.",
+      "impact": {"financial": "Outage losses", "legal": "SLA/continuity breach", "reputation": "Reliability damage"},
+      "early_warning": ["No DR plan", "No backups tested", "Critical task = one person", "No BIA"],
+      "prevention": ["BIA & continuity plans", "Redundancy", "Tested recovery", "Documented critical processes"],
+      "best_practice": "ISO 22301 business continuity with tested recovery and documented criticality",
+      "nirva": ["DOCS", "COMPLIANCE", "EXECUTIVE"], "controls": ["UC-BCM","UC-DOC","UC-RM"], "standards": ["ISO22301","NISTCSF"]
+    }
+  ]
+}
