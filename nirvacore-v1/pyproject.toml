@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nirvacore"
+version = "0.1.0"
+description = "Nirvacore — ERP platform for cleaning & facility management (Ops MVP)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "mypy>=1.10", "ruff>=0.5"]
+
+[project.scripts]
+nirvacore = "nirvacore.interface.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nirvacore"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+packages = ["nirvacore"]
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
