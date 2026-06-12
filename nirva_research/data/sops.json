@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "description": "SOP library — implementation-ready procedures for BEST Group / NirvaCore. Each SOP lists trigger, ordered steps, the business rules it enforces (`rules` → business_rules.json), standards_kb `controls`/`standards`, and `automation` (what NIRVA does vs the human). Built for real, multi-site, deskless operations — not theory.",
+  "sops": [
+    {
+      "id": "SOP-WF-CHECKIN", "domain": "WF", "title": "Site Check-in & Headcount Verification",
+      "trigger": "Worker arrives for an assigned shift",
+      "steps": [
+        "Worker opens NIRVA CHECK on bound device at the site",
+        "App captures geo (site fence) + liveness selfie + timestamp",
+        "Rule WF-002 validates integrity; unverified check-ins are quarantined",
+        "Supervisor sees live required-vs-actual; Rule WF-001 alerts on gaps",
+        "End of shift: check-out captured; hours computed for payroll feed"
+      ],
+      "rules": ["WF-001","WF-002","WF-003","WF-004","PDPA-001"],
+      "controls": ["UC-AC","UC-LOG","UC-AM"], "standards": ["ISO9001","ISO27001","PDPA_TH"],
+      "automation": "NIRVA auto-verifies, alerts, and reconciles billable headcount; human handles only the quarantine queue & SLA variances.",
+      "replaces": "LINE check-in (no integrity, easily faked)"
+    },
+    {
+      "id": "SOP-WF-ROSTER", "domain": "WF", "title": "Shift Rostering & No-Show Recovery",
+      "trigger": "Weekly/daily scheduling cycle",
+      "steps": [
+        "Build roster from contract headcount per site",
+        "Publish to workers; capture acknowledgement",
+        "On no-show (WF-001), auto-notify standby pool",
+        "Log replacement; update required-vs-actual & SLA exposure"
+      ],
+      "rules": ["WF-001","WF-004"], "controls": ["UC-AM","UC-LOG"], "standards": ["ISO9001"],
+      "automation": "Auto roster suggestions + standby dispatch; human approves roster.",
+      "replaces": "Excel rosters + LINE coordination"
+    },
+    {
+      "id": "SOP-PAY-RUN", "domain": "PAY", "title": "Monthly Payroll Run",
+      "trigger": "Payroll cut-off date",
+      "steps": [
+        "Pull verified hours from check-in (single source of truth)",
+        "Rule PAY-001 locks time records; Rule PAY-002 enforces preparer≠approver",
+        "Compute gross, OT (PAY-003), deductions (SSO PAY-005, WHT PAY-006); floor check PAY-004",
+        "Generate payslips with protection (PAY-007); approver signs off",
+        "Disburse; file PND.1 & SSO; archive evidence (EV-FINCTRL)"
+      ],
+      "rules": ["PAY-001","PAY-002","PAY-003","PAY-004","PAY-005","PAY-006","PAY-007"],
+      "controls": ["UC-FIN","UC-AC","UC-PM","UC-AUD"], "standards": ["COSOIC","SOC1","PDPA_TH"],
+      "automation": "Auto-calculation & filing prep; human does final approval (SoD) and exception handling.",
+      "replaces": "Excel payroll + manual statutory filing"
+    },
+    {
+      "id": "SOP-PROC-P2P", "domain": "PROC", "title": "Procure-to-Pay",
+      "trigger": "A purchase need is raised",
+      "steps": [
+        "Requester submits request with budget line",
+        "Approval by threshold; PO issued; vendor must pass DD (PROC-003)",
+        "Goods/service received & confirmed on site",
+        "Three-way match (PROC-001); split-detection (PROC-002); bank check (PROC-004)",
+        "WHT applied (TAX-001); payment; audit trail retained"
+      ],
+      "rules": ["PROC-001","PROC-002","PROC-003","PROC-004","TAX-001"],
+      "controls": ["UC-SUP","UC-CM","UC-FIN","UC-AUD"], "standards": ["ISO9001","ISO37001","COSOIC"],
+      "automation": "Auto match, anomaly flags, WHT calc; human approves PO & resolves flags.",
+      "replaces": "Email/paper approvals, no spend visibility"
+    },
+    {
+      "id": "SOP-ISO-DOC", "domain": "ISO", "title": "Document & Record Control",
+      "trigger": "Create or revise a controlled document",
+      "steps": [
+        "Draft in NIRVA DOCS; assign owner & approver",
+        "Rule ISO-001 enforces version/approval/effective date",
+        "Publish; supersede prior; set retention",
+        "Link document to the processes/tasks/training that use it"
+      ],
+      "rules": ["ISO-001"], "controls": ["UC-DOC"], "standards": ["ISO9001","ISO27001"],
+      "automation": "Auto-versioning, distribution, retention; human authors & approves.",
+      "replaces": "Multiple PDF/Word versions in folders & chats"
+    },
+    {
+      "id": "SOP-ISO-AUDIT", "domain": "ISO", "title": "Internal Audit & CAPA",
+      "trigger": "Audit schedule / nonconformity raised",
+      "steps": [
+        "Plan audit (scope, criteria, auditor independence)",
+        "Conduct; capture findings with evidence",
+        "Raise CAPA; assign owner & due date; Rule ISO-002 escalates overdue",
+        "Verify effectiveness; close; feed management review"
+      ],
+      "rules": ["ISO-002"], "controls": ["UC-AUD"], "standards": ["ISO19011","ISO9001","ISO27001"],
+      "automation": "Auto evidence collection (EV-* pack), scheduling, escalation; auditor judges.",
+      "replaces": "Last-minute audit scramble, Excel finding logs"
+    },
+    {
+      "id": "SOP-PDPA-INTAKE", "domain": "PDPA", "title": "Personal-Data Intake & Consent",
+      "trigger": "A new data source / processing activity is introduced",
+      "steps": [
+        "Classify data (incl. sensitive §26); determine lawful basis",
+        "Capture consent where required (PDPA-001); record in RoPA (PDPA-002)",
+        "Apply minimization, access control & encryption",
+        "Set retention; register DSAR & breach workflows (PDPA-003/004)"
+      ],
+      "rules": ["PDPA-001","PDPA-002","PDPA-003","PDPA-004","PDPA-005"],
+      "controls": ["UC-PM","UC-DG","UC-AC","UC-CRYPTO"], "standards": ["PDPA_TH","ISO27701"],
+      "automation": "Auto consent logging, RoPA prompts, DSAR SLA timers; DPO reviews.",
+      "replaces": "PII in open Excel/LINE with no consent record"
+    },
+    {
+      "id": "SOP-CX-COMPLAINT", "domain": "CX", "title": "Complaint Handling",
+      "trigger": "Customer complaint received (incl. via LINE)",
+      "steps": [
+        "Capture & categorize (CX-001); acknowledge to customer",
+        "Assign owner; resolve within SLA; communicate outcome",
+        "If systemic → raise CAPA (links to SOP-ISO-AUDIT)",
+        "Track CSAT trend (CX-002); flag churn risk pre-renewal"
+      ],
+      "rules": ["CX-001","CX-002"], "controls": ["UC-AUD","UC-DOC"], "standards": ["ISO10002","ISO10004"],
+      "automation": "Auto-capture from channels, SLA timers, trend alerts; human resolves.",
+      "replaces": "Complaints lost in LINE threads"
+    },
+    {
+      "id": "SOP-FM-PTW", "domain": "FM", "title": "Permit-to-Work for High-Risk Tasks",
+      "trigger": "Work at height / hot work / confined space / electrical",
+      "steps": [
+        "Request permit; verify worker competency & valid training (ISO-003)",
+        "Risk assessment & PPE confirmation; Rule OHS-001 blocks start without permit",
+        "Supervisor authorizes; work proceeds with monitoring",
+        "Close permit; log; capture any near-miss (OHS-002)"
+      ],
+      "rules": ["OHS-001","OHS-002","ISO-003"], "controls": ["UC-OHS","UC-TRN","UC-IM"], "standards": ["ISO45001","TISI_OHS"],
+      "automation": "Auto competency/permit checks, escalation; supervisor authorizes on site.",
+      "replaces": "Paper permits, unverified competency"
+    },
+    {
+      "id": "SOP-AI-AGENT", "domain": "AI", "title": "NOVA Agent Operation & Review",
+      "trigger": "A NOVA agent is tasked with operational/compliance work",
+      "steps": [
+        "Agent acts within scoped data & purpose; all actions logged (AI-002)",
+        "For consequential output (pay/employment/vendor/compliance) → human review (AI-001)",
+        "Reviewer signs off or rejects; decision + reviewer recorded",
+        "Evidence retained for AI governance (model card, logs)"
+      ],
+      "rules": ["AI-001","AI-002"], "controls": ["UC-AIG","UC-LOG"], "standards": ["ISO42001","NISTAIRMF","EUAIACT","PDPA_TH"],
+      "automation": "Agent drafts/analyzes; human owns judgment & accountability.",
+      "replaces": "Ungoverned ad-hoc AI use"
+    }
+  ]
+}
