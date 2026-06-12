@@ -23,7 +23,8 @@ nirva_research/
 │   ├── business_rules.json    # 32 machine-readable when→then rules for NirvaCore
 │   ├── sops.json              # 10 implementation-ready SOPs
 │   ├── automation.json        # 12 automation opportunities (impact × complexity)
-│   └── compliance_risks.json  # 12 Thai-context risks (likelihood × impact)
+│   ├── compliance_risks.json  # 12 Thai-context risks (likelihood × impact)
+│   └── payroll_rules.json     # 47-rule unified Payroll Business Rules Catalogue
 ├── research.py                # loader + cross-link validator + decision-ready reports
 └── docs/
     ├── 00_operating_model.md       # how NIRVA RESEARCH operates (the role & rules)
@@ -31,7 +32,8 @@ nirva_research/
     ├── 02_sop_library.md
     ├── 03_business_rules.md
     ├── 04_automation_map.md
-    └── 05_compliance_risk_register.md
+    ├── 05_compliance_risk_register.md
+    └── 06_payroll_catalogue.md     # unified payroll catalogue (analysis + formulas + tables)
 ```
 
 ## Quick start
@@ -39,12 +41,13 @@ nirva_research/
 python -m nirva_research.research            # validate + summary
 python -m nirva_research.research --brief    # decision-ready domain coverage
 python -m nirva_research.research --risks    # risk register, sorted by severity
+python -m nirva_research.research --payroll  # the Payroll Business Rules Catalogue
 ```
 
 ## Current scale
 14 domains · 32 business rules · 10 SOPs · 12 automation opportunities ·
-12 compliance risks — all cross-linked to **78 standards / 20 controls / 9
-products**, integrity-validated.
+12 compliance risks · **47 payroll rules** — all cross-linked to **78 standards /
+20 controls / 9 products**, integrity-validated.
 
 ## How it serves the mission
 | Mission rule | Where it lives |

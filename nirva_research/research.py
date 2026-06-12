@@ -23,7 +23,8 @@ from standards_kb.graph import Graph
 from nirva_os.blueprint import load_all as load_nirva_os
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
-_FILES = ["domains", "business_rules", "sops", "automation", "compliance_risks"]
+_FILES = ["domains", "business_rules", "sops", "automation", "compliance_risks",
+          "payroll_rules"]
 
 _SEV_ORDER = {"high": 0, "medium": 1, "low": 2}
 
@@ -90,6 +91,23 @@ def validate(data: dict, g: Graph, nos: dict) -> list[str]:
         for rid in rk.get("rules", []):
             if rid not in rule_ids:
                 errs.append(f"risk {rk['id']}: unknown rule '{rid}'")
+
+    # Payroll catalogue: validate controls/standards/category + legacy crosswalk.
+    pr = data["payroll_rules"]
+    pr_ids = {r["id"] for r in pr["rules"]}
+    valid_cats = {"TIME", "EARN", "LEAVE", "DEDUCT", "TERM", "FILE", "CTRL", "DATA", "AUDIT"}
+    for r in pr["rules"]:
+        check_std_ctl(f"payroll {r['id']}", r)
+        if r["category"] not in valid_cats:
+            errs.append(f"payroll {r['id']}: unknown category '{r['category']}'")
+        if r.get("legacy") and r["legacy"] not in rule_ids:
+            errs.append(f"payroll {r['id']}: legacy ref '{r['legacy']}' not in business_rules")
+    for legacy_id, target in pr.get("crosswalk_legacy", {}).items():
+        if legacy_id not in rule_ids:
+            errs.append(f"payroll crosswalk: legacy '{legacy_id}' not a business rule")
+        for t in (target if isinstance(target, list) else [target]):
+            if t not in pr_ids:
+                errs.append(f"payroll crosswalk: target '{t}' not a payroll rule")
     return errs
 
 
@@ -125,6 +143,30 @@ def risk_report(data: dict) -> str:
     return "\n".join(out)
 
 
+def payroll_report(data: dict) -> str:
+    pr = data["payroll_rules"]
+    cats: dict[str, list] = {}
+    for r in pr["rules"]:
+        cats.setdefault(r["category"], []).append(r)
+    order = ["TIME", "EARN", "LEAVE", "DEDUCT", "TERM", "FILE", "CTRL", "DATA", "AUDIT"]
+    names = {"TIME": "Working time & OT eligibility", "EARN": "Earnings & wage calc",
+             "LEAVE": "Leave & paid absence", "DEDUCT": "Deductions",
+             "TERM": "Termination & severance", "FILE": "Statutory filing calendar",
+             "CTRL": "Process controls", "DATA": "Privacy & retention",
+             "AUDIT": "Audit & reconciliation"}
+    out = [f"Payroll Business Rules Catalogue — BEST GROUP ({len(pr['rules'])} rules)", "=" * 60]
+    for c in order:
+        rules = cats.get(c, [])
+        out.append(f"\n[{c}] {names[c]}  ({len(rules)})")
+        for r in rules:
+            blk = "■" if r["severity"] == "block" else ("▲" if r["severity"] == "warn" else "·")
+            legacy = f"  ⟵{r['legacy']}" if r.get("legacy") else ""
+            out.append(f"  {blk} {r['id']:14} {r['name']} [{r['applies_to']}]{legacy}")
+    blocks = sum(1 for r in pr["rules"] if r["severity"] == "block")
+    out.append(f"\nLegend: ■ block ({blocks})  ▲ warn  · info   |   legacy crosswalk shown with ⟵")
+    return "\n".join(out)
+
+
 def main(argv: list[str]) -> int:
     g = Graph.load()
     nos = load_nirva_os()
@@ -138,6 +180,7 @@ def main(argv: list[str]) -> int:
     print(f"  SOPs                 {len(data['sops']['sops'])}")
     print(f"  automation opps      {len(data['automation']['opportunities'])}")
     print(f"  compliance risks     {len(data['compliance_risks']['risks'])}")
+    print(f"  payroll rules        {len(data['payroll_rules']['rules'])}")
     print(f"  linked to            {len(g.standards)} standards / {len(g.controls)} controls / "
           f"{len(nos['products']['products'])} products")
 
@@ -145,6 +188,8 @@ def main(argv: list[str]) -> int:
         print("\n" + domain_briefs(data))
     if "--risks" in argv:
         print("\n" + risk_report(data))
+    if "--payroll" in argv:
+        print("\n" + payroll_report(data))
 
     if errs:
         print(f"\n❌ {len(errs)} cross-link error(s):")
