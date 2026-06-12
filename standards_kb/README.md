@@ -44,6 +44,9 @@ standards_kb/
 # validate the whole graph + see the summary
 python -m standards_kb.graph
 
+# generate / refresh the JSON data layer (first run after clone)
+python -m standards_kb.seed_data
+
 # detailed control-reuse leverage stats
 python -m standards_kb.graph --stats
 

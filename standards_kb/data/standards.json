@@ -1,0 +1,848 @@
+{
+  "standards": [
+    {
+      "id": "AS9100",
+      "org": "SAE",
+      "name": "AS9100",
+      "code": "AS9100",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    },
+    {
+      "id": "CCPA",
+      "org": "MISC",
+      "name": "CCPA",
+      "code": "CCPA",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L13",
+        "L20",
+        "L8"
+      ]
+    },
+    {
+      "id": "CISV8",
+      "org": "CIS",
+      "name": "CISV8",
+      "code": "CISV8",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13",
+        "L18",
+        "L19",
+        "L4",
+        "L6",
+        "L7"
+      ]
+    },
+    {
+      "id": "COBIT",
+      "org": "ISACA",
+      "name": "COBIT",
+      "code": "COBIT",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L13",
+        "L15",
+        "L16",
+        "L18",
+        "L3",
+        "L5",
+        "L6"
+      ]
+    },
+    {
+      "id": "COSOERM",
+      "org": "COSO",
+      "name": "COSOERM",
+      "code": "COSOERM",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "id": "COSOIC",
+      "org": "COSO",
+      "name": "COSOIC",
+      "code": "COSOIC",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L16",
+        "L18",
+        "L3",
+        "L5"
+      ]
+    },
+    {
+      "id": "CSACCM",
+      "org": "CSA",
+      "name": "CSACCM",
+      "code": "CSACCM",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L2",
+        "L9"
+      ]
+    },
+    {
+      "id": "CSRD",
+      "org": "EU",
+      "name": "CSRD",
+      "code": "CSRD",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "DORA",
+      "org": "EU",
+      "name": "DORA",
+      "code": "DORA",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L19",
+        "L2",
+        "L6",
+        "L9"
+      ]
+    },
+    {
+      "id": "ESRS",
+      "org": "MISC",
+      "name": "ESRS",
+      "code": "ESRS",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L10",
+        "L11",
+        "L17",
+        "L18",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "EUAIACT",
+      "org": "EU",
+      "name": "EUAIACT",
+      "code": "EUAIACT",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L2"
+      ]
+    },
+    {
+      "id": "GDPR",
+      "org": "MISC",
+      "name": "GDPR",
+      "code": "GDPR",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13",
+        "L15",
+        "L19",
+        "L20",
+        "L4",
+        "L6",
+        "L8"
+      ]
+    },
+    {
+      "id": "GHGP_CORP",
+      "org": "GHGP",
+      "name": "GHGP CORP",
+      "code": "GHGP_CORP",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L10",
+        "L17",
+        "L6"
+      ]
+    },
+    {
+      "id": "GRISTD",
+      "org": "GRI",
+      "name": "GRISTD",
+      "code": "GRISTD",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "HIPAA",
+      "org": "MISC",
+      "name": "HIPAA",
+      "code": "HIPAA",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13",
+        "L20",
+        "L4",
+        "L8"
+      ]
+    },
+    {
+      "id": "IATF16949",
+      "org": "IATF",
+      "name": "IATF16949",
+      "code": "IATF16949",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    },
+    {
+      "id": "IFRSS1",
+      "org": "IFRS",
+      "name": "IFRSS1",
+      "code": "IFRSS1",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "IFRSS2",
+      "org": "IFRS",
+      "name": "IFRSS2",
+      "code": "IFRSS2",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L10",
+        "L17",
+        "L18",
+        "L6"
+      ]
+    },
+    {
+      "id": "IFRS_ACC",
+      "org": "IFRS",
+      "name": "IFRS ACC",
+      "code": "IFRS_ACC",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L18",
+        "L3",
+        "L5"
+      ]
+    },
+    {
+      "id": "ISO13485",
+      "org": "ISO",
+      "name": "ISO13485",
+      "code": "ISO13485",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L15",
+        "L18",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO14001",
+      "org": "ISO",
+      "name": "ISO14001",
+      "code": "ISO14001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L10",
+        "L17",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO19011",
+      "org": "ISO",
+      "name": "ISO19011",
+      "code": "ISO19011",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L16",
+        "L18"
+      ]
+    },
+    {
+      "id": "ISO20000",
+      "org": "ISO",
+      "name": "ISO20000",
+      "code": "ISO20000",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L16",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO22000",
+      "org": "ISO",
+      "name": "ISO22000",
+      "code": "ISO22000",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L11",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO22301",
+      "org": "ISO",
+      "name": "ISO22301",
+      "code": "ISO22301",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L19",
+        "L2",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO23894",
+      "org": "ISO",
+      "name": "ISO23894",
+      "code": "ISO23894",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L2"
+      ]
+    },
+    {
+      "id": "ISO26000",
+      "org": "ISO",
+      "name": "ISO26000",
+      "code": "ISO26000",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "ISO27001",
+      "org": "ISO",
+      "name": "ISO27001",
+      "code": "ISO27001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L13",
+        "L15",
+        "L16",
+        "L18",
+        "L19",
+        "L2",
+        "L4",
+        "L6",
+        "L7",
+        "L9"
+      ]
+    },
+    {
+      "id": "ISO27701",
+      "org": "ISO",
+      "name": "ISO27701",
+      "code": "ISO27701",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13",
+        "L15",
+        "L20",
+        "L8"
+      ]
+    },
+    {
+      "id": "ISO30414",
+      "org": "ISO",
+      "name": "ISO30414",
+      "code": "ISO30414",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    },
+    {
+      "id": "ISO31000",
+      "org": "ISO",
+      "name": "ISO31000",
+      "code": "ISO31000",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "id": "ISO37001",
+      "org": "ISO",
+      "name": "ISO37001",
+      "code": "ISO37001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L2",
+        "L9"
+      ]
+    },
+    {
+      "id": "ISO37301",
+      "org": "ISO",
+      "name": "ISO37301",
+      "code": "ISO37301",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    },
+    {
+      "id": "ISO38500",
+      "org": "ISO",
+      "name": "ISO38500",
+      "code": "ISO38500",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    },
+    {
+      "id": "ISO42001",
+      "org": "ISO",
+      "name": "ISO42001",
+      "code": "ISO42001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L15",
+        "L2",
+        "L4"
+      ]
+    },
+    {
+      "id": "ISO45001",
+      "org": "ISO",
+      "name": "ISO45001",
+      "code": "ISO45001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L11",
+        "L15",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO50001",
+      "org": "ISO",
+      "name": "ISO50001",
+      "code": "ISO50001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L10",
+        "L17",
+        "L6"
+      ]
+    },
+    {
+      "id": "ISO55001",
+      "org": "ISO",
+      "name": "ISO55001",
+      "code": "ISO55001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L7"
+      ]
+    },
+    {
+      "id": "ISO9001",
+      "org": "ISO",
+      "name": "ISO9001",
+      "code": "ISO9001",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L15",
+        "L16",
+        "L18",
+        "L2",
+        "L4",
+        "L6",
+        "L8",
+        "L9"
+      ]
+    },
+    {
+      "id": "ITIL",
+      "org": "AXELOS",
+      "name": "ITIL",
+      "code": "ITIL",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L16",
+        "L19",
+        "L6"
+      ]
+    },
+    {
+      "id": "NFPA",
+      "org": "NFPA",
+      "name": "NFPA",
+      "code": "NFPA",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L11",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "NIS2",
+      "org": "EU",
+      "name": "NIS2",
+      "code": "NIS2",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L19",
+        "L6"
+      ]
+    },
+    {
+      "id": "NIST800171",
+      "org": "NIST",
+      "name": "NIST800171",
+      "code": "NIST800171",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L2",
+        "L9"
+      ]
+    },
+    {
+      "id": "NIST80053",
+      "org": "NIST",
+      "name": "NIST80053",
+      "code": "NIST80053",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L13",
+        "L15",
+        "L18",
+        "L19",
+        "L2",
+        "L4",
+        "L6",
+        "L7"
+      ]
+    },
+    {
+      "id": "NISTAIRMF",
+      "org": "NIST",
+      "name": "NISTAIRMF",
+      "code": "NISTAIRMF",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L2"
+      ]
+    },
+    {
+      "id": "NISTCSF",
+      "org": "NIST",
+      "name": "NISTCSF",
+      "code": "NISTCSF",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L13",
+        "L18",
+        "L19",
+        "L2",
+        "L4",
+        "L6",
+        "L7"
+      ]
+    },
+    {
+      "id": "NISTPF",
+      "org": "NIST",
+      "name": "NISTPF",
+      "code": "NISTPF",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L13",
+        "L20",
+        "L8"
+      ]
+    },
+    {
+      "id": "OECDAI",
+      "org": "OECD",
+      "name": "OECDAI",
+      "code": "OECDAI",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L2"
+      ]
+    },
+    {
+      "id": "OWASPLLM",
+      "org": "OWASP",
+      "name": "OWASPLLM",
+      "code": "OWASPLLM",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L14",
+        "L2"
+      ]
+    },
+    {
+      "id": "PCIDSS",
+      "org": "PCI",
+      "name": "PCIDSS",
+      "code": "PCIDSS",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13",
+        "L15",
+        "L16",
+        "L18",
+        "L19",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "PDPA_SG",
+      "org": "MISC",
+      "name": "PDPA SG",
+      "code": "PDPA_SG",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L13",
+        "L20",
+        "L8"
+      ]
+    },
+    {
+      "id": "PDPA_TH",
+      "org": "PDPC",
+      "name": "PDPA TH",
+      "code": "PDPA_TH",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L13",
+        "L20",
+        "L8"
+      ]
+    },
+    {
+      "id": "SASBSTD",
+      "org": "SASB",
+      "name": "SASBSTD",
+      "code": "SASBSTD",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "SOC1",
+      "org": "AICPA",
+      "name": "SOC1",
+      "code": "SOC1",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L18",
+        "L3",
+        "L5"
+      ]
+    },
+    {
+      "id": "SOC2",
+      "org": "AICPA",
+      "name": "SOC2",
+      "code": "SOC2",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L12",
+        "L13",
+        "L15",
+        "L16",
+        "L18",
+        "L19",
+        "L2",
+        "L4",
+        "L6",
+        "L7",
+        "L9"
+      ]
+    },
+    {
+      "id": "SOX",
+      "org": "MISC",
+      "name": "SOX",
+      "code": "SOX",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L16",
+        "L18",
+        "L3",
+        "L5"
+      ]
+    },
+    {
+      "id": "TISI_OHS",
+      "org": "TISI",
+      "name": "TISI OHS",
+      "code": "TISI_OHS",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L11",
+        "L4",
+        "L6"
+      ]
+    },
+    {
+      "id": "TLS13",
+      "org": "IETF",
+      "name": "TLS13",
+      "code": "TLS13",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L12",
+        "L13"
+      ]
+    },
+    {
+      "id": "TNFDREC",
+      "org": "TNFD",
+      "name": "TNFDREC",
+      "code": "TNFDREC",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L1",
+        "L17",
+        "L18"
+      ]
+    },
+    {
+      "id": "WCAG",
+      "org": "WCAG",
+      "name": "WCAG",
+      "code": "WCAG",
+      "status": "active",
+      "type": "standard",
+      "taxonomy": [
+        "L20"
+      ]
+    }
+  ]
+}

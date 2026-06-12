@@ -1,0 +1,143 @@
+{
+  "domains": [
+    {
+      "id": "L1",
+      "name": "Governance & Strategy",
+      "anchor_standards": []
+    },
+    {
+      "id": "L2",
+      "name": "Risk Management",
+      "anchor_standards": [
+        "ISO31000"
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "Finance & Accounting",
+      "anchor_standards": [
+        "COSOIC",
+        "SOX"
+      ]
+    },
+    {
+      "id": "L4",
+      "name": "People & HR",
+      "anchor_standards": [
+        "ISO9001"
+      ]
+    },
+    {
+      "id": "L5",
+      "name": "Financial Controls",
+      "anchor_standards": [
+        "COSOIC"
+      ]
+    },
+    {
+      "id": "L6",
+      "name": "Operations & Quality",
+      "anchor_standards": [
+        "ISO9001"
+      ]
+    },
+    {
+      "id": "L7",
+      "name": "Asset Management",
+      "anchor_standards": [
+        "ISO55001"
+      ]
+    },
+    {
+      "id": "L8",
+      "name": "Customer & Product",
+      "anchor_standards": [
+        "ISO9001"
+      ]
+    },
+    {
+      "id": "L9",
+      "name": "Supply Chain & Procurement",
+      "anchor_standards": [
+        "ISO37001"
+      ]
+    },
+    {
+      "id": "L10",
+      "name": "Environment",
+      "anchor_standards": [
+        "ISO14001"
+      ]
+    },
+    {
+      "id": "L11",
+      "name": "Occupational Health & Safety",
+      "anchor_standards": [
+        "ISO45001"
+      ]
+    },
+    {
+      "id": "L12",
+      "name": "Information Security",
+      "anchor_standards": [
+        "ISO27001"
+      ]
+    },
+    {
+      "id": "L13",
+      "name": "Privacy & Data Protection",
+      "anchor_standards": [
+        "GDPR"
+      ]
+    },
+    {
+      "id": "L14",
+      "name": "AI & Algorithm Governance",
+      "anchor_standards": [
+        "ISO42001"
+      ]
+    },
+    {
+      "id": "L15",
+      "name": "Knowledge & Documentation",
+      "anchor_standards": [
+        "ISO9001"
+      ]
+    },
+    {
+      "id": "L16",
+      "name": "IT Service & Change",
+      "anchor_standards": [
+        "ITIL"
+      ]
+    },
+    {
+      "id": "L17",
+      "name": "ESG & Sustainability",
+      "anchor_standards": [
+        "ESRS"
+      ]
+    },
+    {
+      "id": "L18",
+      "name": "Audit & Assurance",
+      "anchor_standards": [
+        "ISO19011"
+      ]
+    },
+    {
+      "id": "L19",
+      "name": "Business Continuity & Resilience",
+      "anchor_standards": [
+        "ISO22301"
+      ]
+    },
+    {
+      "id": "L20",
+      "name": "Legal & Regulatory Compliance",
+      "anchor_standards": [
+        "GDPR"
+      ]
+    }
+  ]
+}

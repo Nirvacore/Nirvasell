@@ -1,0 +1,293 @@
+{
+  "modules": [
+    {
+      "module": "GRC",
+      "domains": [
+        "L1",
+        "L2",
+        "L3",
+        "L18"
+      ],
+      "standards": [
+        "COBIT",
+        "ISO37301",
+        "COSOIC",
+        "ISO38500"
+      ],
+      "controls": [
+        "UC-RM",
+        "UC-AUD",
+        "UC-DOC"
+      ]
+    },
+    {
+      "module": "HCM",
+      "domains": [
+        "L4",
+        "L11",
+        "L15"
+      ],
+      "standards": [
+        "ISO30414",
+        "ISO45001",
+        "ISO9001",
+        "GDPR"
+      ],
+      "controls": [
+        "UC-TRN",
+        "UC-OHS",
+        "UC-AC"
+      ]
+    },
+    {
+      "module": "Finance",
+      "domains": [
+        "L5",
+        "L3",
+        "L18"
+      ],
+      "standards": [
+        "COSOIC",
+        "SOX",
+        "SOC1",
+        "IFRS_ACC"
+      ],
+      "controls": [
+        "UC-FIN",
+        "UC-AUD",
+        "UC-AC"
+      ]
+    },
+    {
+      "module": "Procurement",
+      "domains": [
+        "L9",
+        "L2",
+        "L20"
+      ],
+      "standards": [
+        "ISO37001",
+        "NIST800171",
+        "DORA",
+        "ISO9001"
+      ],
+      "controls": [
+        "UC-SUP",
+        "UC-RM",
+        "UC-DOC"
+      ]
+    },
+    {
+      "module": "Quality",
+      "domains": [
+        "L6",
+        "L16",
+        "L8"
+      ],
+      "standards": [
+        "ISO9001",
+        "IATF16949",
+        "AS9100",
+        "ISO13485"
+      ],
+      "controls": [
+        "UC-CM",
+        "UC-AUD",
+        "UC-DOC"
+      ]
+    },
+    {
+      "module": "EHS",
+      "domains": [
+        "L10",
+        "L11",
+        "L17"
+      ],
+      "standards": [
+        "ISO14001",
+        "ISO45001",
+        "ISO50001",
+        "ESRS"
+      ],
+      "controls": [
+        "UC-ENV",
+        "UC-OHS"
+      ]
+    },
+    {
+      "module": "ITSM",
+      "domains": [
+        "L6",
+        "L12",
+        "L16"
+      ],
+      "standards": [
+        "ISO20000",
+        "ITIL",
+        "COBIT"
+      ],
+      "controls": [
+        "UC-CM",
+        "UC-IM",
+        "UC-AM"
+      ]
+    },
+    {
+      "module": "InfoSec",
+      "domains": [
+        "L12",
+        "L19"
+      ],
+      "standards": [
+        "ISO27001",
+        "NIST80053",
+        "SOC2",
+        "PCIDSS",
+        "CISV8",
+        "NIS2"
+      ],
+      "controls": [
+        "UC-AC",
+        "UC-LOG",
+        "UC-CRYPTO",
+        "UC-VULN",
+        "UC-IM",
+        "UC-BCM"
+      ]
+    },
+    {
+      "module": "Privacy",
+      "domains": [
+        "L13",
+        "L20"
+      ],
+      "standards": [
+        "ISO27701",
+        "GDPR",
+        "PDPA_TH",
+        "PDPA_SG",
+        "CCPA",
+        "HIPAA"
+      ],
+      "controls": [
+        "UC-PM",
+        "UC-DG"
+      ]
+    },
+    {
+      "module": "AI_Governance",
+      "domains": [
+        "L14",
+        "L2"
+      ],
+      "standards": [
+        "ISO42001",
+        "NISTAIRMF",
+        "EUAIACT",
+        "OECDAI",
+        "OWASPLLM"
+      ],
+      "controls": [
+        "UC-AIG",
+        "UC-RM"
+      ]
+    },
+    {
+      "module": "Risk",
+      "domains": [
+        "L2",
+        "L1"
+      ],
+      "standards": [
+        "ISO31000",
+        "COSOERM",
+        "NISTCSF"
+      ],
+      "controls": [
+        "UC-RM",
+        "UC-BCM"
+      ]
+    },
+    {
+      "module": "BCM",
+      "domains": [
+        "L19",
+        "L6"
+      ],
+      "standards": [
+        "ISO22301",
+        "DORA",
+        "NISTCSF"
+      ],
+      "controls": [
+        "UC-BCM",
+        "UC-IM"
+      ]
+    },
+    {
+      "module": "ESG",
+      "domains": [
+        "L17",
+        "L10",
+        "L1"
+      ],
+      "standards": [
+        "ESRS",
+        "GRISTD",
+        "IFRSS1",
+        "IFRSS2",
+        "GHGP_CORP",
+        "CSRD",
+        "TNFDREC"
+      ],
+      "controls": [
+        "UC-ESG",
+        "UC-ENV"
+      ]
+    },
+    {
+      "module": "EAM",
+      "domains": [
+        "L7",
+        "L6"
+      ],
+      "standards": [
+        "ISO55001",
+        "ISO27001"
+      ],
+      "controls": [
+        "UC-AM"
+      ]
+    },
+    {
+      "module": "CRM",
+      "domains": [
+        "L8",
+        "L13"
+      ],
+      "standards": [
+        "ISO9001",
+        "WCAG",
+        "GDPR"
+      ],
+      "controls": [
+        "UC-PM"
+      ]
+    },
+    {
+      "module": "Audit",
+      "domains": [
+        "L18",
+        "L3"
+      ],
+      "standards": [
+        "ISO19011",
+        "SOC2",
+        "SOX"
+      ],
+      "controls": [
+        "UC-AUD"
+      ]
+    }
+  ]
+}

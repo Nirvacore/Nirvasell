@@ -1,9 +1,19 @@
 # nirva.sell — Changelog
 
 Built iteratively. Current stats:
-**140 pages · 3,749 i18n keys · 19 languages · 8 sign-in methods · SQLite per-user isolation**
+**142 pages · 3,800+ i18n keys · 19 languages · 8 sign-in methods · SQLite per-user isolation**
 
 ---
+
+---
+
+## v80 — Knowledge Ecosystem Pack (00–01, Search)
+- `00_🧠_KnowledgeHub.py` — organizational knowledge graph (Vision, SOP, decisions, risks…)
+- `01_📚_Standards.py` — browse Universal Compliance Graph (controls, evidence reuse, ERP mapping)
+- `standards_kb/data/` — machine-readable graph (60 standards · 20 controls · 799 edges)
+- `standards_kb/seed_data.py` — generator for the JSON data layer
+- Global Search (`A2`) now includes Knowledge Hub results + KPI
+- Spotlight (⌘K) indexes Knowledge Hub + Standards pages
 
 ## v79 — Inventory Intelligence Pack (H4–H9)
 - `H4_☠_DeadStock.py` — slow/dead SKU detector, capital-at-risk warning, action suggestions
