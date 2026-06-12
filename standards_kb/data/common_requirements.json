@@ -1,0 +1,251 @@
+{
+  "requirements": [
+    {
+      "id": "REQ-POLICY",
+      "name": "Policy",
+      "hs_clause": "5.2",
+      "similarity": 0.92,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "NISTCSF",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-RACI",
+      "name": "Roles, Responsibilities & Authorities",
+      "hs_clause": "5.3",
+      "similarity": 0.9,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "ITIL",
+        "NISTCSF",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-CONTEXT",
+      "name": "Context & Interested Parties",
+      "hs_clause": "4.1-4.2",
+      "similarity": 0.95,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001"
+      ]
+    },
+    {
+      "id": "REQ-RISK",
+      "name": "Risk Assessment",
+      "hs_clause": "6.1",
+      "similarity": 0.85,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "NISTCSF",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-OBJECTIVES",
+      "name": "Objectives & Planning",
+      "hs_clause": "6.2",
+      "similarity": 0.91,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "COBIT"
+      ]
+    },
+    {
+      "id": "REQ-COMPETENCE",
+      "name": "Competence",
+      "hs_clause": "7.2",
+      "similarity": 0.93,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2"
+      ]
+    },
+    {
+      "id": "REQ-AWARENESS",
+      "name": "Awareness & Training",
+      "hs_clause": "7.3",
+      "similarity": 0.88,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "NISTCSF",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-COMM",
+      "name": "Communication",
+      "hs_clause": "7.4",
+      "similarity": 0.86,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "ITIL",
+        "NISTCSF"
+      ]
+    },
+    {
+      "id": "REQ-DOC",
+      "name": "Documented Information",
+      "hs_clause": "7.5",
+      "similarity": 0.94,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "ITIL"
+      ]
+    },
+    {
+      "id": "REQ-OPS",
+      "name": "Operational Planning & Control",
+      "hs_clause": "8.1",
+      "similarity": 0.8,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "ITIL"
+      ]
+    },
+    {
+      "id": "REQ-MONITOR",
+      "name": "Monitoring, Measurement & KPI",
+      "hs_clause": "9.1",
+      "similarity": 0.84,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "ITIL",
+        "NISTCSF"
+      ]
+    },
+    {
+      "id": "REQ-EVIDENCE",
+      "name": "Evidence / Records of Conformity",
+      "hs_clause": "9.1/7.5",
+      "similarity": 0.82,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-AUDIT",
+      "name": "Internal Audit",
+      "hs_clause": "9.2",
+      "similarity": 0.9,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "COBIT"
+      ]
+    },
+    {
+      "id": "REQ-MGMTREVIEW",
+      "name": "Management Review",
+      "hs_clause": "9.3",
+      "similarity": 0.93,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001"
+      ]
+    },
+    {
+      "id": "REQ-NC",
+      "name": "Nonconformity & Corrective Action",
+      "hs_clause": "10.2",
+      "similarity": 0.91,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "SOC2",
+        "ITIL"
+      ]
+    },
+    {
+      "id": "REQ-CI",
+      "name": "Continual Improvement",
+      "hs_clause": "10.1/10.3",
+      "similarity": 0.89,
+      "present_in": [
+        "ISO9001",
+        "ISO27001",
+        "ISO42001",
+        "COBIT",
+        "ITIL"
+      ]
+    },
+    {
+      "id": "REQ-INCIDENT",
+      "name": "Incident / Event Management",
+      "hs_clause": "8.x",
+      "similarity": 0.78,
+      "present_in": [
+        "ISO27001",
+        "SOC2",
+        "ITIL",
+        "NISTCSF",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-TPDD",
+      "name": "Third-Party Due Diligence",
+      "hs_clause": "8.x",
+      "similarity": 0.76,
+      "present_in": [
+        "ISO27001",
+        "SOC2",
+        "GDPR"
+      ]
+    },
+    {
+      "id": "REQ-IMPACT",
+      "name": "Impact Assessment (DPIA/AIA)",
+      "hs_clause": "6.1.x",
+      "similarity": 0.72,
+      "present_in": [
+        "ISO42001",
+        "GDPR"
+      ]
+    }
+  ]
+}

@@ -94,6 +94,62 @@ STRINGS: dict[str, dict[str, str]] = {
     "kh.link_target": {"th": "เชื่อมไปยัง", "en": "Link to"},
     "kh.link_btn": {"th": "เชื่อมโยง", "en": "Link"},
     "kh.linked": {"th": "เชื่อมโยงแล้ว", "en": "Linked"},
+
+    # ---- Standards Knowledge Graph (v80) ----
+    "skb.title": {"th": "มาตรฐาน & Compliance Graph", "en": "Standards & Compliance Graph"},
+    "skb.caption": {
+        "th": "One Data · One Evidence · Many Standards — ควบคุมครั้งเดียว พิสูจน์ได้หลายมาตรฐาน",
+        "en": "One Data · One Evidence · Many Standards — implement once, certify many",
+    },
+    "skb.missing_title": {"th": "ยังไม่มีข้อมูลมาตรฐาน", "en": "Standards data not loaded"},
+    "skb.missing_body": {
+        "th": "รันคำสั่งด้านล่างเพื่อสร้างชุดข้อมูลมาตรฐาน (ครั้งเดียวหลัง clone)",
+        "en": "Run the command below once to generate the standards dataset",
+    },
+    "skb.kpi_standards": {"th": "มาตรฐาน", "en": "Standards"},
+    "skb.kpi_controls": {"th": "Universal Controls", "en": "Universal Controls"},
+    "skb.kpi_evidence": {"th": "Evidence types", "en": "Evidence types"},
+    "skb.kpi_edges": {"th": "Graph edges", "en": "Graph edges"},
+    "skb.tab_controls": {"th": "Controls", "en": "Controls"},
+    "skb.tab_standards": {"th": "มาตรฐาน", "en": "Standards"},
+    "skb.tab_evidence": {"th": "Evidence", "en": "Evidence"},
+    "skb.tab_erp": {"th": "ERP mapping", "en": "ERP mapping"},
+    "skb.controls_title": {"th": "Universal Controls — reuse leverage", "en": "Universal Controls — reuse leverage"},
+    "skb.controls_caption": {
+        "th": "ยิ่ง reuse สูง ยิ่งคุ้ม — ควบคุมเดียวครอบคลุมหลายมาตรฐาน",
+        "en": "Higher reuse = more leverage — one control satisfies many standards",
+    },
+    "skb.col_control": {"th": "Control", "en": "Control"},
+    "skb.col_reuse": {"th": "Reuse", "en": "Reuse"},
+    "skb.col_domains": {"th": "Domains", "en": "Domains"},
+    "skb.col_standards": {"th": "# Standards", "en": "# Standards"},
+    "skb.pick_control": {"th": "ดูรายละเอียด control", "en": "Inspect control"},
+    "skb.proves_evidence": {"th": "Evidence ที่พิสูจน์ control นี้", "en": "Evidence that proves this control"},
+    "skb.search_std": {"th": "ค้นหามาตรฐาน", "en": "Search standards"},
+    "skb.search_std_ph": {"th": "ISO27001, GDPR, SOC2…", "en": "ISO27001, GDPR, SOC2…"},
+    "skb.col_id": {"th": "ID", "en": "ID"},
+    "skb.col_org": {"th": "องค์กร", "en": "Organization"},
+    "skb.col_controls": {"th": "Controls", "en": "Controls"},
+    "skb.col_evidence": {"th": "Evidence", "en": "Evidence"},
+    "skb.col_name": {"th": "ชื่อ", "en": "Name"},
+    "skb.col_auto": {"th": "Auto?", "en": "Auto?"},
+    "skb.col_reach": {"th": "Standard reach", "en": "Standard reach"},
+    "skb.evidence_title": {"th": "Universal Evidence Matrix", "en": "Universal Evidence Matrix"},
+    "skb.evidence_caption": {
+        "th": "🤖 = เก็บอัตโนมัติจากระบบ · 👤 = ต้องมีคนรับรอง",
+        "en": "🤖 = auto-harvestable · 👤 = human attestation",
+    },
+    "skb.erp_title": {"th": "ERP Module Mapping", "en": "ERP Module Mapping"},
+    "skb.erp_caption": {
+        "th": "โมดูลธุรกิจไหนรัน control ไหน — เชื่อม theory กับระบบจริง",
+        "en": "Which business modules operationalize which controls",
+    },
+    "skb.col_module": {"th": "Module", "en": "Module"},
+    "skb.no_match": {"th": "ไม่พบมาตรฐานที่ตรง", "en": "No matching standards"},
+    "skb.footer": {
+        "th": "ข้อมูลจาก standards_kb/ · อ้างอิง family-level ไม่ใช่ข้อความมาตรฐานเต็ม",
+        "en": "Data from standards_kb/ · family-level mapping, not full standard text",
+    },
     "kh.unlink_btn": {"th": "ตัด", "en": "Unlink"},
     # node type labels
     "kh.type.vision": {"th": "วิสัยทัศน์", "en": "Vision"},
@@ -10406,10 +10462,14 @@ STRINGS: dict[str, dict[str, str]] = {
 
     # ---- v67: Global Search ----
     "srch.title": {"th": "ค้นหาทุกอย่าง", "en": "Global Search"},
-    "srch.caption": {"th": "ค้นหาสินค้า ออเดอร์ ลูกค้า ในที่เดียว", "en": "Search products, orders, customers in one place"},
+    "srch.caption": {
+        "th": "ค้นหาสินค้า ออเดอร์ ลูกค้า ความรู้ ในที่เดียว",
+        "en": "Search products, orders, customers, and knowledge in one place",
+    },
     "srch.kpi_products": {"th": "สินค้า", "en": "Products"},
     "srch.kpi_orders": {"th": "ออเดอร์", "en": "Orders"},
     "srch.kpi_customers": {"th": "ลูกค้า", "en": "Customers"},
+    "srch.kpi_knowledge": {"th": "ความรู้", "en": "Knowledge"},
     "srch.input_label": {"th": "🔎 ค้นหา", "en": "🔎 Search"},
     "srch.input_ph": {"th": "ชื่อสินค้า, SKU, เลขออเดอร์, ชื่อลูกค้า...", "en": "Product name, SKU, order ID, customer name..."},
     "srch.no_results": {"th": "ไม่พบผลลัพธ์ — ลองคำค้นอื่น", "en": "No results — try a different query"},
@@ -10418,6 +10478,7 @@ STRINGS: dict[str, dict[str, str]] = {
     "srch.products_title": {"th": "สินค้า", "en": "Products"},
     "srch.orders_title": {"th": "ออเดอร์", "en": "Orders"},
     "srch.customers_title": {"th": "ลูกค้า", "en": "Customers"},
+    "srch.knowledge_title": {"th": "ความรู้ (Knowledge Hub)", "en": "Knowledge (Hub)"},
 
     # ---- v67: Backup ----
     "bkup.title": {"th": "สำรองข้อมูล", "en": "Backup & Restore"},

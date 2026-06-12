@@ -1,0 +1,113 @@
+{
+  "conflicts": [
+    {
+      "id": "CON-LOCALIZATION-GLOBAL",
+      "standards": [
+        "GDPR",
+        "CSRD"
+      ],
+      "summary": "Data must stay in-region vs global analytics graph",
+      "resolution": "Regional data planes with global metadata only"
+    },
+    {
+      "id": "CON-RETENTION-RTBF",
+      "standards": [
+        "GDPR",
+        "SOX"
+      ],
+      "summary": "Erasure rights vs mandatory retention for audit",
+      "resolution": "Legal-hold workflow with pseudonymization"
+    },
+    {
+      "id": "CON-COMPLIANCE-INNOVATION",
+      "standards": [
+        "SOC2",
+        "ISO27001"
+      ],
+      "summary": "Change velocity vs change-control gates",
+      "resolution": "Compliance gates in CI/CD pipeline"
+    },
+    {
+      "id": "CON-AUTOMATION-HUMAN",
+      "standards": [
+        "EUAIACT",
+        "ISO42001"
+      ],
+      "summary": "Efficiency vs mandated human oversight",
+      "resolution": "Human-in-the-loop checkpoints for high-risk AI"
+    },
+    {
+      "id": "CON-TRANSPARENCY-IP",
+      "standards": [
+        "EUAIACT",
+        "ISO42001"
+      ],
+      "summary": "Model transparency vs trade secrets",
+      "resolution": "Tiered disclosure with regulator-only annexes"
+    },
+    {
+      "id": "CON-ESG-COST",
+      "standards": [
+        "ESRS",
+        "ISO14001"
+      ],
+      "summary": "Decarbonization capex vs short-term margin",
+      "resolution": "Internal carbon pricing and phased targets"
+    },
+    {
+      "id": "CON-SPEED-AUDIT",
+      "standards": [
+        "SOC2",
+        "ISO9001"
+      ],
+      "summary": "Ship fast vs documented change evidence",
+      "resolution": "Automated evidence harvest from ITSM/CI-CD"
+    },
+    {
+      "id": "CON-PRIVACY-SECURITY",
+      "standards": [
+        "GDPR",
+        "ISO27001"
+      ],
+      "summary": "Minimize data vs security monitoring needs",
+      "resolution": "Pseudonymized logs with strict access control"
+    },
+    {
+      "id": "CON-VENDOR-AGILITY",
+      "standards": [
+        "DORA",
+        "ISO37001"
+      ],
+      "summary": "Vendor due diligence depth vs onboarding speed",
+      "resolution": "Tiered vendor risk with proportional checks"
+    },
+    {
+      "id": "CON-AI-SAFETY-SPEED",
+      "standards": [
+        "EUAIACT",
+        "NISTAIRMF"
+      ],
+      "summary": "Model eval rigor vs time-to-market",
+      "resolution": "Risk-tiered eval gates before production"
+    },
+    {
+      "id": "CON-ESG-METRICS-BURDEN",
+      "standards": [
+        "ESRS",
+        "GRISTD"
+      ],
+      "summary": "Disclosure breadth vs SME reporting capacity",
+      "resolution": "Materiality assessment scopes required metrics"
+    },
+    {
+      "id": "CON-MULTI-JURISDICTION",
+      "standards": [
+        "GDPR",
+        "CCPA",
+        "PDPA_TH"
+      ],
+      "summary": "Conflicting privacy obligations across regions",
+      "resolution": "Strictest-common-denominator baseline + overlays"
+    }
+  ]
+}

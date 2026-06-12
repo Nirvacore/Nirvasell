@@ -1,0 +1,144 @@
+{
+  "organizations": [
+    {
+      "id": "AICPA",
+      "name": "American Institute of CPAs",
+      "scope": "global"
+    },
+    {
+      "id": "AXELOS",
+      "name": "AXELOS (ITIL)",
+      "scope": "global"
+    },
+    {
+      "id": "CIS",
+      "name": "Center for Internet Security",
+      "scope": "global"
+    },
+    {
+      "id": "COSO",
+      "name": "COSO",
+      "scope": "global"
+    },
+    {
+      "id": "CSA",
+      "name": "Cloud Security Alliance",
+      "scope": "global"
+    },
+    {
+      "id": "DAMA",
+      "name": "DAMA International",
+      "scope": "global"
+    },
+    {
+      "id": "EU",
+      "name": "European Union",
+      "scope": "global"
+    },
+    {
+      "id": "GHGP",
+      "name": "GHG Protocol",
+      "scope": "global"
+    },
+    {
+      "id": "GRI",
+      "name": "Global Reporting Initiative",
+      "scope": "global"
+    },
+    {
+      "id": "IATF",
+      "name": "IATF",
+      "scope": "global"
+    },
+    {
+      "id": "IEC",
+      "name": "International Electrotechnical Commission",
+      "scope": "global"
+    },
+    {
+      "id": "IETF",
+      "name": "IETF",
+      "scope": "global"
+    },
+    {
+      "id": "IFRS",
+      "name": "IFRS Foundation",
+      "scope": "global"
+    },
+    {
+      "id": "ISACA",
+      "name": "ISACA (COBIT)",
+      "scope": "global"
+    },
+    {
+      "id": "ISO",
+      "name": "International Organization for Standardization",
+      "scope": "global"
+    },
+    {
+      "id": "MISC",
+      "name": "Other / consortium",
+      "scope": "global"
+    },
+    {
+      "id": "MITRE",
+      "name": "MITRE",
+      "scope": "global"
+    },
+    {
+      "id": "NFPA",
+      "name": "NFPA",
+      "scope": "global"
+    },
+    {
+      "id": "NIST",
+      "name": "National Institute of Standards and Technology",
+      "scope": "global"
+    },
+    {
+      "id": "OECD",
+      "name": "OECD",
+      "scope": "global"
+    },
+    {
+      "id": "OWASP",
+      "name": "OWASP Foundation",
+      "scope": "global"
+    },
+    {
+      "id": "PCI",
+      "name": "PCI Security Standards Council",
+      "scope": "global"
+    },
+    {
+      "id": "PDPC",
+      "name": "Personal Data Protection Commission (Thailand)",
+      "scope": "global"
+    },
+    {
+      "id": "SAE",
+      "name": "SAE International",
+      "scope": "global"
+    },
+    {
+      "id": "SASB",
+      "name": "SASB Standards",
+      "scope": "global"
+    },
+    {
+      "id": "TISI",
+      "name": "Thai Industrial Standards Institute",
+      "scope": "global"
+    },
+    {
+      "id": "TNFD",
+      "name": "Taskforce on Nature-related Financial Disclosures",
+      "scope": "global"
+    },
+    {
+      "id": "WCAG",
+      "name": "W3C (WCAG)",
+      "scope": "global"
+    }
+  ]
+}

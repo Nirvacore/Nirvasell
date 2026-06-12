@@ -1,0 +1,173 @@
+{
+  "evidence": [
+    {
+      "id": "EV-POLICY",
+      "name": "Approved Policy Document (versioned, signed)",
+      "controls": [
+        "UC-AC",
+        "UC-CM",
+        "UC-RM",
+        "UC-PM",
+        "UC-AIG",
+        "UC-ESG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-RACI",
+      "name": "Roles/RACI & Org Chart with control ownership",
+      "controls": [
+        "UC-AC",
+        "UC-RM",
+        "UC-AIG",
+        "UC-DG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-RISKREG",
+      "name": "Risk Register with assessments & treatments",
+      "controls": [
+        "UC-RM",
+        "UC-SUP",
+        "UC-BCM",
+        "UC-AIG",
+        "UC-VULN"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-TRAINLOG",
+      "name": "Training completion & awareness records",
+      "controls": [
+        "UC-TRN"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-ACCESSREVIEW",
+      "name": "Periodic access review / recertification logs",
+      "controls": [
+        "UC-AC",
+        "UC-LOG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-CHANGETICKET",
+      "name": "Change tickets with approvals & rollback",
+      "controls": [
+        "UC-CM",
+        "UC-VULN"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-INCIDENT",
+      "name": "Incident/breach records with timeline & RCA",
+      "controls": [
+        "UC-IM",
+        "UC-BCM",
+        "UC-LOG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-VENDORDD",
+      "name": "Vendor due-diligence & contracts (DPA/SLAs)",
+      "controls": [
+        "UC-SUP",
+        "UC-PM"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-LOGS",
+      "name": "System/audit logs (retained, tamper-evident)",
+      "controls": [
+        "UC-LOG",
+        "UC-AC",
+        "UC-IM"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-SCAN",
+      "name": "Vulnerability scan & pen-test reports",
+      "controls": [
+        "UC-VULN",
+        "UC-CRYPTO"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-AUDITREPORT",
+      "name": "Internal audit reports & management review minutes",
+      "controls": [
+        "UC-AUD",
+        "UC-FIN"
+      ],
+      "auto_collectable": false
+    },
+    {
+      "id": "EV-DSAR",
+      "name": "DSAR/consent records & RoPA (Art.30)",
+      "controls": [
+        "UC-PM",
+        "UC-DG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-MODELCARD",
+      "name": "Model card, AI impact assessment & eval results",
+      "controls": [
+        "UC-AIG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-BCPTEST",
+      "name": "BC/DR test & exercise results, RTO/RPO evidence",
+      "controls": [
+        "UC-BCM"
+      ],
+      "auto_collectable": false
+    },
+    {
+      "id": "EV-GHG",
+      "name": "GHG inventory & ESG data with assurance trail",
+      "controls": [
+        "UC-ENV",
+        "UC-ESG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-FINCTRL",
+      "name": "ICFR control evidence (reconciliations, approvals)",
+      "controls": [
+        "UC-FIN",
+        "UC-AUD"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-ASSETINV",
+      "name": "Asset/CMDB inventory with classification",
+      "controls": [
+        "UC-AM",
+        "UC-DG"
+      ],
+      "auto_collectable": true
+    },
+    {
+      "id": "EV-HAZARD",
+      "name": "Hazard assessments & safety incident logs",
+      "controls": [
+        "UC-OHS"
+      ],
+      "auto_collectable": false
+    }
+  ]
+}

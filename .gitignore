@@ -10,6 +10,7 @@ __pycache__/
 
 # Local data — must NOT be committed (user DBs, scraped images)
 data/
+!standards_kb/data/
 *.db
 *.db-journal
 *.sqlite
