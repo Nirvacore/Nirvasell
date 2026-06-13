@@ -2,6 +2,10 @@
 
 Machine-readable source: [`../data/payroll_rules.json`](../data/payroll_rules.json)
 · Live view: `python -m nirva_research.research --payroll`
+· **Executable engine:** [`../payroll_engine.py`](../payroll_engine.py) +
+[`../test_payroll_engine.py`](../test_payroll_engine.py) (20 passing tests) —
+the formulas in §B are implemented and unit-tested, config-driven so every
+`[verify]` figure is a dated parameter, not code.
 
 > **What this is:** every payroll rule BEST GROUP needs to run a large,
 > multi-site, OT-heavy **mixed daily-/monthly-paid** service workforce —
