@@ -50,6 +50,18 @@ class StatutoryConfig:
         (120, 30), (365, 90), (1095, 180), (2190, 240), (3650, 300), (7300, 400),
     )
     rounding_dp: int = 2  # PR-CTRL-006
+    # Personal income tax / PND.1 — PR-DED-002 (Revenue Code). All [verify].
+    # Brackets as (upper_bound_of_band, marginal_rate); last band upper = inf.
+    pit_brackets: tuple[tuple[float, float], ...] = (
+        (150000, 0.00), (300000, 0.05), (500000, 0.10), (750000, 0.15),
+        (1000000, 0.20), (2000000, 0.25), (5000000, 0.30), (float("inf"), 0.35),
+    )
+    pit_expense_rate: float = 0.50          # employment-income expense deduction
+    pit_expense_cap: float = 100000.0       # capped at 100k/yr
+    pit_personal_allowance: float = 60000.0
+    pit_spouse_allowance: float = 60000.0   # if spouse has no income
+    pit_child_allowance: float = 30000.0    # per child
+    pit_sso_deduction_cap: float = 9000.0   # SSO is tax-deductible, capped/yr
 
 
 DEFAULT_CONFIG = StatutoryConfig()
@@ -119,6 +131,52 @@ def social_security(wage: float, cfg: StatutoryConfig = DEFAULT_CONFIG) -> float
     return _round(base * cfg.sso_rate, cfg)
 
 
+@dataclass
+class TaxProfile:
+    """Per-employee inputs for PIT (PR-DED-002). Personal allowance & the
+    employment-expense deduction are automatic; these are the variable parts."""
+    spouse_no_income: bool = False
+    children: int = 0
+    extra_deductions: float = 0.0   # annual: provident fund, life/health insurance, donations, etc.
+
+
+def annual_income_tax(taxable: float, cfg: StatutoryConfig = DEFAULT_CONFIG) -> float:
+    """Progressive PIT on net taxable income. PR-DED-002 (Revenue Code §48)."""
+    tax = 0.0
+    lower = 0.0
+    for upper, rate in cfg.pit_brackets:
+        if taxable <= lower:
+            break
+        band = min(taxable, upper) - lower
+        tax += band * rate
+        lower = upper
+    return _round(tax, cfg)
+
+
+def pit_allowances(profile: TaxProfile, annual_income: float, sso_annual: float,
+                   cfg: StatutoryConfig = DEFAULT_CONFIG) -> float:
+    """Total deductions & allowances applied before the tax brackets. PR-DED-002."""
+    expense = min(annual_income * cfg.pit_expense_rate, cfg.pit_expense_cap)
+    allow = cfg.pit_personal_allowance
+    if profile.spouse_no_income:
+        allow += cfg.pit_spouse_allowance
+    allow += max(0, profile.children) * cfg.pit_child_allowance
+    allow += min(sso_annual, cfg.pit_sso_deduction_cap)
+    allow += max(0.0, profile.extra_deductions)
+    return _round(expense + allow, cfg)
+
+
+def pit_withholding_monthly(monthly_income: float, profile: TaxProfile,
+                            monthly_sso: float, cfg: StatutoryConfig = DEFAULT_CONFIG) -> float:
+    """Monthly PND.1 withholding via the standard annualization method:
+    annual tax on (12 × monthly income), divided by 12. PR-DED-002.
+    Simplified for regular monthly income; irregular pay needs re-estimation."""
+    annual_income = monthly_income * 12
+    deductions = pit_allowances(profile, annual_income, monthly_sso * 12, cfg)
+    taxable = max(0.0, annual_income - deductions)
+    return _round(annual_income_tax(taxable, cfg) / 12, cfg)
+
+
 def apply_deduction_limits(wage: float, deductions: list[tuple[str, float, bool]],
                            cfg: StatutoryConfig = DEFAULT_CONFIG) -> tuple[list[tuple[str, float]], list[str]]:
     """PR-DED-004 (§76). Non-tax/non-SSO deductions: each ≤10% and aggregate
@@ -178,6 +236,7 @@ class Worker:
     sso_member: bool = True
     pf_rate: float = 0.0                # provident-fund employee rate (0-0.15)
     other_deductions: list[tuple[str, float, bool]] = field(default_factory=list)
+    tax_profile: "TaxProfile | None" = None  # if set, PIT/PND.1 is withheld (PR-DED-002)
 
 
 def compute_payslip(w: Worker, cfg: StatutoryConfig = DEFAULT_CONFIG) -> dict:
@@ -217,13 +276,18 @@ def compute_payslip(w: Worker, cfg: StatutoryConfig = DEFAULT_CONFIG) -> dict:
     if w.pf_rate:
         rules.append("PR-DED-003")
 
+    pit = 0.0
+    if w.tax_profile is not None:
+        pit = pit_withholding_monthly(gross, w.tax_profile, sso, cfg)
+        rules.append("PR-DED-002")
+
     allowed_other, viol = apply_deduction_limits(gross, w.other_deductions, cfg)
     if w.other_deductions:
         rules.append("PR-DED-004")
     flags += [f"WARN PR-DED-004: {v}" for v in viol]
     other_total = _round(sum(a for _, a in allowed_other), cfg)
 
-    total_deductions = _round(sso + pf + other_total, cfg)
+    total_deductions = _round(sso + pf + pit + other_total, cfg)
     net = _round(gross - total_deductions, cfg)
     if net < 0:
         flags.append("BLOCK: net pay negative — review deductions (never net below 0 / min wage)")
@@ -236,7 +300,7 @@ def compute_payslip(w: Worker, cfg: StatutoryConfig = DEFAULT_CONFIG) -> dict:
         },
         "gross": gross,
         "deductions": {
-            "social_security": sso, "provident_fund": pf,
+            "social_security": sso, "provident_fund": pf, "income_tax": pit,
             "other": allowed_other, "total": total_deductions,
         },
         "net": net,

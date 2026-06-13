@@ -3,7 +3,7 @@
 Machine-readable source: [`../data/payroll_rules.json`](../data/payroll_rules.json)
 · Live view: `python -m nirva_research.research --payroll`
 · **Executable engine:** [`../payroll_engine.py`](../payroll_engine.py) +
-[`../test_payroll_engine.py`](../test_payroll_engine.py) (20 passing tests) —
+[`../test_payroll_engine.py`](../test_payroll_engine.py) (25 passing tests, incl. PIT/PND.1) —
 the formulas in §B are implemented and unit-tested, config-driven so every
 `[verify]` figure is a dated parameter, not code.
 
@@ -66,6 +66,32 @@ Overtime & holiday pay (per LPA §61–63)
 
 > The daily-vs-monthly split is the #1 Thai payroll error. The catalogue encodes
 > it explicitly (`applies_to`).
+
+### PIT / PND.1 withholding (PR-DED-002) — implemented & tested
+Monthly withholding uses the standard **annualization method**: annual tax on
+(12 × monthly income) ÷ 12, after the employment-expense deduction and
+allowances.
+```
+taxable = annual_income − expense_deduction − allowances
+  expense   = min(50% × income, 100,000)              [verify]
+  allowances= personal 60,000 (+spouse 60,000, +30,000/child,
+              +SSO ≤9,000, +PF/insurance/donations)   [verify]
+```
+| Net taxable (THB/yr) | Marginal rate |
+|---|---|
+| 0 – 150,000 | 0% |
+| 150,001 – 300,000 | 5% |
+| 300,001 – 500,000 | 10% |
+| 500,001 – 750,000 | 15% |
+| 750,001 – 1,000,000 | 20% |
+| 1,000,001 – 2,000,000 | 25% |
+| 2,000,001 – 5,000,000 | 30% |
+| > 5,000,000 | 35% |
+
+Worked example (tested): ฿30,000/mo single earner → taxable ฿191,000 → annual
+tax ฿2,050 → **฿170.83/mo**. The same earner with a non-earning spouse + 2
+children falls below the ฿150,000 threshold → **฿0**. Brackets & allowances are
+all config (`StatutoryConfig`), so a Revenue Code change is a parameter update.
 
 ---
 

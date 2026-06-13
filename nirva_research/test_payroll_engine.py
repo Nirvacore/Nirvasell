@@ -11,9 +11,10 @@ current legal figures (which live in config and are [verify]).
 from __future__ import annotations
 
 from nirva_research.payroll_engine import (
-    StatutoryConfig, Worker, hourly_rate, daily_rate, overtime_pay,
+    StatutoryConfig, Worker, TaxProfile, hourly_rate, daily_rate, overtime_pay,
     holiday_work_pay, holiday_overtime_pay, minimum_wage_ok, social_security,
     apply_deduction_limits, severance_days, severance_pay, compute_payslip,
+    annual_income_tax, pit_allowances, pit_withholding_monthly,
 )
 
 CFG = StatutoryConfig()  # defaults; deterministic
@@ -94,6 +95,27 @@ def test_severance_pay_amount():
     assert severance_pay("monthly", 30000, 1460, CFG) == 180000.0
 
 
+# ---- PIT / PND.1 (PR-DED-002) --------------------------------------------
+def test_annual_income_tax_brackets():
+    cases = {0: 0, 150000: 0, 300000: 7500, 500000: 27500,
+             191000: 2050, 2000000: 365000}
+    for taxable, expected in cases.items():
+        assert annual_income_tax(taxable, CFG) == expected, f"{taxable}->{expected}"
+
+def test_pit_allowances_basic():
+    # 360k income: expense min(180k,100k)=100k + personal 60k + SSO 9k = 169k
+    assert pit_allowances(TaxProfile(), 360000, 9000, CFG) == 169000.0
+
+def test_pit_withholding_single_earner():
+    # 30k/mo single → taxable 191k → annual tax 2050 → /12
+    assert pit_withholding_monthly(30000, TaxProfile(), 750, CFG) == 170.83
+
+def test_pit_withholding_family_drops_to_zero():
+    # spouse + 2 children pull taxable below the 150k threshold → 0 withholding
+    prof = TaxProfile(spouse_no_income=True, children=2)
+    assert pit_withholding_monthly(30000, prof, 750, CFG) == 0.0
+
+
 # ---- payslip integration -------------------------------------------------
 def test_payslip_monthly_full_period():
     w = Worker(pay_type="monthly", base_wage=30000)
@@ -116,6 +138,17 @@ def test_payslip_minimum_wage_block_flag():
     w = Worker(pay_type="daily", base_wage=300)   # below default 360 floor
     p = compute_payslip(w, CFG)
     assert any("BLOCK PR-EARN-001" in f for f in p["flags"])
+
+def test_payslip_pit_opt_in():
+    # No tax_profile → no PIT (backward compatible)
+    base = compute_payslip(Worker(pay_type="monthly", base_wage=30000), CFG)
+    assert base["deductions"]["income_tax"] == 0.0 and base["net"] == 29250.0
+    # With tax_profile → PIT withheld and netted
+    taxed = compute_payslip(
+        Worker(pay_type="monthly", base_wage=30000, tax_profile=TaxProfile()), CFG)
+    assert taxed["deductions"]["income_tax"] == 170.83
+    assert taxed["net"] == 29079.17          # 30000 - 750 SSO - 170.83 PIT
+    assert "PR-DED-002" in taxed["rules_applied"]
 
 
 # ---- runner --------------------------------------------------------------

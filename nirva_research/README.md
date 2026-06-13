@@ -27,7 +27,7 @@ nirva_research/
 │   └── payroll_rules.json     # 47-rule unified Payroll Business Rules Catalogue
 ├── research.py                # loader + cross-link validator + decision-ready reports
 ├── payroll_engine.py          # executable, config-driven payroll calc engine
-├── test_payroll_engine.py     # 20 unit tests (run with plain python or pytest)
+├── test_payroll_engine.py     # 25 unit tests (run with plain python or pytest)
 └── docs/
     ├── 00_operating_model.md       # how NIRVA RESEARCH operates (the role & rules)
     ├── 01_domain_briefs.md         # intl best practice vs Thai implementation
@@ -44,7 +44,7 @@ python -m nirva_research.research            # validate + summary
 python -m nirva_research.research --brief    # decision-ready domain coverage
 python -m nirva_research.research --risks    # risk register, sorted by severity
 python -m nirva_research.research --payroll  # the Payroll Business Rules Catalogue
-python -m nirva_research.test_payroll_engine # run the payroll engine unit tests (20)
+python -m nirva_research.test_payroll_engine # run the payroll engine unit tests (25)
 ```
 
 ## Current scale
