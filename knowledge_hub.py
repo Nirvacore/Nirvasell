@@ -297,6 +297,54 @@ def capture(node_type: str, title: str, *, body: str = "", tags: str = "",
                     status=status, source=source, ref_key=ref_key)
 
 
+def capture_policy_change(
+    platform: str,
+    *,
+    url: str = "",
+    diffs: list | None = None,
+    notes: str = "",
+    effective_date: str = "",
+    ref_key: str,
+    node_type: str = "market",
+) -> int:
+    """Record a marketplace fee/policy event in the Knowledge Hub.
+
+    Idempotent per ``ref_key`` — safe to call from cron on every policy check
+    or when the user applies fee updates on the Policies page.
+    """
+    init()
+    lines = [f"Platform: {platform.upper()}"]
+    if url:
+        lines.append(f"Source: {url}")
+    if effective_date:
+        lines.append(f"Effective: {effective_date}")
+    if diffs:
+        lines.append("\nFee changes:")
+        for d in diffs:
+            lines.append(
+                f"  • {d['field']}: {d['old']:.2f}% → {d['new']:.2f}% "
+                f"({d['delta']:+.2f}%)"
+            )
+    if notes:
+        lines.append(f"\n{notes}")
+
+    applied = ref_key.endswith(":applied")
+    title = (
+        f"{platform.upper()} fee config applied"
+        if applied
+        else f"{platform.upper()} marketplace policy changed"
+    )
+    return capture(
+        node_type,
+        title,
+        body="\n".join(lines),
+        tags=f"policy,{platform},fees,marketplace",
+        source="policy_watcher",
+        ref_key=ref_key,
+        status="active",
+    )
+
+
 def search(query: str, *, limit: int = 20) -> list[dict]:
     """Read knowledge OUT of the Hub. Other modules / global search call this."""
     return list_nodes(search=query, limit=limit)

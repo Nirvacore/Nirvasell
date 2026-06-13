@@ -3239,6 +3239,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "zh": "已更新 ✓", "ja": "更新済 ✓",
         "ko": "업데이트됨 ✓", "vi": "Đã cập nhật ✓", "id": "Diperbarui ✓",
     },
+    "policy.hub_saved": {
+        "th": "บันทึกเข้า Knowledge Hub แล้ว",
+        "en": "Saved to Knowledge Hub",
+    },
     "policy.no_change": {
         "th": "✓ ไม่มีการเปลี่ยนแปลง — fees ปัจจุบันยังตรงกับนโยบาย",
         "en": "✓ No changes — current fees still match policy",
@@ -7776,6 +7780,14 @@ STRINGS: dict[str, dict[str, str]] = {
                "scope-free</b>. We have most <b>ISO 27001 / SOC 2 / WCAG</b> "
                "controls but no third-party audit yet — those cost $25K+ "
                "annually and aren't justified at our scale."),
+    },
+    "comp.standards_cta": {
+        "th": "ดู Universal Compliance Graph (60+ มาตรฐาน · 20 controls)",
+        "en": "Browse Universal Compliance Graph (60+ standards · 20 controls)",
+    },
+    "comp.standards_reuse": {
+        "th": "Control reuse สูงสุด",
+        "en": "Top control reuse",
     },
     "comp.matrix_title": {
         "th": "มาตรฐานที่เกี่ยวข้อง", "en": "Relevant standards",
