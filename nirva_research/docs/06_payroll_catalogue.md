@@ -3,7 +3,7 @@
 Machine-readable source: [`../data/payroll_rules.json`](../data/payroll_rules.json)
 · Live view: `python -m nirva_research.research --payroll`
 · **Executable engine:** [`../payroll_engine.py`](../payroll_engine.py) +
-[`../test_payroll_engine.py`](../test_payroll_engine.py) (25 passing tests, incl. PIT/PND.1) —
+[`../test_payroll_engine.py`](../test_payroll_engine.py) (29 passing tests, incl. PIT/PND.1 & final pay) —
 the formulas in §B are implemented and unit-tested, config-driven so every
 `[verify]` figure is a dated parameter, not code.
 

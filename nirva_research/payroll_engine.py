@@ -62,6 +62,9 @@ class StatutoryConfig:
     pit_spouse_allowance: float = 60000.0   # if spouse has no income
     pit_child_allowance: float = 30000.0    # per child
     pit_sso_deduction_cap: float = 9000.0   # SSO is tax-deductible, capped/yr
+    # Termination — PR-TERM-002 (LPA §17): advance notice ≥ one pay period.
+    notice_period_days: int = 30             # [verify per contract]
+    final_pay_deadline_days: int = 3         # PR-TERM-003 (§70): pay within 3 days
 
 
 DEFAULT_CONFIG = StatutoryConfig()
@@ -216,6 +219,66 @@ def severance_pay(pay_type: str, base_wage: float, service_days: int,
                   cfg: StatutoryConfig = DEFAULT_CONFIG) -> float:
     """Severance amount = severance_days × daily rate. PR-TERM-001."""
     return _round(severance_days(service_days, cfg) * daily_rate(pay_type, base_wage, cfg), cfg)
+
+
+def compute_final_pay(pay_type: str, base_wage: float, service_days: int,
+                      termination_type: str, unused_leave_days: float = 0.0,
+                      notice_given: bool = True, final_worked_days: float = 0.0,
+                      period_days: int = 30, cfg: StatutoryConfig = DEFAULT_CONFIG) -> dict:
+    """Compose an employee's final settlement. Combines:
+      • pro-rata final wage for days worked but unpaid
+      • severance by tenure        — PR-TERM-001 (§118)
+      • payment in lieu of notice  — PR-TERM-002 (§17)
+      • unused annual-leave payout — PR-TERM-004 (§67)
+    and flags the statutory payment deadline — PR-TERM-003 (§70).
+
+    termination_type:
+      'without_cause' — employer dismissal w/o serious cause → severance + (lieu if no notice)
+      'with_cause'    — §119 serious misconduct → no severance, no lieu
+      'resignation'   — employee-initiated → no severance, no lieu
+    Leave payout and earned final wages are owed in all cases.
+    """
+    if termination_type not in {"without_cause", "with_cause", "resignation"}:
+        raise ValueError(f"unknown termination_type {termination_type!r}")
+
+    dr = daily_rate(pay_type, base_wage, cfg)
+    rules: list[str] = []
+
+    if pay_type == "monthly":
+        final_wage = _round(base_wage * (final_worked_days / period_days), cfg)
+    else:
+        final_wage = _round(dr * final_worked_days, cfg)
+
+    severance = 0.0
+    if termination_type == "without_cause":
+        severance = severance_pay(pay_type, base_wage, service_days, cfg)
+        rules.append("PR-TERM-001")
+
+    pay_in_lieu = 0.0
+    if termination_type == "without_cause" and not notice_given:
+        pay_in_lieu = _round(dr * cfg.notice_period_days, cfg)
+        rules.append("PR-TERM-002")
+
+    leave_payout = _round(dr * unused_leave_days, cfg)
+    if unused_leave_days:
+        rules.append("PR-TERM-004")
+
+    total = _round(final_wage + severance + pay_in_lieu + leave_payout, cfg)
+    rules.append("PR-TERM-003")
+
+    return {
+        "components": {
+            "final_wage": final_wage,
+            "severance": severance,
+            "severance_days": severance_days(service_days, cfg) if severance else 0,
+            "pay_in_lieu_of_notice": pay_in_lieu,
+            "unused_leave_payout": leave_payout,
+        },
+        "total": total,
+        "termination_type": termination_type,
+        "rules_applied": sorted(set(rules)),
+        "flags": [f"PR-TERM-003 (§70): pay within {cfg.final_pay_deadline_days} days of termination"],
+    }
 
 
 # --------------------------------------------------------------------------

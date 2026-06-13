@@ -14,7 +14,7 @@ from nirva_research.payroll_engine import (
     StatutoryConfig, Worker, TaxProfile, hourly_rate, daily_rate, overtime_pay,
     holiday_work_pay, holiday_overtime_pay, minimum_wage_ok, social_security,
     apply_deduction_limits, severance_days, severance_pay, compute_payslip,
-    annual_income_tax, pit_allowances, pit_withholding_monthly,
+    annual_income_tax, pit_allowances, pit_withholding_monthly, compute_final_pay,
 )
 
 CFG = StatutoryConfig()  # defaults; deterministic
@@ -114,6 +114,42 @@ def test_pit_withholding_family_drops_to_zero():
     # spouse + 2 children pull taxable below the 150k threshold → 0 withholding
     prof = TaxProfile(spouse_no_income=True, children=2)
     assert pit_withholding_monthly(30000, prof, 750, CFG) == 0.0
+
+
+# ---- final pay / termination (PR-TERM-001..004) --------------------------
+def test_final_pay_without_cause_no_notice():
+    # 4y (1460d) monthly 30000, 5 unused leave days, no notice, 10 days worked
+    fp = compute_final_pay("monthly", 30000, 1460, "without_cause",
+                           unused_leave_days=5, notice_given=False,
+                           final_worked_days=10, period_days=30, cfg=CFG)
+    c = fp["components"]
+    assert c["final_wage"] == 10000.0          # 30000*10/30
+    assert c["severance"] == 180000.0          # 180 days × 1000
+    assert c["severance_days"] == 180
+    assert c["pay_in_lieu_of_notice"] == 30000.0   # 1000 × 30
+    assert c["unused_leave_payout"] == 5000.0      # 1000 × 5
+    assert fp["total"] == 225000.0
+    assert set(["PR-TERM-001", "PR-TERM-002", "PR-TERM-003", "PR-TERM-004"]).issubset(fp["rules_applied"])
+
+def test_final_pay_resignation_no_severance():
+    fp = compute_final_pay("monthly", 30000, 1460, "resignation",
+                           unused_leave_days=5, notice_given=True,
+                           final_worked_days=10, period_days=30, cfg=CFG)
+    assert fp["components"]["severance"] == 0.0
+    assert fp["components"]["pay_in_lieu_of_notice"] == 0.0
+    assert fp["total"] == 15000.0              # final wage 10000 + leave 5000
+
+def test_final_pay_with_cause_no_severance_but_leave_owed():
+    fp = compute_final_pay("daily", 500, 2200, "with_cause",
+                           unused_leave_days=3, final_worked_days=4, cfg=CFG)
+    assert fp["components"]["severance"] == 0.0
+    assert fp["components"]["final_wage"] == 2000.0   # 500 × 4
+    assert fp["components"]["unused_leave_payout"] == 1500.0  # 500 × 3
+    assert fp["total"] == 3500.0
+
+def test_final_pay_always_flags_3day_deadline():
+    fp = compute_final_pay("monthly", 30000, 400, "without_cause", cfg=CFG)
+    assert any("within 3 days" in f for f in fp["flags"])
 
 
 # ---- payslip integration -------------------------------------------------
