@@ -4,6 +4,7 @@ from __future__ import annotations
 from nirvacore.domain.employee import Employee, Role
 from nirvacore.domain.errors import NotFound
 from nirvacore.domain.ids import EmployeeId, new_employee_id
+from nirvacore.domain.money import Money
 
 from .ports import Clock, EmployeeRepository
 
@@ -13,14 +14,23 @@ class EmployeeService:
         self._employees = employees
         self._clock = clock
 
-    def hire(self, full_name: str, role: Role) -> Employee:
+    def hire(
+        self, full_name: str, role: Role, hourly_rate: Money | None = None
+    ) -> Employee:
         employee = Employee(
             id=new_employee_id(),
             full_name=full_name.strip(),
             role=role,
             hired_on=self._clock.now().date(),
+            hourly_rate=hourly_rate or Money.zero(),
         )
         self._employees.add(employee)
+        return employee
+
+    def set_rate(self, employee_id: EmployeeId, hourly_rate: Money) -> Employee:
+        employee = self._require(employee_id)
+        employee.hourly_rate = hourly_rate
+        self._employees.save(employee)
         return employee
 
     def deactivate(self, employee_id: EmployeeId) -> Employee:

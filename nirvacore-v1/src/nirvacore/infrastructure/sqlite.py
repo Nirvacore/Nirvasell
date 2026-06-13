@@ -20,6 +20,7 @@ from nirvacore.domain.ids import (
     EmployeeId,
     SiteId,
 )
+from nirvacore.domain.money import Money
 from nirvacore.domain.site import Site, SiteStatus
 
 # Ordered list of (version, SQL). Append-only; never edit a shipped migration.
@@ -49,6 +50,13 @@ MIGRATIONS: list[tuple[int, str]] = [
         );
         CREATE INDEX idx_attendance_employee ON attendance(employee_id);
         CREATE INDEX idx_attendance_clock_in ON attendance(clock_in);
+        """,
+    ),
+    (
+        2,
+        """
+        ALTER TABLE employees ADD COLUMN hourly_rate TEXT NOT NULL DEFAULT '0';
+        ALTER TABLE employees ADD COLUMN pay_currency TEXT NOT NULL DEFAULT 'THB';
         """,
     ),
 ]
@@ -93,27 +101,31 @@ class SqliteEmployeeRepository:
 
     def add(self, employee: Employee) -> None:
         self._conn.execute(
-            "INSERT INTO employees (id, full_name, role, hired_on, status) "
-            "VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO employees (id, full_name, role, hired_on, status, "
+            "hourly_rate, pay_currency) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (
                 employee.id,
                 employee.full_name,
                 employee.role.value,
                 employee.hired_on.isoformat(),
                 employee.status.value,
+                str(employee.hourly_rate.amount),
+                employee.hourly_rate.currency,
             ),
         )
         self._conn.commit()
 
     def save(self, employee: Employee) -> None:
         self._conn.execute(
-            "UPDATE employees SET full_name=?, role=?, hired_on=?, status=? "
-            "WHERE id=?",
+            "UPDATE employees SET full_name=?, role=?, hired_on=?, status=?, "
+            "hourly_rate=?, pay_currency=? WHERE id=?",
             (
                 employee.full_name,
                 employee.role.value,
                 employee.hired_on.isoformat(),
                 employee.status.value,
+                str(employee.hourly_rate.amount),
+                employee.hourly_rate.currency,
                 employee.id,
             ),
         )
@@ -141,6 +153,7 @@ class SqliteEmployeeRepository:
             full_name=row["full_name"],
             role=Role(row["role"]),
             hired_on=date.fromisoformat(row["hired_on"]),
+            hourly_rate=Money.of(row["hourly_rate"], row["pay_currency"]),
             status=EmploymentStatus(row["status"]),
         )
 

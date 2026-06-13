@@ -13,6 +13,7 @@ from enum import StrEnum
 
 from .errors import DomainError
 from .ids import EmployeeId
+from .money import Money
 
 
 class EmploymentStatus(StrEnum):
@@ -32,11 +33,14 @@ class Employee:
     full_name: str
     role: Role
     hired_on: date
+    hourly_rate: Money = field(default_factory=Money.zero)
     status: EmploymentStatus = field(default=EmploymentStatus.ACTIVE)
 
     def __post_init__(self) -> None:
         if not self.full_name.strip():
             raise DomainError("Employee full_name must not be empty")
+        if self.hourly_rate.amount < 0:
+            raise DomainError("Employee hourly_rate must not be negative")
 
     @property
     def is_active(self) -> bool:

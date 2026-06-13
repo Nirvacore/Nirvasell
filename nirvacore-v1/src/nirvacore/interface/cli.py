@@ -5,6 +5,7 @@
     nirvacore clock-in <employee_id> <site_id>
     nirvacore clock-out <employee_id>
     nirvacore timesheet 2026-06-01 2026-06-30
+    nirvacore payroll 2026-06-01 2026-07-01
 
 Kept intentionally thin: it parses args and delegates to use cases. An HTTP
 (FastAPI) adapter can be added later alongside it without touching the core.
@@ -17,6 +18,7 @@ from datetime import UTC, datetime
 from nirvacore.domain.employee import Role
 from nirvacore.domain.errors import DomainError
 from nirvacore.domain.ids import EmployeeId, SiteId
+from nirvacore.domain.money import Money
 
 from .container import build_container
 
@@ -29,6 +31,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_hire = sub.add_parser("hire", help="Hire an employee")
     p_hire.add_argument("full_name")
     p_hire.add_argument("role", choices=[r.value for r in Role])
+    p_hire.add_argument(
+        "rate", nargs="?", default="0", help="Hourly pay rate (THB)"
+    )
 
     sub.add_parser("employees", help="List active employees")
 
@@ -50,6 +55,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p_ts.add_argument("start", help="YYYY-MM-DD (inclusive)")
     p_ts.add_argument("end", help="YYYY-MM-DD (exclusive)")
 
+    p_pay = sub.add_parser("payroll", help="Gross pay per employee in a range")
+    p_pay.add_argument("start", help="YYYY-MM-DD (inclusive)")
+    p_pay.add_argument("end", help="YYYY-MM-DD (exclusive)")
+
     return parser
 
 
@@ -63,11 +72,19 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.command == "hire":
-            emp = c.employees.hire(args.full_name, Role(args.role))
-            print(f"{emp.id}\t{emp.full_name}\t{emp.role.value}")
+            emp = c.employees.hire(
+                args.full_name, Role(args.role), Money.of(args.rate)
+            )
+            print(
+                f"{emp.id}\t{emp.full_name}\t{emp.role.value}"
+                f"\t{emp.hourly_rate}/h"
+            )
         elif args.command == "employees":
             for emp in c.employees.list_active():
-                print(f"{emp.id}\t{emp.full_name}\t{emp.role.value}")
+                print(
+                    f"{emp.id}\t{emp.full_name}\t{emp.role.value}"
+                    f"\t{emp.hourly_rate}/h"
+                )
         elif args.command == "sites":
             if args.site_command == "add":
                 site = c.sites.register(args.name, args.address)
@@ -91,6 +108,14 @@ def main(argv: list[str] | None = None) -> int:
             for line in ts.lines:
                 print(f"{line.employee_name}\t{line.hours} h")
             print(f"TOTAL\t{ts.total_hours} h")
+        elif args.command == "payroll":
+            run = c.payroll.run(_day(args.start), _day(args.end))
+            for slip in run.slips:
+                print(
+                    f"{slip.employee_name}\t{slip.hours} h"
+                    f"\t@ {slip.hourly_rate}/h\t= {slip.gross_pay}"
+                )
+            print(f"TOTAL\t{run.total_gross}")
     except DomainError as exc:
         print(f"error: {exc}")
         return 1

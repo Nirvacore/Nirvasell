@@ -2,7 +2,8 @@
 
 ERP platform for a real **cleaning & facility-management** business. This is
 the first vertical slice: the minimum to run daily operations for the **first
-20 employees** — *employees · sites · attendance (clock in/out) · timesheets*.
+20 employees** — *employees · sites · attendance (clock in/out) · timesheets ·
+payroll (gross pay)*.
 
 > ⚠️ **Separate system.** This project is self-contained and has **no coupling**
 > to `nirva.sell` (the reseller app it currently shares a git branch with for
@@ -56,11 +57,12 @@ python -m pip install -e ".[dev]"
 ruff check . && mypy && pytest
 
 # use it
-nirvacore hire "Somchai P." cleaner          # -> <employee_id> ...
+nirvacore hire "Somchai P." cleaner 60       # 60 = hourly rate (THB)
 nirvacore sites add "ABC Tower" "123 Sukhumvit"
 nirvacore clock-in <employee_id> <site_id>
 nirvacore clock-out <employee_id>
 nirvacore timesheet 2026-06-01 2026-06-30
+nirvacore payroll 2026-06-01 2026-07-01      # gross pay = hours × rate
 ```
 
 State persists to `./nirvacore.db` (override with `--db`).
@@ -85,8 +87,10 @@ State persists to `./nirvacore.db` (override with `--db`).
 
 ## Roadmap (next slices, in priority order)
 
-1. **Scheduling/assignments** — plan who is expected at which site.
-2. **Payroll run** — turn timesheets into pay (rates, overtime, deductions).
+1. ~~**Payroll run** — turn timesheets into pay.~~ ✅ gross pay shipped
+   (hours × hourly rate, `Money` value object, schema migration v2). Next:
+   overtime rules, deductions, and persisted payslips.
+2. **Scheduling/assignments** — plan who is expected at which site.
 3. **Client invoicing** — bill contracted hours per site.
 4. **HTTP API (FastAPI)** + auth, so mobile clock-in becomes possible.
 
