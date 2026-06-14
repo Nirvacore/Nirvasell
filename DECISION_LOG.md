@@ -3,6 +3,13 @@
 
 ---
 
+### 2026-06-14 · D-012 · Phase 3 — SoT ยืนยันแล้ว (user-attested) + แผนจัดบ้าน Mac
+- **ปิด UNRESOLVED:** ผู้ใช้ยืนยัน `~/nirvacore` ↔ `nirvacore-v1` ↔ `main` = **Code Truth**, `~/NIRVA` = Workspace
+  - หมายเหตุ: user-attested (ผมยังไม่เปิดไฟล์เอง) → สคริปต์ย้ายจะ verify remote/branch ก่อนแตะหัวใจ
+- **Phase 3 = planning เท่านั้น:** MAC_REORGANIZATION_PLAN.md (3A) + `nirva_backup.sh` (3B) + `nirva_reorg.sh` (3C)
+- **Safety ฝังในสคริปต์:** default DRY-RUN (ต้อง `EXECUTE=1`) · backup ก่อนย้าย (gate) · ไม่ทับปลายทาง · ไม่ลบต้นทางเพิ่ม · ไม่แตะ git history · ไม่เปลี่ยน remote · ชื่อชนกันแยกปลายทาง (ไม่ merge)
+- ⛔ ยังไม่ execute — รอผู้ใช้อนุมัติ/รันเอง · `nirvawealth` (no remote) = ต้อง backup+push ก่อน (ขั้นแยก)
+
 ### 2026-06-14 · D-011 · Phase 2B "Find the Heart" — ยังระบุไม่ได้
 - focus `~/nirvacore` + `~/NIRVA` → ทั้งคู่ absent บน VM (cloud) → ตอบ Q1-5 ด้วยหลักฐานไม่ได้
 - สร้าง `scripts/find_heart.sh` (เจาะ 2 โฟลเดอร์, ไม่สแกนทั้งเครื่อง) + decision rule สำเร็จรูป
