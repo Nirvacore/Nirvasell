@@ -3,6 +3,24 @@
 
 ---
 
+### 2026-06-14 · D-009 · Part 9 Recommendations (ยังไม่แนะนำ migration)
+**ต้องยืนยันถัดไป (เรียงความสำคัญ):**
+1. เปิด `nirvacore-v1` (สิทธิ์ private) → ปิด C2 / SoT ของ NirvaCore
+2. รัน `scripts/local_audit.sh` บน Mac → ปิด C6/C7 + เติม Local/Cursor registry
+3. ตรวจ `nirvatic` 99MB (C4) เมื่อมีสิทธิ์
+4. ขอรายการ Claude.ai Projects + NotebookLM notebooks → ปิด C8/C9
+**หลักฐานที่ยังขาด:** ผล audit Mac/Cursor · เนื้อใน private 3 repo · มี deployment/ลูกค้าจริงไหม (ตัดสิน A vs P)
+**รอได้ปลอดภัย:** การจัดบ้าน knowledge/decision (C1/C3), การวาง topology — ทำหลังแผนที่ครบ
+**สำคัญ:** *preserve ก่อน — ยังไม่ merge/move/rename/delete อะไรทั้งสิ้น*
+
+### 2026-06-14 · D-008 · Phase 2 environment = cloud VM (ไม่ใช่ MacBook)
+- หลักฐาน: `root@vm`, ไม่มี `~/Projects ~/Documents ~/Desktop ~/Downloads ~/NIRVA`, ไม่มี Cursor/Claude-desktop data
+- ผล: Part 1-4 (Local/Cursor/Claude/Knowledge) **ทำจากที่นี่ไม่ได้** → บันทึก Access Limitation + สร้าง `scripts/local_audit.sh` ให้รันบน Mac
+- ❌ ห้ามสรุปว่า "ไม่มีงาน" — เป็นคนละเครื่อง
+
+### 2026-06-14 · D-007 · NIRVA = Pre-Production state
+- ไม่มี repo ใดพิสูจน์ว่า mission-critical · NirvaCore = Pending Verification
+
 ### 2026-06-14 · D-006 · Re-score classification ตามเกณฑ์ business-dependency
 - **เกณฑ์ใหม่:** A ต้องมี *production use จริง / ลูกค้า / ธุรกิจเสียหายถ้าล่ม* — ไม่ใช่แค่โค้ดสมบูรณ์
 - **ผล:**
