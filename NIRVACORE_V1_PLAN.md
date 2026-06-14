@@ -5,8 +5,24 @@
 > Nirvacore:manu, Nirvacore2, NirvaDeploy, MU TEA …) → ดูแลยาก ข้อมูลกระจาย
 > ขัดกับหลัก **"One Data"** ของ Nirva เอง
 >
-> **เป้าหมาย:** รวมทุกอย่างเป็น **repo เดียว = `nirvacore` (v1)** โดย **ไม่ทิ้งงานเก่า**
-> และเก็บประวัติ git ไว้
+> **เป้าหมาย:** รวมทุกอย่างเข้า **repo เดียว = `nirvacore-v1` (มีอยู่แล้ว)** โดย
+> **ไม่ทิ้งงานเก่า** และเก็บประวัติ git ไว้
+
+---
+
+## 0. ผลสำรวจจริง (org `Nirvacore`, 14 มิ.ย. 2026) — มีแค่ 6 repo
+| repo | ภาษา | ขนาด | private? | แผน |
+|---|---|---|---|---|
+| **`nirvacore-v1`** | TypeScript | 6.5 MB | ✅ | **= ตัวหลัก (monorepo home)** ดูโครงสร้างภายในก่อน |
+| `Nirvasell` | Python | 1.3 MB | – | → `apps/sell/` + ดึง packages ขึ้น root |
+| `Nirvaprocure` | TypeScript | 1.0 MB | – | → `apps/procure/` |
+| `nirvadeploy` | TypeScript | 2.3 MB | ✅ | → `apps/deploy/` |
+| `nirvatic` | JavaScript | **99 MB** ⚠️ | ✅ | ทำความสะอาด node_modules ก่อน → `apps/nirvatic/` |
+| `MUTEA` | – | 15 KB | – | ว่าง → ข้าม/placeholder |
+
+> หมายเหตุสำคัญ: ชื่อในรูป (NirvaWealth, Fleet, Builder, manu, Core2,
+> Research&Docs) **ไม่ใช่ repo จริงบน GitHub** — มีแค่ 6 ตัวข้างบน. และ
+> `nirvacore-v1` **มีอยู่แล้ว** จึง **ไม่ต้องสร้างใหม่**.
 
 ---
 

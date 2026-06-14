@@ -5,10 +5,14 @@
 # (เก็บประวัติ git ของแต่ละ repo ไว้ครบ — ไม่ทิ้งงานเก่า)
 #
 # วิธีใช้:
-#   1) สร้าง repo เปล่าชื่อ nirvacore บน GitHub (org: Nirvacore)
-#   2) แก้ค่า ORG ด้านล่างถ้าจำเป็น และตรวจรายการ REPOS ว่าตรงกับของจริง
-#      (คอมเมนต์ตัวที่ยังไม่มี / ยังว่างออกได้)
-#   3) รัน:  bash scripts/consolidate_to_nirvacore.sh
+#   target = repo "nirvacore-v1" ที่มีอยู่แล้ว (ไม่ต้องสร้างใหม่)
+#   1) clone nirvacore-v1 มาที่เครื่อง แล้ว cd เข้าไป
+#   2) ตรวจรายการ REPOS ว่าตรงกับของจริง (มี 6 repo ใน org)
+#   3) รัน:  bash /path/to/consolidate_to_nirvacore.sh
+#
+# ⚠️ nirvatic ใหญ่ ~99MB — น่าจะเผลอ commit node_modules ก่อนดูดเข้ามาควร
+#    ตรวจ/ทำความสะอาดก่อน (เพิ่ม .gitignore node_modules, git rm -r --cached)
+#    ไม่งั้น monorepo จะอืดถาวร
 #
 # ปลอดภัย: สคริปต์นี้ไม่ลบ repo เก่าใดๆ. มันแค่ "ดูดสำเนา+ประวัติ" เข้ามา.
 # หลังยืนยันว่าครบแล้ว ค่อยไป Archive repo เก่าบน GitHub เองด้วยมือ.
@@ -20,18 +24,14 @@ BASE="https://github.com/${ORG}"
 BRANCH_DEFAULT="main"   # ถ้า repo ไหนใช้ master ให้ใส่คู่ใน REPOS
 
 # รูปแบบ:  "ชื่อ-repo|ปลายทางในโฟลเดอร์|branch"
-# คอมเมนต์ (#) ตัวที่ยังไม่มีจริง หรือยังว่าง
+# อิงผลสำรวจจริง org Nirvacore (มี 6 repo). target = repo nirvacore-v1 (มีอยู่แล้ว)
+# คอมเมนต์ (#) ตัวที่ยังไม่อยากดูด
 REPOS=(
-  "NirvaSell|apps/sell|main"
-  "NIRVAPROCURE|apps/procure|main"
-  "NirvaFleet|apps/fleet|main"
-  "NirvaDeploy|apps/deploy|main"
-  "NirvaWealth|apps/wealth|main"
-  "NIRVACORE-BUILDER|apps/builder|main"
-  "Nirvacore-manu|apps/manu|main"
-  "NirvaResearchDocs|packages/research_docs|main"
-  "MU-TEA|ventures/mu_tea|main"
-  # "Nirvacore2|_review/nirvacore2|main"   # ← ตรวจก่อนว่ามีของจริงไหม
+  "Nirvasell|apps/sell|main"          # Python — งาน standards_kb/nirva_os/payroll
+  "Nirvaprocure|apps/procure|main"    # TypeScript
+  "nirvadeploy|apps/deploy|main"      # TypeScript (private)
+  "nirvatic|apps/nirvatic|main"       # JS (private, ~99MB — ดู §cleanup ก่อน!)
+  # "MUTEA|ventures/mu_tea|main"      # ว่าง 15KB — ข้ามไปก่อน
 )
 
 echo "==> ตรวจว่าอยู่ใน repo nirvacore (เปล่า) จริง"
