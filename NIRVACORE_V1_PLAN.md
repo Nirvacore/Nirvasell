@@ -8,6 +8,11 @@
 > **เป้าหมาย:** รวมทุกอย่างเข้า **repo เดียว = `nirvacore-v1` (มีอยู่แล้ว)** โดย
 > **ไม่ทิ้งงานเก่า** และเก็บประวัติ git ไว้
 
+> ⚠️ **สถานะ: PAUSED (รอ audit)** — ตาม NIRVA MASTER COMMAND CENTER governance
+> (*audit before refactor · do not merge automatically*) การ "ดูดรวม" ในแผนนี้
+> **ระงับไว้ก่อน** จนกว่าจะ audit ครบทั้ง 6 repo ดู **`NIRVA_REPO_AUDIT.md`** เป็นตัวหลัก
+> แผนนี้เก็บไว้เป็น *ทางเลือก topology หนึ่ง* เท่านั้น ยังไม่ใช่ข้อสรุป
+
 ---
 
 ## 0. ผลสำรวจจริง (org `Nirvacore`, 14 มิ.ย. 2026) — มีแค่ 6 repo
