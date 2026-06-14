@@ -9,7 +9,7 @@
 
 set -u
 STAMP="$(date +%Y%m%d-%H%M%S)"
-DEST="$HOME/NIRVA-HQ/07-Backups/$STAMP"
+DEST="$HOME/HQ/07_BACKUPS/Daily/$STAMP"   # ตาม HQ_BLUEPRINT.md (retention: Daily 7 วัน)
 EXECUTE="${EXECUTE:-0}"
 
 # โฟลเดอร์ที่ต้อง backup (ตาม MAC_REORGANIZATION_PLAN.md)

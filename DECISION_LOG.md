@@ -3,6 +3,12 @@
 
 ---
 
+### 2026-06-14 · D-013 · NIRVA LIFE OS — โครง `~/HQ` 10 หมวด (10-year blueprint)
+- รับ blueprint ใหม่จากผู้ใช้ → `HQ_BLUEPRINT.md` = เอกสารหลัก (แทนโครง `~/NIRVA-HQ` 7 หมวดเดิม)
+- โครง: 01_CORE..10_SYSTEM + policies (Downloads inbox/30วัน, new-file, truth hierarchy, NAS nightly, yearly review, retention)
+- อัปเดต: `MAC_REORGANIZATION_PLAN.md` (map → ~/HQ), `nirva_reorg.sh` (ปลายทางใหม่ + กันชนโฟลเดอร์ว่างด้วย rmdir-empty), `nirva_backup.sh` (→ 07_BACKUPS/Daily), เพิ่ม `hq_init.sh` (สร้างโครง)
+- safety เดิมคงทุกข้อ · default DRY-RUN · ⛔ ยังไม่ execute
+
 ### 2026-06-14 · D-012 · Phase 3 — SoT ยืนยันแล้ว (user-attested) + แผนจัดบ้าน Mac
 - **ปิด UNRESOLVED:** ผู้ใช้ยืนยัน `~/nirvacore` ↔ `nirvacore-v1` ↔ `main` = **Code Truth**, `~/NIRVA` = Workspace
   - หมายเหตุ: user-attested (ผมยังไม่เปิดไฟล์เอง) → สคริปต์ย้ายจะ verify remote/branch ก่อนแตะหัวใจ
