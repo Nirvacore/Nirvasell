@@ -3,6 +3,19 @@
 
 ---
 
+### 2026-06-14 · D-011 · Phase 2B "Find the Heart" — ยังระบุไม่ได้
+- focus `~/nirvacore` + `~/NIRVA` → ทั้งคู่ absent บน VM (cloud) → ตอบ Q1-5 ด้วยหลักฐานไม่ได้
+- สร้าง `scripts/find_heart.sh` (เจาะ 2 โฟลเดอร์, ไม่สแกนทั้งเครื่อง) + decision rule สำเร็จรูป
+- NirvaCore SoT แคบเหลือ 3 ผู้สมัคร: `nirvacore-v1`(remote) · `~/nirvacore` · `~/NIRVA` → **ยัง UNRESOLVED**
+- Output: HEART_REPORT.md, SOURCE_OF_TRUTH_UPDATE.md, CONFLICT_UPDATE.md
+
+### 2026-06-14 · D-010 · Phase 2A House Cleaning = discovery only
+- ใช้รายการโฟลเดอร์ที่ผู้ใช้รายงานเป็นหลักฐาน → LOCAL_REGISTRY/LOCAL_CONFLICT/LOCAL_SOURCE_OF_TRUTH
+- 🔴 flag: Downloads อาจมี production asset (nirva deploy/deploy/zip) → "Downloads ต้องไม่เป็น SoT"
+- flag duplicate L1-L6 (ไม่ resolve) · `~/nirvawealth` = local-only ไม่มี repo (เสี่ยงสูญ)
+- เสนอ future structure แบบ informational เท่านั้น · ทุก classification = Confidence Low (จากชื่อ)
+- ⛔ ไม่ย้าย/เปลี่ยนชื่อ/ลบ/merge/git ใดๆ
+
 ### 2026-06-14 · D-009 · Part 9 Recommendations (ยังไม่แนะนำ migration)
 **ต้องยืนยันถัดไป (เรียงความสำคัญ):**
 1. เปิด `nirvacore-v1` (สิทธิ์ private) → ปิด C2 / SoT ของ NirvaCore
