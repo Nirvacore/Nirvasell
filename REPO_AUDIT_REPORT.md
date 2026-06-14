@@ -3,6 +3,14 @@
 > หลักการ: *Reality before imagination · Audit before refactor · ไม่เดาจากชื่อ · ใช้หลักฐาน*
 > สถานะ: **AUDIT ONLY** — ยังไม่ merge / rename / archive / delete ใดๆ
 
+### เกณฑ์จัดชั้น (refined 2026-06-14 — business dependency, ไม่ใช่ความสมบูรณ์ทางเทคนิค)
+- **A (Production):** ใช้งานจริง · มี user/customer · **ธุรกิจเสียหายถ้าล่ม**
+- **B (Reusable Product):** product-grade ใช้ซ้ำได้ · **ยังไม่ mission-critical** (ยังไม่มีลูกค้า/ยังไม่ deploy production)
+- **C:** research / venture / exploration
+- **D:** archive
+> ⚠️ ห้ามให้ A เพราะโค้ดสมบูรณ์ — A ต้องมีหลักฐานการพึ่งพาทางธุรกิจจริง
+> **ผลหลัง re-score: ยังไม่มี repo ใดเป็น A** (ไม่มีหลักฐาน production use)
+
 ## วิธีเก็บหลักฐาน
 - Public repo (`Nirvasell`, `Nirvaprocure`, `MUTEA`): **clone ตรงผ่าน git แล้วเปิดไฟล์จริง** ✅
 - Private repo (`nirvacore-v1`, `nirvadeploy`, `nirvatic`): **ยังไม่มีสิทธิ์** → ยังไม่ audit (รอเพิ่ม scope)
@@ -10,7 +18,8 @@
 
 ---
 
-## 1) Nirvasell — ชั้น **A (Production System)** ✅ ยืนยันด้วยหลักฐาน
+## 1) Nirvasell — ชั้น **B (Reusable Product)** *(re-scored A→B)*
+> เหตุผล: โค้ด product-grade จริง แต่ **ไม่มีหลักฐาน production use / ลูกค้าจริง** (README = self-host + MIT ฟรี) → ยังไม่ mission-critical ⇒ B. ยกเป็น A เมื่อมีหลักฐานใช้งานจริง
 | ด้าน | หลักฐาน |
 |---|---|
 | ตัวตน | `nirva.sell` — "ระบบปฏิบัติการสำหรับแม่ค้าออนไลน์" (README) |
@@ -20,7 +29,8 @@
 | 🚩 Risk | **ไม่มี** node_modules/dist/build tracked · มีแค่ `.env.example`, `.streamlit/secrets.toml.example` = **template ปลอดภัย** |
 | หมายเหตุ | ฝัง 3 แพ็กเกจที่ไม่ใช่งานค้าขาย: `standards_kb/`(C), `nirva_os/`(C/B), `nirva_research/`+payroll(C) → ดู DECISION_LOG |
 
-## 2) Nirvaprocure — ชั้น **A (Production System)** ✅ ยืนยันด้วยหลักฐาน
+## 2) Nirvaprocure — ชั้น **B (Reusable Product)** *(re-scored A→B)*
+> เหตุผล: STATUS.md ระบุเอง *"ready for a **first pilot** customer"* = ยังไม่ production · ยังไม่มีลูกค้า ⇒ B (pre-production). โค้ดสมบูรณ์มากแต่ยังไม่ mission-critical
 | ด้าน | หลักฐาน |
 |---|---|
 | ตัวตน | "AI-augmented procurement OS for Thailand & ASEAN SMEs" (README) |
@@ -30,7 +40,7 @@
 | สถานะภายใน | STATUS.md: "~230 files, 90+ tasks shipped, typecheck clean, ready for pilot + Fly.io" |
 | 🚩 Risk | **ไม่มี** node_modules/dist tracked · มีแค่ `backend/.env.example`, `frontend/.env.example` = template ปลอดภัย · `frontend/package-lock.json` = ปกติ |
 
-## 3) MUTEA — ชั้น **C (Knowledge / Research)** ✅ *(แก้จากที่เดาว่า D-placeholder — ผิด!)*
+## 3) MUTEA — ชั้น **C (Research / Venture / Exploration)** ✅ *(แก้จากที่เดาว่า D-placeholder — ผิด!)*
 | ด้าน | หลักฐาน |
 |---|---|
 | ตัวตน | "Mu Tea — A gentle lifestyle brand... Japanese tea / mindfulness" + "research knowledge base" (commit msg) |
@@ -45,9 +55,11 @@
 ## 4) ยังไม่ได้ audit (รอสิทธิ์ private)
 | repo | ภาษา/ขนาด (metadata) | ทำไมต้องสอบ |
 |---|---|---|
-| `nirvacore-v1` | TS / 6.5MB | **ผู้สมัคร Source of Truth ของ NirvaCore** — ต้องเปิดดูก่อนชี้ขาด |
+| `nirvacore-v1` | TS / 6.5MB | **ผู้สมัคร Source of Truth ของ NirvaCore** — ต้องเปิดดูก่อนชี้ขาด · *technical maturity ≠ A* (ต้องมีหลักฐาน production) |
 | `nirvadeploy` | TS / 2.3MB | desc: Thai PaaS · MCP · Stripe+BTC · PDPA |
 | `nirvatic` | JS / **99MB** ⚠️ | ใหญ่ผิดปกติ — สงสัย node_modules/build artifact tracked → **flag Risk ล่วงหน้า** รอยืนยัน |
+
+> ⚠️ การจัดชั้น private 3 ตัว = **ยังไม่จัด** จนเปิดไฟล์จริง และ A จะให้ได้ก็ต่อเมื่อมีหลักฐาน production/ลูกค้า ไม่ใช่แค่โค้ดสมบูรณ์
 
 ---
 
@@ -59,6 +71,17 @@
 | MUTEA | สะอาด | 🟢 |
 | nirvatic | สงสัย 99MB = artifact tracked | 🔴 รอยืนยัน (ยังไม่แตะ) |
 | nirvacore-v1 / nirvadeploy | ยังไม่ทราบ | ⚪ รอ audit |
+
+## 5b) สรุป Classification (refined — business dependency)
+| repo | เดิม | **ใหม่** | เหตุผล |
+|---|---|---|---|
+| Nirvasell | A | **B** | ไม่มีหลักฐาน production/ลูกค้า |
+| Nirvaprocure | A | **B** | "ready for first pilot" = pre-production |
+| MUTEA | C | **C** | venture/exploration (คงเดิม) |
+| nirvacore-v1 | A? | **ยังไม่จัด** | รอ audit · A ต้องมีหลักฐานธุรกิจ |
+| nirvadeploy | A/B? | **ยังไม่จัด** | รอ audit |
+| nirvatic | ? | **ยังไม่จัด** | รอ audit |
+> **สรุป: ปัจจุบันไม่มี repo ใดเข้าเกณฑ์ A** — 2 ตัวที่โค้ดพร้อมเป็น B (pre-production)
 
 ## 6) Source of Truth — NirvaCore
 > **ยังชี้ขาดไม่ได้** ด้วยหลักฐาน ณ ตอนนี้

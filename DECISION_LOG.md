@@ -3,6 +3,16 @@
 
 ---
 
+### 2026-06-14 · D-006 · Re-score classification ตามเกณฑ์ business-dependency
+- **เกณฑ์ใหม่:** A ต้องมี *production use จริง / ลูกค้า / ธุรกิจเสียหายถ้าล่ม* — ไม่ใช่แค่โค้ดสมบูรณ์
+- **ผล:**
+  - Nirvasell: A → **B** (ไม่มีหลักฐาน production/ลูกค้า)
+  - Nirvaprocure: A → **B** (STATUS.md: "ready for first pilot" = pre-production)
+  - MUTEA: **C** (venture/exploration คงเดิม)
+  - private 3 ตัว: → **ยังไม่จัด** (รอ audit; technical maturity ≠ A)
+- **สรุป:** ปัจจุบัน **ไม่มี repo ใดเป็น A**
+- **อัปเดต:** AUDIT_LOG.md, REPO_AUDIT_REPORT.md, REPO_REGISTRY.md · *ไม่แตะ repo ใด*
+
 ### 2026-06-14 · D-005 · MUTEA จัดชั้นใหม่ D → **C**
 - **หลักฐาน:** clone จริง พบ README "Mu Tea research knowledge base" + 7 ไฟล์ .md (brand + 4 research reports) ไม่มีโค้ด
 - **ตัดสิน:** เป็น Knowledge/Research (C) ไม่ใช่ placeholder ว่าง (D)
