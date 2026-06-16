@@ -15,6 +15,7 @@ import streamlit as st
 import db
 import fees as fees_mod
 import policy_watcher as pw
+import knowledge_hub as kh
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
@@ -22,6 +23,7 @@ from _components import friendly_error
 from i18n import t
 
 db.init()
+kh.init()
 st.set_page_config(page_title="nirva.sell · Policies", page_icon="📋", layout="wide")
 apply_theme()
 require_auth()
@@ -175,9 +177,20 @@ for s in sources:
                         width='stretch',
                     ):
                         pw.apply_update(platform, nd)
+                        try:
+                            kh.capture_policy_change(
+                                platform,
+                                diffs=pw.compare(platform, nd),
+                                notes=nd.get("notes", ""),
+                                effective_date=nd.get("effective_date", ""),
+                                ref_key=f"{platform}:applied",
+                                node_type="decision",
+                            )
+                        except Exception:
+                            pass
                         st.session_state.pop(f"new_data_{platform}", None)
                         st.session_state.pop(f"paste_mode_{platform}", None)
-                        st.success(t("policy.applied"))
+                        st.success(t("policy.applied") + " · " + t("policy.hub_saved"))
                         st.rerun()
                 with cb:
                     st.caption(t("policy.apply_hint"))

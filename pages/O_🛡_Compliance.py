@@ -46,6 +46,29 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# ---- Link to Universal Compliance Graph ---------------------------------
+try:
+    from standards_kb.graph import Graph
+    _g = Graph.load()
+    _top = max(_g.controls, key=_g.reuse_factor)
+    sc1, sc2, sc3 = st.columns([2, 1, 1])
+    with sc1:
+        st.page_link(
+            "pages/01_📚_Standards.py",
+            label="📚 " + t("comp.standards_cta"),
+            icon="📚",
+        )
+    with sc2:
+        st.metric(t("skb.kpi_standards"), _g.summary()["standards"])
+    with sc3:
+        st.metric(
+            t("comp.standards_reuse"),
+            f"{_top} ×{_g.reuse_factor(_top)}",
+        )
+except Exception:
+    pass
+
+st.divider()
 
 # ---- Standards table ---------------------------------------------------
 

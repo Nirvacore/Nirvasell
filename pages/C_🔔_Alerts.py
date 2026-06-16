@@ -167,6 +167,8 @@ if POLICY_ALERTS.exists():
                 st.caption(f"  Effective: {r['effective_date']}")
             if r.get("notes"):
                 st.caption(f"  {r['notes'][:200]}")
+        st.page_link("pages/00_🧠_KnowledgeHub.py",
+                     label="→ " + t("kh.title"), icon="🧠")
         st.divider()
 
 

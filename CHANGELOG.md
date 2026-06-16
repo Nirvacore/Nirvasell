@@ -7,6 +7,15 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v81 — Policy → Knowledge Hub bridge
+- `knowledge_hub.capture_policy_change()` — idempotent policy/fee events pushed into Hub
+- `scripts/policy_check.py` — cron captures policy changes per user DB
+- `E_📋_Policies.py` — applying fee updates saves a Decision node + toast
+- `O_🛡_Compliance.py` — link + KPIs from Standards Knowledge Graph
+- README updated to 142 pages
+
 ## v80 — Knowledge Ecosystem Pack (00–01, Search)
 - `00_🧠_KnowledgeHub.py` — organizational knowledge graph (Vision, SOP, decisions, risks…)
 - `01_📚_Standards.py` — browse Universal Compliance Graph (controls, evidence reuse, ERP mapping)

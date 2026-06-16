@@ -107,15 +107,25 @@ def main():
         # Fan-out to ALL users' notification channels (cron is system-wide,
         # but each user's notify_channels live in their per-user DB).
         try:
-            import sys as _sys
-            _sys.path.insert(0, str(ROOT))
-            import auth, notifier, user_settings, db
+            import auth, notifier, user_settings, db, knowledge_hub as kh
             for user in auth.list_users():
                 # Point db.conn() at this user's DB for the duration.
                 # Cleanest: set session_state via streamlit if available; we
                 # bypass with a fake.
                 import streamlit as _st
                 _st.session_state = {"auth_user": user}
+                try:
+                    kh.init()
+                    kh.capture_policy_change(
+                        platform,
+                        url=result.get("url_used", url),
+                        diffs=diffs,
+                        notes=(extracted or {}).get("notes", "") if extracted else "",
+                        effective_date=(extracted or {}).get("effective_date", "") if extracted else "",
+                        ref_key=f"{platform}:{new_hash}",
+                    )
+                except Exception:
+                    pass
                 try:
                     prefs = user_settings.notify_prefs()
                     if not prefs.get("policy_change"):

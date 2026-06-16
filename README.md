@@ -2,7 +2,7 @@
 
 **ระบบปฏิบัติการสำหรับแม่ค้าออนไลน์** — จัดการทุกอย่างตั้งแต่สต็อก ออเดอร์ กำไร โปรโมชั่น ไลฟ์สด ไปจนถึงใบกำกับภาษี ในแอปเดียว
 
-🌐 **140 หน้า · 19 ภาษา UI · 17 สกุลเงิน · SQLite per-user · Self-host ได้**
+🌐 **142 หน้า · 19 ภาษา UI · 17 สกุลเงิน · SQLite per-user · Self-host ได้**
 
 ## ฟรีตลอด · MIT License
 
@@ -32,7 +32,15 @@ python3 -m streamlit run app.py --server.port 8501
 
 ---
 
-## หน้าทั้งหมด (140 หน้า)
+## หน้าทั้งหมด (142 หน้า)
+
+### 🧠 Knowledge & Compliance
+| หน้า | ฟีเจอร์ |
+|------|---------|
+| 🧠 Knowledge Hub | ความรู้องค์กร — Vision, SOP, decisions, risks (knowledge graph) |
+| 📚 Standards | Universal Compliance Graph — 60+ มาตรฐาน, 20 controls, evidence reuse |
+| 📋 Policies | ดึง/วางนโยบาย marketplace → Claude สกัด fees → sync Knowledge Hub |
+| 🛡 Compliance | สถานะมาตรฐานที่เกี่ยวข้อง + ลิงก์ไป Standards Graph |
 
 ### 📊 Dashboard & Core
 | หน้า | ฟีเจอร์ |
