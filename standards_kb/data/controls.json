@@ -1,457 +1,126 @@
 {
+  "schema_version": "1.0",
+  "description": "Phase 6 — Universal Control Library. A control is a reusable safeguard implemented ONCE and mapped to MANY standards. `requirements` lists common_requirements.json IDs the control satisfies. `satisfies` maps each standard to its specific clause/control reference (the crosswalk). `domains` are taxonomy IDs. This is the heart of 'One Control → Many Standards'.",
   "controls": [
     {
-      "id": "UC-IM",
-      "name": "Incident Management",
-      "domains": [
-        "L12",
-        "L19",
-        "L6"
-      ],
-      "requirements": [
-        "REQ-INCIDENT",
-        "REQ-COMM",
-        "REQ-NC"
-      ],
-      "satisfies": {
-        "ISO27001": "A.5.24-A.5.28",
-        "ISO22301": "8.4",
-        "SOC2": "CC7.3-CC7.5",
-        "NISTCSF": "RS,DE",
-        "NIST80053": "IR family",
-        "GDPR": "Art.33-34",
-        "NIS2": "Art.23",
-        "DORA": "Ch.III",
-        "ITIL": "Incident Mgmt"
-      }
+      "id": "UC-AC", "name": "Access Control & Identity Management", "domains": ["L12","L13","L4"],
+      "objective": "Ensure only authorized identities access systems and data, with least privilege and periodic review.",
+      "requirements": ["REQ-ROLES","REQ-DOCINFO","REQ-MONITORING"],
+      "satisfies": {"ISO27001": "A.5.15-A.5.18, A.8.2-A.8.5", "NIST80053": "AC family", "SOC2": "CC6.1-CC6.3", "PCIDSS": "Req 7,8", "CISV8": "Control 5,6", "GDPR": "Art.32", "NISTCSF": "PR.AA", "HIPAA": "164.312(a)"}
     },
     {
-      "id": "UC-AC",
-      "name": "Access Control & Identity Management",
-      "domains": [
-        "L12",
-        "L13",
-        "L4"
-      ],
-      "requirements": [
-        "REQ-RACI",
-        "REQ-DOC",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO27001": "A.5.15-A.5.18",
-        "NIST80053": "AC family",
-        "SOC2": "CC6.1-CC6.3",
-        "PCIDSS": "Req 7,8",
-        "CISV8": "Control 5,6",
-        "GDPR": "Art.32",
-        "NISTCSF": "PR.AA",
-        "HIPAA": "164.312(a)"
-      }
+      "id": "UC-CM", "name": "Change Management", "domains": ["L6","L16","L12"],
+      "objective": "Control changes to systems and processes to preserve integrity, security and continuity.",
+      "requirements": ["REQ-OPCONTROL","REQ-DOCINFO","REQ-INCIDENT"],
+      "satisfies": {"ISO27001": "A.8.32", "ISO9001": "8.5.6", "ISO20000": "8.5.1", "SOC2": "CC8.1", "ITIL": "Change Enablement", "COBIT": "BAI06", "PCIDSS": "Req 6.5"}
     },
     {
-      "id": "UC-TRN",
-      "name": "Training & Competence Management",
-      "domains": [
-        "L4",
-        "L15"
-      ],
-      "requirements": [
-        "REQ-COMPETENCE",
-        "REQ-AWARENESS",
-        "REQ-DOC"
-      ],
-      "satisfies": {
-        "ISO9001": "7.2-7.3",
-        "ISO27001": "7.2-7.3",
-        "ISO45001": "7.2-7.3",
-        "ISO42001": "7.2",
-        "SOC2": "CC1.4",
-        "PCIDSS": "Req 12.6",
-        "GDPR": "Art.39",
-        "NIST80053": "AT family"
-      }
+      "id": "UC-IM", "name": "Incident Management", "domains": ["L12","L19","L6"],
+      "objective": "Detect, triage, respond to and learn from incidents and breaches.",
+      "requirements": ["REQ-INCIDENT","REQ-COMMS","REQ-NONCONFORMITY"],
+      "satisfies": {"ISO27001": "A.5.24-A.5.28", "ISO22301": "8.4", "SOC2": "CC7.3-CC7.5", "NISTCSF": "RS,DE", "NIST80053": "IR family", "GDPR": "Art.33-34", "NIS2": "Art.23", "DORA": "Ch.III", "ITIL": "Incident Mgmt"}
     },
     {
-      "id": "UC-RM",
-      "name": "Risk Management",
-      "domains": [
-        "L2",
-        "L1"
-      ],
-      "requirements": [
-        "REQ-RISK",
-        "REQ-OBJECTIVES",
-        "REQ-MONITOR",
-        "REQ-IMPACT"
-      ],
-      "satisfies": {
-        "ISO31000": "full",
-        "ISO27001": "6.1.2-6.1.3",
-        "ISO22301": "6.1",
-        "COSOERM": "full",
-        "NISTCSF": "GV.RM,ID.RA",
-        "NIST80053": "RA family",
-        "NISTAIRMF": "Map/Measure",
-        "EUAIACT": "Art.9"
-      }
+      "id": "UC-SUP", "name": "Supplier & Third-Party Management", "domains": ["L9","L2","L12"],
+      "objective": "Assess, contract, monitor and offboard third parties commensurate with risk.",
+      "requirements": ["REQ-DUEDILIGENCE","REQ-RISK","REQ-MONITORING"],
+      "satisfies": {"ISO27001": "A.5.19-A.5.23", "ISO9001": "8.4", "SOC2": "CC9.2", "NIST800171": "3.x supply chain", "DORA": "Art.28-30", "CSACCM": "STA domain", "ISO37001": "8.x"}
     },
     {
-      "id": "UC-ESG",
-      "name": "ESG & Sustainability Disclosure",
-      "domains": [
-        "L17",
-        "L1",
-        "L18"
-      ],
-      "requirements": [
-        "REQ-CONTEXT",
-        "REQ-MONITOR",
-        "REQ-EVIDENCE",
-        "REQ-MGMTREVIEW"
-      ],
-      "satisfies": {
-        "ESRS": "full",
-        "GRISTD": "full",
-        "IFRSS1": "full",
-        "IFRSS2": "full",
-        "SASBSTD": "metrics",
-        "CSRD": "ref",
-        "TNFDREC": "LEAP",
-        "ISO26000": "guidance"
-      }
+      "id": "UC-TRN", "name": "Training & Competence Management", "domains": ["L4","L15"],
+      "objective": "Build and evidence the competence and awareness needed to operate controls.",
+      "requirements": ["REQ-COMPETENCE","REQ-AWARENESS","REQ-DOCINFO"],
+      "satisfies": {"ISO9001": "7.2-7.3", "ISO27001": "7.2-7.3", "ISO45001": "7.2-7.3", "ISO42001": "7.2", "SOC2": "CC1.4", "PCIDSS": "Req 12.6", "GDPR": "Art.39", "NIST80053": "AT family"}
     },
     {
-      "id": "UC-CM",
-      "name": "Change Management",
-      "domains": [
-        "L6",
-        "L16",
-        "L12"
-      ],
-      "requirements": [
-        "REQ-OPS",
-        "REQ-DOC",
-        "REQ-INCIDENT"
-      ],
-      "satisfies": {
-        "ISO27001": "A.8.32",
-        "ISO9001": "8.5.6",
-        "ISO20000": "8.5.1",
-        "SOC2": "CC8.1",
-        "ITIL": "Change Enablement",
-        "COBIT": "BAI06",
-        "PCIDSS": "Req 6.5"
-      }
+      "id": "UC-DOC", "name": "Documented Information / Document Control", "domains": ["L15","L6","L18"],
+      "objective": "Create, version, approve, distribute and retain documented information & records.",
+      "requirements": ["REQ-DOCINFO","REQ-EVIDENCE"],
+      "satisfies": {"ISO9001": "7.5", "ISO27001": "7.5", "ISO13485": "4.2", "SOC2": "CC2.1", "COBIT": "BAI08", "NIST80053": "DM/PM"}
     },
     {
-      "id": "UC-SUP",
-      "name": "Supplier & Third-Party Management",
-      "domains": [
-        "L9",
-        "L2",
-        "L12"
-      ],
-      "requirements": [
-        "REQ-TPDD",
-        "REQ-RISK",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO27001": "A.5.19-A.5.23",
-        "ISO9001": "8.4",
-        "SOC2": "CC9.2",
-        "NIST800171": "3.x supply chain",
-        "DORA": "Art.28-30",
-        "CSACCM": "STA domain",
-        "ISO37001": "8.x"
-      }
+      "id": "UC-AM", "name": "Asset Management & Inventory", "domains": ["L7","L12"],
+      "objective": "Maintain an accurate inventory of assets with ownership, classification and lifecycle.",
+      "requirements": ["REQ-DOCINFO","REQ-ROLES","REQ-MONITORING"],
+      "satisfies": {"ISO27001": "A.5.9-A.5.14", "ISO55001": "full", "CISV8": "Control 1,2", "NIST80053": "CM-8", "NISTCSF": "ID.AM", "SOC2": "CC6.1"}
     },
     {
-      "id": "UC-PM",
-      "name": "Privacy Management & Data Subject Rights",
-      "domains": [
-        "L13",
-        "L20",
-        "L8"
-      ],
-      "requirements": [
-        "REQ-IMPACT",
-        "REQ-DOC",
-        "REQ-COMM",
-        "REQ-EVIDENCE"
-      ],
-      "satisfies": {
-        "ISO27701": "full",
-        "GDPR": "Art.12-23",
-        "PDPA_TH": "full",
-        "PDPA_SG": "full",
-        "CCPA": "full",
-        "NISTPF": "Control-P",
-        "HIPAA": "Privacy Rule"
-      }
+      "id": "UC-RM", "name": "Risk Management", "domains": ["L2","L1"],
+      "objective": "Establish a repeatable process to identify, assess, treat and monitor risk.",
+      "requirements": ["REQ-RISK","REQ-OBJECTIVES","REQ-MONITORING","REQ-IMPACT"],
+      "satisfies": {"ISO31000": "full", "ISO27001": "6.1.2-6.1.3", "ISO22301": "6.1", "COSOERM": "full", "NISTCSF": "GV.RM,ID.RA", "NIST80053": "RA family", "NISTAIRMF": "Map/Measure", "EUAIACT": "Art.9"}
     },
     {
-      "id": "UC-AUD",
-      "name": "Internal Audit & Management Review",
-      "domains": [
-        "L18",
-        "L1",
-        "L16"
-      ],
-      "requirements": [
-        "REQ-AUDIT",
-        "REQ-MGMTREVIEW",
-        "REQ-NC",
-        "REQ-CI"
-      ],
-      "satisfies": {
-        "ISO19011": "full",
-        "ISO9001": "9.2-9.3",
-        "ISO27001": "9.2-9.3",
-        "SOC2": "CC4.1",
-        "SOX": "404",
-        "COBIT": "MEA02",
-        "COSOIC": "Monitoring"
-      }
+      "id": "UC-BCM", "name": "Business Continuity & Resilience", "domains": ["L19","L2","L6"],
+      "objective": "Ensure critical services continue or recover within defined objectives after disruption.",
+      "requirements": ["REQ-RISK","REQ-OPCONTROL","REQ-INCIDENT","REQ-MONITORING"],
+      "satisfies": {"ISO22301": "full", "ISO27001": "A.5.29-A.5.30", "SOC2": "A1.2-A1.3", "NISTCSF": "RC", "DORA": "Art.11-12", "NIST80053": "CP family"}
     },
     {
-      "id": "UC-DOC",
-      "name": "Documented Information / Document Control",
-      "domains": [
-        "L15",
-        "L6",
-        "L18"
-      ],
-      "requirements": [
-        "REQ-DOC",
-        "REQ-EVIDENCE"
-      ],
-      "satisfies": {
-        "ISO9001": "7.5",
-        "ISO27001": "7.5",
-        "ISO13485": "4.2",
-        "SOC2": "CC2.1",
-        "COBIT": "BAI08",
-        "NIST80053": "DM/PM"
-      }
+      "id": "UC-AIG", "name": "AI Governance & Model Lifecycle", "domains": ["L14","L1","L2"],
+      "objective": "Govern AI systems across lifecycle: intake, impact assessment, oversight, monitoring.",
+      "requirements": ["REQ-IMPACT","REQ-RISK","REQ-ROLES","REQ-MONITORING","REQ-DOCINFO"],
+      "satisfies": {"ISO42001": "full", "NISTAIRMF": "full", "EUAIACT": "Art.9-15,17", "ISO23894": "full", "OECDAI": "principles", "OWASPLLM": "LLM01-10"}
     },
     {
-      "id": "UC-AM",
-      "name": "Asset Management & Inventory",
-      "domains": [
-        "L7",
-        "L12"
-      ],
-      "requirements": [
-        "REQ-DOC",
-        "REQ-RACI",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO27001": "A.5.9-A.5.14",
-        "ISO55001": "full",
-        "CISV8": "Control 1,2",
-        "NIST80053": "CM-8",
-        "NISTCSF": "ID.AM",
-        "SOC2": "CC6.1"
-      }
+      "id": "UC-DG", "name": "Data Governance & Classification", "domains": ["L13","L12","L15"],
+      "objective": "Classify, steward and control data quality and lifecycle across the enterprise.",
+      "requirements": ["REQ-DOCINFO","REQ-ROLES","REQ-MONITORING"],
+      "satisfies": {"ISO27001": "A.5.12-A.5.13", "ISO27701": "full", "COBIT": "APO14", "GDPR": "Art.5", "DAMA-DMBOK": "ref", "NIST80053": "DM"}
     },
     {
-      "id": "UC-BCM",
-      "name": "Business Continuity & Resilience",
-      "domains": [
-        "L19",
-        "L2",
-        "L6"
-      ],
-      "requirements": [
-        "REQ-RISK",
-        "REQ-OPS",
-        "REQ-INCIDENT",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO22301": "full",
-        "ISO27001": "A.5.29-A.5.30",
-        "SOC2": "A1.2-A1.3",
-        "NISTCSF": "RC",
-        "DORA": "Art.11-12",
-        "NIST80053": "CP family"
-      }
+      "id": "UC-PM", "name": "Privacy Management & Data Subject Rights", "domains": ["L13","L20","L8"],
+      "objective": "Operate consent, transparency, DSAR fulfilment and privacy-by-design.",
+      "requirements": ["REQ-IMPACT","REQ-DOCINFO","REQ-COMMS","REQ-EVIDENCE"],
+      "satisfies": {"ISO27701": "full", "GDPR": "Art.12-23,25,30,35", "PDPA_TH": "full", "PDPA_SG": "full", "CCPA": "full", "NISTPF": "Control-P,Communicate-P", "HIPAA": "Privacy Rule"}
     },
     {
-      "id": "UC-AIG",
-      "name": "AI Governance & Model Lifecycle",
-      "domains": [
-        "L14",
-        "L1",
-        "L2"
-      ],
-      "requirements": [
-        "REQ-IMPACT",
-        "REQ-RISK",
-        "REQ-RACI",
-        "REQ-MONITOR",
-        "REQ-DOC"
-      ],
-      "satisfies": {
-        "ISO42001": "full",
-        "NISTAIRMF": "full",
-        "EUAIACT": "Art.9-15",
-        "ISO23894": "full",
-        "OECDAI": "principles",
-        "OWASPLLM": "LLM01-10"
-      }
+      "id": "UC-LOG", "name": "Logging, Monitoring & Detection", "domains": ["L12","L18","L19"],
+      "objective": "Capture, protect and analyze logs to detect anomalies and provide audit evidence.",
+      "requirements": ["REQ-MONITORING","REQ-EVIDENCE","REQ-INCIDENT"],
+      "satisfies": {"ISO27001": "A.8.15-A.8.16", "SOC2": "CC7.1-CC7.2", "PCIDSS": "Req 10", "NIST80053": "AU family", "NISTCSF": "DE.CM", "CISV8": "Control 8"}
     },
     {
-      "id": "UC-DG",
-      "name": "Data Governance & Classification",
-      "domains": [
-        "L13",
-        "L12",
-        "L15"
-      ],
-      "requirements": [
-        "REQ-DOC",
-        "REQ-RACI",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO27001": "A.5.12-A.5.13",
-        "ISO27701": "full",
-        "COBIT": "APO14",
-        "GDPR": "Art.5",
-        "NIST80053": "DM"
-      }
+      "id": "UC-CRYPTO", "name": "Cryptography & Key Management", "domains": ["L12","L13"],
+      "objective": "Protect confidentiality and integrity via approved cryptography and key lifecycle.",
+      "requirements": ["REQ-OPCONTROL","REQ-DOCINFO"],
+      "satisfies": {"ISO27001": "A.8.24", "NIST80053": "SC-12,SC-13", "PCIDSS": "Req 3,4", "TLS13": "ref", "SOC2": "CC6.1", "GDPR": "Art.32"}
     },
     {
-      "id": "UC-LOG",
-      "name": "Logging, Monitoring & Detection",
-      "domains": [
-        "L12",
-        "L18",
-        "L19"
-      ],
-      "requirements": [
-        "REQ-MONITOR",
-        "REQ-EVIDENCE",
-        "REQ-INCIDENT"
-      ],
-      "satisfies": {
-        "ISO27001": "A.8.15-A.8.16",
-        "SOC2": "CC7.1-CC7.2",
-        "PCIDSS": "Req 10",
-        "NIST80053": "AU family",
-        "NISTCSF": "DE.CM",
-        "CISV8": "Control 8"
-      }
+      "id": "UC-VULN", "name": "Vulnerability & Patch Management", "domains": ["L12","L6"],
+      "objective": "Identify, prioritize and remediate technical vulnerabilities on a risk basis.",
+      "requirements": ["REQ-RISK","REQ-OPCONTROL","REQ-MONITORING"],
+      "satisfies": {"ISO27001": "A.8.8", "NIST80053": "RA-5,SI-2", "PCIDSS": "Req 6,11", "CISV8": "Control 7", "NISTCSF": "ID.RA,PR.PS", "SOC2": "CC7.1"}
     },
     {
-      "id": "UC-CRYPTO",
-      "name": "Cryptography & Key Management",
-      "domains": [
-        "L12",
-        "L13"
-      ],
-      "requirements": [
-        "REQ-OPS",
-        "REQ-DOC"
-      ],
-      "satisfies": {
-        "ISO27001": "A.8.24",
-        "NIST80053": "SC-12,SC-13",
-        "PCIDSS": "Req 3,4",
-        "TLS13": "ref",
-        "SOC2": "CC6.1",
-        "GDPR": "Art.32"
-      }
+      "id": "UC-AUD", "name": "Internal Audit & Management Review", "domains": ["L18","L1","L16"],
+      "objective": "Independently verify control effectiveness and drive management oversight.",
+      "requirements": ["REQ-INTAUDIT","REQ-MGMTREVIEW","REQ-NONCONFORMITY","REQ-IMPROVE"],
+      "satisfies": {"ISO19011": "full", "ISO9001": "9.2-9.3", "ISO27001": "9.2-9.3", "SOC2": "CC4.1", "SOX": "404", "COBIT": "MEA02", "COSOIC": "Monitoring"}
     },
     {
-      "id": "UC-VULN",
-      "name": "Vulnerability & Patch Management",
-      "domains": [
-        "L12",
-        "L6"
-      ],
-      "requirements": [
-        "REQ-RISK",
-        "REQ-OPS",
-        "REQ-MONITOR"
-      ],
-      "satisfies": {
-        "ISO27001": "A.8.8",
-        "NIST80053": "RA-5,SI-2",
-        "PCIDSS": "Req 6,11",
-        "CISV8": "Control 7",
-        "NISTCSF": "ID.RA,PR.PS",
-        "SOC2": "CC7.1"
-      }
+      "id": "UC-ENV", "name": "Environmental & Energy Management", "domains": ["L10","L17","L6"],
+      "objective": "Identify environmental aspects, set targets, and reduce footprint & energy use.",
+      "requirements": ["REQ-CONTEXT","REQ-OBJECTIVES","REQ-MONITORING","REQ-IMPROVE"],
+      "satisfies": {"ISO14001": "full", "ISO50001": "full", "GHGP_CORP": "ref", "ESRS": "E1-E5", "IFRSS2": "metrics"}
     },
     {
-      "id": "UC-ENV",
-      "name": "Environmental & Energy Management",
-      "domains": [
-        "L10",
-        "L17",
-        "L6"
-      ],
-      "requirements": [
-        "REQ-CONTEXT",
-        "REQ-OBJECTIVES",
-        "REQ-MONITOR",
-        "REQ-CI"
-      ],
-      "satisfies": {
-        "ISO14001": "full",
-        "ISO50001": "full",
-        "GHGP_CORP": "ref",
-        "ESRS": "E1-E5",
-        "IFRSS2": "metrics"
-      }
+      "id": "UC-OHS", "name": "Occupational Health & Safety", "domains": ["L11","L4","L6"],
+      "objective": "Identify hazards, control OH&S risks and ensure worker participation.",
+      "requirements": ["REQ-RISK","REQ-COMPETENCE","REQ-INCIDENT","REQ-OPCONTROL"],
+      "satisfies": {"ISO45001": "full", "TISI_OHS": "ref", "ISO22000": "safety prereq", "ESRS": "S1", "NFPA": "life-safety"}
     },
     {
-      "id": "UC-OHS",
-      "name": "Occupational Health & Safety",
-      "domains": [
-        "L11",
-        "L4",
-        "L6"
-      ],
-      "requirements": [
-        "REQ-RISK",
-        "REQ-COMPETENCE",
-        "REQ-INCIDENT",
-        "REQ-OPS"
-      ],
-      "satisfies": {
-        "ISO45001": "full",
-        "TISI_OHS": "ref",
-        "ISO22000": "safety prereq",
-        "ESRS": "S1",
-        "NFPA": "life-safety"
-      }
+      "id": "UC-ESG", "name": "ESG & Sustainability Disclosure", "domains": ["L17","L1","L18"],
+      "objective": "Govern, collect and assure material sustainability data and disclosures.",
+      "requirements": ["REQ-CONTEXT","REQ-MONITORING","REQ-EVIDENCE","REQ-MGMTREVIEW"],
+      "satisfies": {"ESRS": "full", "GRISTD": "full", "IFRSS1": "full", "IFRSS2": "full", "SASBSTD": "metrics", "CSRD": "ref", "TNFDREC": "LEAP", "ISO26000": "guidance"}
     },
     {
-      "id": "UC-FIN",
-      "name": "Financial Controls & ICFR",
-      "domains": [
-        "L5",
-        "L3",
-        "L18"
-      ],
-      "requirements": [
-        "REQ-EVIDENCE",
-        "REQ-MONITOR",
-        "REQ-AUDIT"
-      ],
-      "satisfies": {
-        "COSOIC": "full",
-        "SOX": "302,404",
-        "SOC1": "full",
-        "IFRS_ACC": "ref",
-        "COBIT": "align"
-      }
+      "id": "UC-FIN", "name": "Financial Controls & ICFR", "domains": ["L5","L3","L18"],
+      "objective": "Ensure reliable financial reporting via internal control over financial reporting.",
+      "requirements": ["REQ-EVIDENCE","REQ-MONITORING","REQ-INTAUDIT"],
+      "satisfies": {"COSOIC": "full", "SOX": "302,404", "SOC1": "full", "IFRS_ACC": "ref", "COBIT": "align"}
     }
   ]
 }

@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "description": "BEST GROUP master structure — the holding company and its five pillars. NIRVA is the Business Operating System pillar; NOVA is the AI workforce that runs on it; BEST SERVICE is the real operating business (cash flow + pilot ground); MUVERSE and SOUL are consumer ventures. This tree is the navigation spine for the whole portfolio.",
+  "group": "BEST GROUP",
+  "pillars": [
+    {
+      "id": "BEST_SERVICE", "name": "BEST SERVICE", "icon": "🛡️",
+      "role": "Real operating business — cash flow engine & NIRVA pilot ground",
+      "legal_entity": "BEST INVESTIGATION CO., LTD.",
+      "scale": {"employees": "1356+", "sites": "256+"},
+      "units": ["Investigation", "Cleaning Service", "Security Service", "Facility Management", "Rental Service", "Workforce / Manpower"]
+    },
+    {
+      "id": "NIRVA", "name": "NIRVA", "icon": "💻",
+      "role": "Business Operating System for organizations",
+      "modules": {
+        "NirvaOS": ["Executive Dashboard", "Workforce", "Commercial", "Operations", "Supply Chain", "Finance", "Governance", "Administration"],
+        "NirvaCore": ["HR / Payroll", "CRM", "Fleet", "QC", "Accounting", "Document", "ISO"],
+        "NirvaCloud": ["Hosting", "Regional data planes", "Tenancy"],
+        "NirvaDeploy": ["CI/CD", "Compliance gates", "Provisioning"],
+        "NirvaGov": ["ISO", "PDPA", "Audit", "Tender"],
+        "NirvaProcure": ["Procurement", "Vendor", "Marketplace", "Dealer Network"],
+        "NirvaTrade": ["Cross-org trust exchange", "B2B commerce"],
+        "NirvaWealth": ["Finance", "Investment", "Treasury"],
+        "NirvaAcademy": ["Training", "Certification", "Learning paths"],
+        "NirvaResearch": ["Standards research", "Knowledge graph", "Benchmarks"],
+        "NirvaMedia": ["Content", "Brand", "Publishing"]
+      }
+    },
+    {
+      "id": "NOVA", "name": "NOVA", "icon": "🤖",
+      "role": "AI workforce that operates inside NIRVA",
+      "agents": ["HR Agent", "ISO Agent", "Procurement Agent", "Finance Agent", "Research Agent", "Executive Agent"],
+      "services": ["Nova Knowledge", "Nova Voice", "Nova Vision", "Nova Studio", "Nova Research", "Nova Media"]
+    },
+    {
+      "id": "MUVERSE", "name": "MUVERSE", "icon": "🌱",
+      "role": "Consumer & lifestyle ventures",
+      "units": ["Mu Tea", "Mu Living (Home/Lifestyle/Daily Goods)", "Mu Wellness (Herbs/Functional Food/Self Care)", "Mu Academy", "Mu Retreat", "Mu Community", "Mu Media", "Mu Store"]
+    },
+    {
+      "id": "SOUL", "name": "SOUL", "icon": "🪷",
+      "role": "Alternative living & resilience",
+      "units": ["Food Security (Emergency/Freeze-Dry/Seed Bank)", "Water Security (Filter/Storage/Rain Harvesting)", "Energy Security (Solar/Battery/Portable/Off-Grid)", "Emergency Preparedness", "Farm/Homestead", "Tiny House", "Eco Village", "Soul Academy", "Soul Retreat", "Soul Publishing", "Soul Community", "Soul Foundation"]
+    },
+    {
+      "id": "FUTURE", "name": "FUTURE VENTURES", "icon": "🚀",
+      "role": "Expansion pipeline",
+      "units": ["Manufacturing (Machine Shop/Industrial ERP/OEM-ODM)", "Import Export", "Global Sourcing", "Property", "Travel", "Startup Studio", "Franchise", "Future Projects"]
+    }
+  ],
+  "strategic_logic": "BEST SERVICE funds and pilots NIRVA. NIRVA + NOVA become the productized OS sold to other organizations. MUVERSE/SOUL are demand-side ventures that also run on NIRVA — proving the OS across industries (service, retail, manufacturing, wellness). One platform, many businesses: every venture is both a NIRVA customer and a reference case."
+}

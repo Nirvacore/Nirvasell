@@ -9,8 +9,11 @@ __pycache__/
 .pytest_cache/
 
 # Local data — must NOT be committed (user DBs, scraped images)
-data/
+# Scoped to the app root so it doesn't clobber versioned knowledge-base data
+# directories (standards_kb/data, nirva_os/data), which are source, not runtime.
+/data/
 !standards_kb/data/
+!nirva_os/data/
 *.db
 *.db-journal
 *.sqlite

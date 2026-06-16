@@ -1,144 +1,82 @@
 {
+  "schema_version": "1.0",
+  "description": "Phase 1 — Global registry of standards-development organizations (SDOs), regulators, and frameworks bodies. Each org is a node in the knowledge graph; `id` is the stable key referenced by standards.json.",
+  "scopes": {
+    "global": "International, treaty- or membership-based bodies with worldwide remit",
+    "technology": "ICT / internet / telecom consortia and SDOs",
+    "regional": "Multi-country regional bodies (e.g. EU)",
+    "national": "Single-country national standards bodies (NSBs) or regulators",
+    "sector": "Industry- or domain-specific bodies",
+    "framework": "Framework / good-practice authors (not formal SDOs) and regulators"
+  },
   "organizations": [
-    {
-      "id": "AICPA",
-      "name": "American Institute of CPAs",
-      "scope": "global"
-    },
-    {
-      "id": "AXELOS",
-      "name": "AXELOS (ITIL)",
-      "scope": "global"
-    },
-    {
-      "id": "CIS",
-      "name": "Center for Internet Security",
-      "scope": "global"
-    },
-    {
-      "id": "COSO",
-      "name": "COSO",
-      "scope": "global"
-    },
-    {
-      "id": "CSA",
-      "name": "Cloud Security Alliance",
-      "scope": "global"
-    },
-    {
-      "id": "DAMA",
-      "name": "DAMA International",
-      "scope": "global"
-    },
-    {
-      "id": "EU",
-      "name": "European Union",
-      "scope": "global"
-    },
-    {
-      "id": "GHGP",
-      "name": "GHG Protocol",
-      "scope": "global"
-    },
-    {
-      "id": "GRI",
-      "name": "Global Reporting Initiative",
-      "scope": "global"
-    },
-    {
-      "id": "IATF",
-      "name": "IATF",
-      "scope": "global"
-    },
-    {
-      "id": "IEC",
-      "name": "International Electrotechnical Commission",
-      "scope": "global"
-    },
-    {
-      "id": "IETF",
-      "name": "IETF",
-      "scope": "global"
-    },
-    {
-      "id": "IFRS",
-      "name": "IFRS Foundation",
-      "scope": "global"
-    },
-    {
-      "id": "ISACA",
-      "name": "ISACA (COBIT)",
-      "scope": "global"
-    },
-    {
-      "id": "ISO",
-      "name": "International Organization for Standardization",
-      "scope": "global"
-    },
-    {
-      "id": "MISC",
-      "name": "Other / consortium",
-      "scope": "global"
-    },
-    {
-      "id": "MITRE",
-      "name": "MITRE",
-      "scope": "global"
-    },
-    {
-      "id": "NFPA",
-      "name": "NFPA",
-      "scope": "global"
-    },
-    {
-      "id": "NIST",
-      "name": "National Institute of Standards and Technology",
-      "scope": "global"
-    },
-    {
-      "id": "OECD",
-      "name": "OECD",
-      "scope": "global"
-    },
-    {
-      "id": "OWASP",
-      "name": "OWASP Foundation",
-      "scope": "global"
-    },
-    {
-      "id": "PCI",
-      "name": "PCI Security Standards Council",
-      "scope": "global"
-    },
-    {
-      "id": "PDPC",
-      "name": "Personal Data Protection Commission (Thailand)",
-      "scope": "global"
-    },
-    {
-      "id": "SAE",
-      "name": "SAE International",
-      "scope": "global"
-    },
-    {
-      "id": "SASB",
-      "name": "SASB Standards",
-      "scope": "global"
-    },
-    {
-      "id": "TISI",
-      "name": "Thai Industrial Standards Institute",
-      "scope": "global"
-    },
-    {
-      "id": "TNFD",
-      "name": "Taskforce on Nature-related Financial Disclosures",
-      "scope": "global"
-    },
-    {
-      "id": "WCAG",
-      "name": "W3C (WCAG)",
-      "scope": "global"
-    }
+    {"id": "ISO",     "name": "International Organization for Standardization", "scope": "global", "country": "INT", "founded": 1947, "website": "https://www.iso.org", "role": "Apex international SDO; management-system & horizontal standards"},
+    {"id": "IEC",     "name": "International Electrotechnical Commission", "scope": "global", "country": "INT", "founded": 1906, "website": "https://www.iec.ch", "role": "Electrical, electronic & related technologies; co-publishes ISO/IEC"},
+    {"id": "ITU",     "name": "International Telecommunication Union", "scope": "global", "country": "INT", "founded": 1865, "website": "https://www.itu.int", "role": "UN agency for telecom & ICT (ITU-T, ITU-R)"},
+    {"id": "OIML",    "name": "International Organization of Legal Metrology", "scope": "global", "country": "INT", "founded": 1955, "website": "https://www.oiml.org", "role": "Legal metrology, measuring instruments"},
+    {"id": "BIPM",    "name": "International Bureau of Weights and Measures", "scope": "global", "country": "INT", "founded": 1875, "website": "https://www.bipm.org", "role": "SI units, metrological traceability"},
+    {"id": "ISOIEC",  "name": "ISO/IEC Joint Technical Committee (JTC 1)", "scope": "global", "country": "INT", "founded": 1987, "website": "https://jtc1info.org", "role": "Joint IT standards (e.g. ISO/IEC 27001, 42001, 20000)"},
+
+    {"id": "IEEE",    "name": "Institute of Electrical and Electronics Engineers", "scope": "technology", "country": "US", "founded": 1963, "website": "https://standards.ieee.org", "role": "Electronics, networking (802.x), software/systems engineering"},
+    {"id": "IETF",    "name": "Internet Engineering Task Force", "scope": "technology", "country": "INT", "founded": 1986, "website": "https://www.ietf.org", "role": "Internet protocols (RFCs: TCP/IP, TLS, HTTP, OAuth)"},
+    {"id": "W3C",     "name": "World Wide Web Consortium", "scope": "technology", "country": "INT", "founded": 1994, "website": "https://www.w3.org", "role": "Web standards (HTML, CSS, WCAG, DID/VC)"},
+    {"id": "OASIS",   "name": "Organization for the Advancement of Structured Information Standards", "scope": "technology", "country": "US", "founded": 1993, "website": "https://www.oasis-open.org", "role": "SAML, STIX/TAXII, OpenC2, MQTT"},
+    {"id": "3GPP",    "name": "3rd Generation Partnership Project", "scope": "technology", "country": "INT", "founded": 1998, "website": "https://www.3gpp.org", "role": "Mobile telecom (4G/5G) specifications"},
+    {"id": "CSA",     "name": "Cloud Security Alliance", "scope": "technology", "country": "US", "founded": 2008, "website": "https://cloudsecurityalliance.org", "role": "Cloud Controls Matrix (CCM), STAR, CAIQ"},
+    {"id": "PCISSC",  "name": "PCI Security Standards Council", "scope": "sector", "country": "US", "founded": 2006, "website": "https://www.pcisecuritystandards.org", "role": "PCI DSS, payment-card data security"},
+
+    {"id": "ANSI",    "name": "American National Standards Institute", "scope": "national", "country": "US", "founded": 1918, "website": "https://www.ansi.org", "role": "US NSB; accreditor & coordinator"},
+    {"id": "NIST",    "name": "National Institute of Standards and Technology", "scope": "national", "country": "US", "founded": 1901, "website": "https://www.nist.gov", "role": "US federal: CSF, SP 800-series, AI RMF, FIPS"},
+    {"id": "ASTM",    "name": "ASTM International", "scope": "sector", "country": "US", "founded": 1898, "website": "https://www.astm.org", "role": "Materials, products, systems testing"},
+    {"id": "ASME",    "name": "American Society of Mechanical Engineers", "scope": "sector", "country": "US", "founded": 1880, "website": "https://www.asme.org", "role": "Pressure vessels, mechanical codes"},
+    {"id": "NFPA",    "name": "National Fire Protection Association", "scope": "sector", "country": "US", "founded": 1896, "website": "https://www.nfpa.org", "role": "Fire & life-safety codes (NFPA 70/NEC)"},
+    {"id": "SAE",     "name": "SAE International", "scope": "sector", "country": "US", "founded": 1905, "website": "https://www.sae.org", "role": "Automotive & aerospace (J-standards, AS9100 basis)"},
+    {"id": "API",     "name": "American Petroleum Institute", "scope": "sector", "country": "US", "founded": 1919, "website": "https://www.api.org", "role": "Oil & gas standards"},
+    {"id": "AICPA",   "name": "American Institute of Certified Public Accountants", "scope": "framework", "country": "US", "founded": 1887, "website": "https://www.aicpa-cima.com", "role": "SOC 1/2/3, Trust Services Criteria"},
+    {"id": "COSO",    "name": "Committee of Sponsoring Organizations of the Treadway Commission", "scope": "framework", "country": "US", "founded": 1985, "website": "https://www.coso.org", "role": "Internal control & ERM frameworks"},
+    {"id": "PCAOB",   "name": "Public Company Accounting Oversight Board", "scope": "framework", "country": "US", "founded": 2002, "website": "https://pcaobus.org", "role": "Audit oversight; SOX-related"},
+    {"id": "FASB",    "name": "Financial Accounting Standards Board", "scope": "framework", "country": "US", "founded": 1973, "website": "https://www.fasb.org", "role": "US GAAP"},
+
+    {"id": "CEN",     "name": "European Committee for Standardization", "scope": "regional", "country": "EU", "founded": 1961, "website": "https://www.cencenelec.eu", "role": "EU harmonized standards (EN)"},
+    {"id": "CENELEC", "name": "European Committee for Electrotechnical Standardization", "scope": "regional", "country": "EU", "founded": 1973, "website": "https://www.cencenelec.eu", "role": "EU electrotechnical EN standards"},
+    {"id": "ETSI",    "name": "European Telecommunications Standards Institute", "scope": "regional", "country": "EU", "founded": 1988, "website": "https://www.etsi.org", "role": "EU telecom; cybersecurity (EN 303 645)"},
+    {"id": "ENISA",   "name": "European Union Agency for Cybersecurity", "scope": "regional", "country": "EU", "founded": 2004, "website": "https://www.enisa.europa.eu", "role": "EU cybersecurity certification schemes"},
+    {"id": "EDPB",    "name": "European Data Protection Board", "scope": "regional", "country": "EU", "founded": 2018, "website": "https://www.edpb.europa.eu", "role": "GDPR consistency & guidance"},
+    {"id": "EFRAG",   "name": "European Financial Reporting Advisory Group", "scope": "regional", "country": "EU", "founded": 2001, "website": "https://www.efrag.org", "role": "ESRS (CSRD sustainability reporting)"},
+    {"id": "EUCOM",   "name": "European Commission", "scope": "regional", "country": "EU", "founded": 1958, "website": "https://commission.europa.eu", "role": "EU law: GDPR, AI Act, NIS2, DORA, CSRD"},
+
+    {"id": "BSI",     "name": "British Standards Institution", "scope": "national", "country": "GB", "founded": 1901, "website": "https://www.bsigroup.com", "role": "UK NSB; BS standards, originator of many ISO MSS"},
+    {"id": "DIN",     "name": "Deutsches Institut für Normung", "scope": "national", "country": "DE", "founded": 1917, "website": "https://www.din.de", "role": "German NSB; DIN standards"},
+    {"id": "AFNOR",   "name": "Association Française de Normalisation", "scope": "national", "country": "FR", "founded": 1926, "website": "https://www.afnor.org", "role": "French NSB; NF standards"},
+    {"id": "JISC",    "name": "Japanese Industrial Standards Committee", "scope": "national", "country": "JP", "founded": 1949, "website": "https://www.jisc.go.jp", "role": "Japan NSB; JIS standards"},
+    {"id": "SAC",     "name": "Standardization Administration of China", "scope": "national", "country": "CN", "founded": 2001, "website": "https://www.sac.gov.cn", "role": "China NSB; GB standards"},
+    {"id": "KATS",    "name": "Korean Agency for Technology and Standards", "scope": "national", "country": "KR", "founded": 1883, "website": "https://www.kats.go.kr", "role": "Korea NSB; KS standards"},
+    {"id": "TISI",    "name": "Thai Industrial Standards Institute", "scope": "national", "country": "TH", "founded": 1969, "website": "https://www.tisi.go.th", "role": "Thailand NSB; TIS (มอก.) standards"},
+    {"id": "SCC",     "name": "Standards Council of Canada", "scope": "national", "country": "CA", "founded": 1970, "website": "https://www.scc.ca", "role": "Canada NSB"},
+    {"id": "SA",      "name": "Standards Australia", "scope": "national", "country": "AU", "founded": 1922, "website": "https://www.standards.org.au", "role": "Australia NSB; AS/NZS standards"},
+    {"id": "BIS",     "name": "Bureau of Indian Standards", "scope": "national", "country": "IN", "founded": 1986, "website": "https://www.bis.gov.in", "role": "India NSB; IS standards"},
+    {"id": "ABNT",    "name": "Associação Brasileira de Normas Técnicas", "scope": "national", "country": "BR", "founded": 1940, "website": "https://www.abnt.org.br", "role": "Brazil NSB; NBR standards"},
+    {"id": "SPRING",  "name": "Enterprise Singapore (Standards)", "scope": "national", "country": "SG", "founded": 2018, "website": "https://www.enterprisesg.gov.sg", "role": "Singapore standards & IMDA PDPC"},
+
+    {"id": "ISACA",   "name": "ISACA", "scope": "framework", "country": "US", "founded": 1969, "website": "https://www.isaca.org", "role": "COBIT, IT governance & audit"},
+    {"id": "AXELOS",  "name": "AXELOS / PeopleCert", "scope": "framework", "country": "GB", "founded": 2013, "website": "https://www.axelos.com", "role": "ITIL 4, PRINCE2, RESILIA"},
+    {"id": "GRI",     "name": "Global Reporting Initiative", "scope": "framework", "country": "NL", "founded": 1997, "website": "https://www.globalreporting.org", "role": "GRI sustainability reporting standards"},
+    {"id": "SASB",    "name": "Sustainability Accounting Standards Board (now under ISSB)", "scope": "framework", "country": "US", "founded": 2011, "website": "https://sasb.ifrs.org", "role": "Industry-specific sustainability metrics"},
+    {"id": "ISSB",    "name": "International Sustainability Standards Board", "scope": "framework", "country": "INT", "founded": 2021, "website": "https://www.ifrs.org/groups/international-sustainability-standards-board", "role": "IFRS S1/S2 sustainability disclosure"},
+    {"id": "IFRSF",   "name": "IFRS Foundation", "scope": "framework", "country": "INT", "founded": 2001, "website": "https://www.ifrs.org", "role": "IFRS Accounting & Sustainability Standards"},
+    {"id": "GHGP",    "name": "Greenhouse Gas Protocol (WRI/WBCSD)", "scope": "framework", "country": "INT", "founded": 1998, "website": "https://ghgprotocol.org", "role": "Corporate GHG accounting (Scope 1/2/3)"},
+    {"id": "TCFD",    "name": "Task Force on Climate-related Financial Disclosures", "scope": "framework", "country": "INT", "founded": 2015, "website": "https://www.fsb-tcfd.org", "role": "Climate risk disclosure (folded into ISSB 2024)"},
+    {"id": "TNFD",    "name": "Taskforce on Nature-related Financial Disclosures", "scope": "framework", "country": "INT", "founded": 2021, "website": "https://tnfd.global", "role": "Nature & biodiversity risk disclosure"},
+    {"id": "CDP",     "name": "CDP (Carbon Disclosure Project)", "scope": "framework", "country": "GB", "founded": 2000, "website": "https://www.cdp.net", "role": "Environmental disclosure platform"},
+    {"id": "SBTI",    "name": "Science Based Targets initiative", "scope": "framework", "country": "INT", "founded": 2015, "website": "https://sciencebasedtargets.org", "role": "Net-zero / emissions target validation"},
+    {"id": "UNGC",    "name": "UN Global Compact", "scope": "framework", "country": "INT", "founded": 2000, "website": "https://unglobalcompact.org", "role": "Ten Principles; SDG alignment"},
+    {"id": "OECD",    "name": "Organisation for Economic Co-operation and Development", "scope": "framework", "country": "INT", "founded": 1961, "website": "https://www.oecd.org", "role": "AI Principles, corporate governance, due diligence"},
+    {"id": "OWASP",   "name": "Open Worldwide Application Security Project", "scope": "framework", "country": "US", "founded": 2001, "website": "https://owasp.org", "role": "ASVS, Top 10, SAMM, LLM Top 10"},
+    {"id": "CIS",     "name": "Center for Internet Security", "scope": "framework", "country": "US", "founded": 2000, "website": "https://www.cisecurity.org", "role": "CIS Controls v8, Benchmarks"},
+    {"id": "MITRE",   "name": "MITRE Corporation", "scope": "framework", "country": "US", "founded": 1958, "website": "https://www.mitre.org", "role": "ATT&CK, ATLAS, CWE/CVE"},
+    {"id": "PMI",     "name": "Project Management Institute", "scope": "framework", "country": "US", "founded": 1969, "website": "https://www.pmi.org", "role": "PMBOK, project governance"},
+    {"id": "THAIPDPC","name": "Thailand Personal Data Protection Committee", "scope": "national", "country": "TH", "founded": 2019, "website": "https://www.pdpc.or.th", "role": "PDPA (Thailand) enforcement"},
+    {"id": "UN",      "name": "United Nations", "scope": "global", "country": "INT", "founded": 1945, "website": "https://www.un.org", "role": "SDGs / Agenda 2030, Guiding Principles on Business & Human Rights"},
+    {"id": "BLAB",    "name": "B Lab", "scope": "framework", "country": "US", "founded": 2006, "website": "https://www.bcorporation.net", "role": "B Corp certification & B Impact Assessment"}
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "description": "Revenue model — starting from ฿0. Ranked by founder priority, annotated with time-to-revenue (ttr), effort, gross-margin profile, and the NIRVA product(s) each stream monetizes. The sequence is deliberately cash-first → recurring-later.",
+  "streams": [
+    {"rank": 1, "stream": "Consulting", "monetizes": ["DIAGNOSIS"], "ttr": "immediate (cash today)", "effort": "low-build", "margin": "high (time)", "scalability": "low", "note": "Org CT-scan / digital-readiness / ISO-readiness assessments. Funds the build, generates pilots, produces real data and case studies. Start HERE."},
+    {"rank": 2, "stream": "Digital Check-in", "monetizes": ["CHECK"], "ttr": "weeks", "effort": "MVP exists in nirva.sell DNA", "margin": "high (SaaS)", "scalability": "high", "note": "Per-active-worker pricing. BEST = anchor customer (1,356 workers). Land-and-expand entry product."},
+    {"rank": 3, "stream": "Executive Dashboard", "monetizes": ["EXECUTIVE"], "ttr": "weeks", "effort": "medium", "margin": "very high", "scalability": "high", "note": "Premium per-org. Sells to the buyer with budget (CEO/MD). Natural upsell after CHECK provides the data."},
+    {"rank": 4, "stream": "Procurement", "monetizes": ["PROCURE"], "ttr": "weeks-months", "effort": "medium-high", "margin": "high", "scalability": "high", "note": "ROI story is strongest (fraud/leakage reduction). Transaction + subscription."},
+    {"rank": 5, "stream": "Compliance", "monetizes": ["COMPLIANCE","AUDIT"], "ttr": "months", "effort": "high", "margin": "very high", "scalability": "high", "note": "Per-standard modules on the standards_kb engine. Sticky, high willingness-to-pay (cert/tender gated)."},
+    {"rank": 6, "stream": "Blueprint Library", "monetizes": ["DIAGNOSIS","COMPLIANCE","DOCS"], "ttr": "fast (productized IP)", "effort": "low (already drafted)", "margin": "very high", "scalability": "high", "note": "Sell industry starter-kits (SOPs/docs/audit programs) — productized consulting; low marginal cost."},
+    {"rank": 7, "stream": "Training", "monetizes": ["LIFE","NirvaAcademy"], "ttr": "months", "effort": "medium", "margin": "high", "scalability": "medium", "note": "Per-employee learning + certification; complements compliance/training matrix."},
+    {"rank": 8, "stream": "Marketplace", "monetizes": ["PROCURE","NirvaTrade"], "ttr": "long", "effort": "high", "margin": "take-rate", "scalability": "very high", "note": "Vendor/dealer network + B2B trade once procurement volume exists. Network-effect play."},
+    {"rank": 9, "stream": "Partner Referrals", "monetizes": ["all"], "ttr": "medium", "effort": "low", "margin": "commission", "scalability": "high", "note": "ISO consultants, accountants, FM brokers resell NIRVA. Channel leverage."},
+    {"rank": 10, "stream": "SaaS (full platform)", "monetizes": ["NirvaOS","NirvaCore"], "ttr": "long", "effort": "very high", "margin": "very high", "scalability": "very high", "note": "The end-state: full OS subscription. Everything above is the on-ramp that funds and de-risks this."}
+  ],
+  "sequencing_logic": "Cash-first (Consulting + Blueprints) funds product. CHECK is the cheap, urgent wedge that captures clean data. EXECUTIVE monetizes the buyer with budget. PROCURE/COMPLIANCE deliver the biggest ROI and stickiness. Marketplace/SaaS are the long-term compounding engines once volume and trust exist."
+}
