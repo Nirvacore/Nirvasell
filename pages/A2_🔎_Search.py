@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import streamlit as st
 import db
 import global_search as gs
+import knowledge_hub as kh
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
@@ -20,12 +21,14 @@ st.set_page_config(page_title="nirva.sell · Search",
 apply_theme()
 require_auth()
 db.init()
+kh.init()
 render_sidebar()
 
 page_header(icon="🔎", title=t("srch.title"), subtitle=t("srch.caption"))
 
 qs = gs.quick_stats()
-k1, k2, k3 = st.columns(3)
+ks = kh.stats()
+k1, k2, k3, k4 = st.columns(4)
 with k1:
     metric_with_hint("📦 " + t("srch.kpi_products"), str(qs["products"]),
                      hint="", hint_tone="info")
@@ -34,6 +37,9 @@ with k2:
                      hint="", hint_tone="info")
 with k3:
     metric_with_hint("👥 " + t("srch.kpi_customers"), str(qs["customers"]),
+                     hint="", hint_tone="info")
+with k4:
+    metric_with_hint("🧠 " + t("srch.kpi_knowledge"), str(ks["nodes"]),
                      hint="", hint_tone="info")
 
 st.divider()
@@ -48,7 +54,7 @@ if query and len(query.strip()) >= 2:
     results = gs.search(query.strip())
 
     total = (len(results["products"]) + len(results["orders"]) +
-             len(results["customers"]))
+             len(results["customers"]) + len(results["knowledge"]))
 
     if total == 0:
         st.info(t("srch.no_results"))
@@ -113,6 +119,31 @@ if query and len(query.strip()) >= 2:
                 "</div></div>",
                 unsafe_allow_html=True,
             )
+
+    # ---- Knowledge Hub ----
+    know = results["knowledge"]
+    if know:
+        st.markdown("### 🧠 " + t("srch.knowledge_title") +
+                     " (" + str(len(know)) + ")")
+        for n in know:
+            st.markdown(
+                "<div style='display:flex;justify-content:space-between;"
+                "align-items:center;padding:8px 14px;"
+                "border-bottom:0.5px solid rgba(40,30,20,0.05);"
+                f"border-left:3px solid {n.get('type_color', '#5b7fa6')}'>"
+                "<div>"
+                f"{n.get('type_icon', '📄')} <strong>{n.get('title', '')}</strong>"
+                f" <span style='color:#9a9485;font-size:11px'>"
+                f"{n.get('node_type', '')}</span>"
+                "</div>"
+                + (f"<div style='font-size:12px;color:#7a7569;max-width:420px;"
+                   f"white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>"
+                   f"{(n.get('body') or '')[:80]}</div>" if n.get("body") else "")
+                + "</div>",
+                unsafe_allow_html=True,
+            )
+        st.page_link("pages/00_🧠_KnowledgeHub.py",
+                     label="→ " + t("kh.title"), icon="🧠")
 
     # ---- Customers ----
     custs = results["customers"]

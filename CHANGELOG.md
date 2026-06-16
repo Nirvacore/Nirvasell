@@ -1,9 +1,28 @@
 # nirva.sell — Changelog
 
 Built iteratively. Current stats:
-**140 pages · 3,749 i18n keys · 19 languages · 8 sign-in methods · SQLite per-user isolation**
+**142 pages · 3,800+ i18n keys · 19 languages · 8 sign-in methods · SQLite per-user isolation**
 
 ---
+
+---
+
+---
+
+## v81 — Policy → Knowledge Hub bridge
+- `knowledge_hub.capture_policy_change()` — idempotent policy/fee events pushed into Hub
+- `scripts/policy_check.py` — cron captures policy changes per user DB
+- `E_📋_Policies.py` — applying fee updates saves a Decision node + toast
+- `O_🛡_Compliance.py` — link + KPIs from Standards Knowledge Graph
+- README updated to 142 pages
+
+## v80 — Knowledge Ecosystem Pack (00–01, Search)
+- `00_🧠_KnowledgeHub.py` — organizational knowledge graph (Vision, SOP, decisions, risks…)
+- `01_📚_Standards.py` — browse Universal Compliance Graph (controls, evidence reuse, ERP mapping)
+- `standards_kb/data/` — machine-readable graph (60 standards · 20 controls · 799 edges)
+- `standards_kb/seed_data.py` — generator for the JSON data layer
+- Global Search (`A2`) now includes Knowledge Hub results + KPI
+- Spotlight (⌘K) indexes Knowledge Hub + Standards pages
 
 ## v79 — Inventory Intelligence Pack (H4–H9)
 - `H4_☠_DeadStock.py` — slow/dead SKU detector, capital-at-risk warning, action suggestions

@@ -20,6 +20,8 @@ import streamlit as st
 # blurb_key). label_key looks up the SHORT page name in i18n.
 PAGES = [
     ("app.py",                            "✨", "qa.start",          "ws.subtitle"),
+    ("pages/00_🧠_KnowledgeHub.py",      "🧠", "kh.title",          "kh.caption"),
+    ("pages/01_📚_Standards.py",           "📚", "skb.title",         "skb.caption"),
     ("pages/0_🚀_Start.py",              "🚀", "onboard.title",     "onboard.caption"),
     ("pages/2_📦_Catalog.py",            "📦", "catalog.title",     "catalog.caption"),
     ("pages/3_🤖_Generate.py",           "🤖", "generate.title",    "generate.caption"),
