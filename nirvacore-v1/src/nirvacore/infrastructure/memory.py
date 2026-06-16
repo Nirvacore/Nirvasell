@@ -7,7 +7,8 @@ from datetime import datetime
 
 from nirvacore.domain.attendance import AttendanceRecord
 from nirvacore.domain.employee import Employee
-from nirvacore.domain.ids import AttendanceId, EmployeeId, SiteId
+from nirvacore.domain.ids import AttendanceId, EmployeeId, ShiftId, SiteId
+from nirvacore.domain.shift import Shift
 from nirvacore.domain.site import Site
 
 
@@ -73,4 +74,33 @@ class InMemoryAttendanceRepository:
             rec
             for rec in self._items.values()
             if start <= rec.clock_in < end
+        ]
+
+
+class InMemoryShiftRepository:
+    def __init__(self) -> None:
+        self._items: dict[ShiftId, Shift] = {}
+
+    def add(self, shift: Shift) -> None:
+        self._items[shift.id] = shift
+
+    def get(self, shift_id: ShiftId) -> Shift | None:
+        return self._items.get(shift_id)
+
+    def save(self, shift: Shift) -> None:
+        self._items[shift.id] = shift
+
+    def list_between(self, start: datetime, end: datetime) -> list[Shift]:
+        return [s for s in self._items.values() if s.start < end and start < s.end]
+
+    def list_active_for_employee(
+        self, employee_id: EmployeeId, start: datetime, end: datetime
+    ) -> list[Shift]:
+        return [
+            s
+            for s in self._items.values()
+            if s.employee_id == employee_id
+            and s.is_active
+            and s.start < end
+            and start < s.end
         ]

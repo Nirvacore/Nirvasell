@@ -13,6 +13,7 @@ from nirvacore.application.clock import SystemClock
 from nirvacore.application.employee_service import EmployeeService
 from nirvacore.application.payroll_service import PayrollService
 from nirvacore.application.ports import Clock
+from nirvacore.application.schedule_service import ScheduleService
 from nirvacore.application.site_service import SiteService
 from nirvacore.infrastructure import sqlite as sql
 
@@ -23,6 +24,7 @@ class Container:
     sites: SiteService
     attendance: AttendanceService
     payroll: PayrollService
+    schedule: ScheduleService
 
 
 def build_container(db_path: str, clock: Clock | None = None) -> Container:
@@ -33,6 +35,7 @@ def build_container(db_path: str, clock: Clock | None = None) -> Container:
     employee_repo = sql.SqliteEmployeeRepository(conn)
     site_repo = sql.SqliteSiteRepository(conn)
     attendance_repo = sql.SqliteAttendanceRepository(conn)
+    shift_repo = sql.SqliteShiftRepository(conn)
 
     attendance = AttendanceService(
         attendance_repo, employee_repo, site_repo, the_clock
@@ -42,4 +45,5 @@ def build_container(db_path: str, clock: Clock | None = None) -> Container:
         sites=SiteService(site_repo),
         attendance=attendance,
         payroll=PayrollService(attendance, employee_repo),
+        schedule=ScheduleService(shift_repo, employee_repo, site_repo),
     )

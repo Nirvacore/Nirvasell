@@ -3,7 +3,7 @@
 ERP platform for a real **cleaning & facility-management** business. This is
 the first vertical slice: the minimum to run daily operations for the **first
 20 employees** — *employees · sites · attendance (clock in/out) · timesheets ·
-payroll (gross pay)*.
+payroll (gross pay) · scheduling (planned shifts & roster)*.
 
 > ⚠️ **Separate system.** This project is self-contained and has **no coupling**
 > to `nirva.sell` (the reseller app it currently shares a git branch with for
@@ -63,6 +63,8 @@ nirvacore clock-in <employee_id> <site_id>
 nirvacore clock-out <employee_id>
 nirvacore timesheet 2026-06-01 2026-06-30
 nirvacore payroll 2026-06-01 2026-07-01      # gross pay = hours × rate
+nirvacore schedule <employee_id> <site_id> 2026-06-15T08:00 2026-06-15T17:00
+nirvacore roster 2026-06-15 2026-06-16       # planned shifts in a range
 ```
 
 State persists to `./nirvacore.db` (override with `--db`).
@@ -90,8 +92,10 @@ State persists to `./nirvacore.db` (override with `--db`).
 1. ~~**Payroll run** — turn timesheets into pay.~~ ✅ gross pay shipped
    (hours × hourly rate, `Money` value object, schema migration v2). Next:
    overtime rules, deductions, and persisted payslips.
-2. **Scheduling/assignments** — plan who is expected at which site.
-3. **Client invoicing** — bill contracted hours per site.
+2. ~~**Scheduling/assignments** — plan who works where.~~ ✅ planned shifts +
+   roster shipped (overlap guard, schema migration v3). Next: **plan-vs-actual
+   variance** (roster vs attendance → no-shows / coverage gaps).
+3. **Client invoicing** — bill contracted/worked hours per site.
 4. **HTTP API (FastAPI)** + auth, so mobile clock-in becomes possible.
 
 ## Extraction to the `Nirvacore-v1` repo

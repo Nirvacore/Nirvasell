@@ -18,9 +18,11 @@ from nirvacore.domain.employee import Employee, EmploymentStatus, Role
 from nirvacore.domain.ids import (
     AttendanceId,
     EmployeeId,
+    ShiftId,
     SiteId,
 )
 from nirvacore.domain.money import Money
+from nirvacore.domain.shift import Shift, ShiftStatus
 from nirvacore.domain.site import Site, SiteStatus
 
 # Ordered list of (version, SQL). Append-only; never edit a shipped migration.
@@ -57,6 +59,21 @@ MIGRATIONS: list[tuple[int, str]] = [
         """
         ALTER TABLE employees ADD COLUMN hourly_rate TEXT NOT NULL DEFAULT '0';
         ALTER TABLE employees ADD COLUMN pay_currency TEXT NOT NULL DEFAULT 'THB';
+        """,
+    ),
+    (
+        3,
+        """
+        CREATE TABLE shifts (
+            id           TEXT PRIMARY KEY,
+            employee_id  TEXT NOT NULL REFERENCES employees(id),
+            site_id      TEXT NOT NULL REFERENCES sites(id),
+            start        TEXT NOT NULL,
+            end          TEXT NOT NULL,
+            status       TEXT NOT NULL
+        );
+        CREATE INDEX idx_shifts_employee ON shifts(employee_id);
+        CREATE INDEX idx_shifts_start ON shifts(start);
         """,
     ),
 ]
@@ -265,4 +282,74 @@ class SqliteAttendanceRepository:
             site_id=SiteId(row["site_id"]),
             clock_in=datetime.fromisoformat(row["clock_in"]),
             clock_out=_parse_dt(row["clock_out"]),
+        )
+
+
+class SqliteShiftRepository:
+    def __init__(self, conn: sqlite3.Connection) -> None:
+        self._conn = conn
+
+    def add(self, shift: Shift) -> None:
+        self._conn.execute(
+            "INSERT INTO shifts (id, employee_id, site_id, start, end, status) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                shift.id,
+                shift.employee_id,
+                shift.site_id,
+                shift.start.isoformat(),
+                shift.end.isoformat(),
+                shift.status.value,
+            ),
+        )
+        self._conn.commit()
+
+    def save(self, shift: Shift) -> None:
+        self._conn.execute(
+            "UPDATE shifts SET employee_id=?, site_id=?, start=?, end=?, "
+            "status=? WHERE id=?",
+            (
+                shift.employee_id,
+                shift.site_id,
+                shift.start.isoformat(),
+                shift.end.isoformat(),
+                shift.status.value,
+                shift.id,
+            ),
+        )
+        self._conn.commit()
+
+    def get(self, shift_id: ShiftId) -> Shift | None:
+        row = self._conn.execute(
+            "SELECT * FROM shifts WHERE id=?", (shift_id,)
+        ).fetchone()
+        return self._to_entity(row) if row else None
+
+    def list_between(self, start: datetime, end: datetime) -> list[Shift]:
+        rows = self._conn.execute(
+            "SELECT * FROM shifts WHERE start < ? AND end > ? ORDER BY start",
+            (end.isoformat(), start.isoformat()),
+        ).fetchall()
+        return [self._to_entity(r) for r in rows]
+
+    def list_active_for_employee(
+        self, employee_id: EmployeeId, start: datetime, end: datetime
+    ) -> list[Shift]:
+        rows = self._conn.execute(
+            "SELECT * FROM shifts WHERE employee_id=? AND status=? "
+            "AND start < ? AND end > ? ORDER BY start",
+            (employee_id, ShiftStatus.PLANNED.value, end.isoformat(),
+             start.isoformat()),
+        ).fetchall()
+        return [self._to_entity(r) for r in rows]
+
+    @staticmethod
+    def _to_entity(row: sqlite3.Row) -> Shift:
+        return Shift(
+            id=ShiftId(row["id"]),
+            employee_id=EmployeeId(row["employee_id"]),
+            site_id=SiteId(row["site_id"]),
+            start=datetime.fromisoformat(row["start"]),
+            end=datetime.fromisoformat(row["end"]),
+            status=ShiftStatus(row["status"]),
         )

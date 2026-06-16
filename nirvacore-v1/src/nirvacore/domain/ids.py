@@ -13,6 +13,7 @@ from uuid import uuid4
 EmployeeId = NewType("EmployeeId", str)
 SiteId = NewType("SiteId", str)
 AttendanceId = NewType("AttendanceId", str)
+ShiftId = NewType("ShiftId", str)
 
 
 def new_employee_id() -> EmployeeId:
@@ -25,3 +26,7 @@ def new_site_id() -> SiteId:
 
 def new_attendance_id() -> AttendanceId:
     return AttendanceId(uuid4().hex)
+
+
+def new_shift_id() -> ShiftId:
+    return ShiftId(uuid4().hex)

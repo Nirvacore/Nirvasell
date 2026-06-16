@@ -12,7 +12,8 @@ from typing import Protocol
 
 from nirvacore.domain.attendance import AttendanceRecord
 from nirvacore.domain.employee import Employee
-from nirvacore.domain.ids import AttendanceId, EmployeeId, SiteId
+from nirvacore.domain.ids import AttendanceId, EmployeeId, ShiftId, SiteId
+from nirvacore.domain.shift import Shift
 from nirvacore.domain.site import Site
 
 
@@ -46,3 +47,13 @@ class AttendanceRepository(Protocol):
     def list_between(
         self, start: datetime, end: datetime
     ) -> list[AttendanceRecord]: ...
+
+
+class ShiftRepository(Protocol):
+    def add(self, shift: Shift) -> None: ...
+    def get(self, shift_id: ShiftId) -> Shift | None: ...
+    def save(self, shift: Shift) -> None: ...
+    def list_between(self, start: datetime, end: datetime) -> list[Shift]: ...
+    def list_active_for_employee(
+        self, employee_id: EmployeeId, start: datetime, end: datetime
+    ) -> list[Shift]: ...

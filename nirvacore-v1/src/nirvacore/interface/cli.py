@@ -59,11 +59,26 @@ def _build_parser() -> argparse.ArgumentParser:
     p_pay.add_argument("start", help="YYYY-MM-DD (inclusive)")
     p_pay.add_argument("end", help="YYYY-MM-DD (exclusive)")
 
+    p_sch = sub.add_parser("schedule", help="Plan a shift for an employee")
+    p_sch.add_argument("employee_id")
+    p_sch.add_argument("site_id")
+    p_sch.add_argument("start", help="ISO datetime, e.g. 2026-06-15T08:00")
+    p_sch.add_argument("end", help="ISO datetime, e.g. 2026-06-15T17:00")
+
+    p_ros = sub.add_parser("roster", help="Planned shifts in a range")
+    p_ros.add_argument("start", help="YYYY-MM-DD (inclusive)")
+    p_ros.add_argument("end", help="YYYY-MM-DD (exclusive)")
+
     return parser
 
 
 def _day(value: str) -> datetime:
     return datetime.fromisoformat(value).replace(tzinfo=UTC)
+
+
+def _instant(value: str) -> datetime:
+    dt = datetime.fromisoformat(value)
+    return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -116,6 +131,25 @@ def main(argv: list[str] | None = None) -> int:
                     f"\t@ {slip.hourly_rate}/h\t= {slip.gross_pay}"
                 )
             print(f"TOTAL\t{run.total_gross}")
+        elif args.command == "schedule":
+            shift = c.schedule.schedule(
+                EmployeeId(args.employee_id),
+                SiteId(args.site_id),
+                _instant(args.start),
+                _instant(args.end),
+            )
+            print(
+                f"scheduled: {shift.id}\t{shift.start.isoformat()}"
+                f" → {shift.end.isoformat()}\t({shift.planned_hours} h)"
+            )
+        elif args.command == "roster":
+            roster = c.schedule.roster(_day(args.start), _day(args.end))
+            for entry in roster.lines:
+                print(
+                    f"{entry.shift.start.isoformat()}\t{entry.employee_name}"
+                    f"\t@ {entry.site_name}\t{entry.shift.planned_hours} h"
+                )
+            print(f"TOTAL PLANNED\t{roster.planned_hours} h")
     except DomainError as exc:
         print(f"error: {exc}")
         return 1
