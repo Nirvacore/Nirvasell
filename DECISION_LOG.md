@@ -3,6 +3,15 @@
 
 ---
 
+### 2026-06-14 · D-014 · BEST GROUP back office — แยกโดเมนจาก NIRVA (plan only)
+- **NIRVA Separation Policy:** BEST-HQ (ธุรกิจ) ↔ NIRVA-HQ (เทคโนโลยี) **ห้ามปน**
+- 🔴 พบ `NIRVAPROCURE` ในรายการ BEST → ต้องไป NIRVA-HQ (ไม่ดูดเข้า BEST-HQ)
+- เป้าหมาย `~/BEST-HQ/` 01_ERP..12_MANAGEMENT + 99_BACKUP
+- Deliverables: BEST_REORGANIZATION_PLAN, BEST_FOLDER_REGISTRY, BEST_RISK_REGISTER, BEST_BACKUP_PLAN, BEST_UNKNOWN_FOLDER_REPORT + `best_audit.sh`/`best_backup.sh`
+- ความเสี่ยงเด่น: PDPA(09_HR), ไม่พบที่อยู่ 03_FINANCE/09_HR ชัด, บันทึกลูกค้า/สัญญา (กฎหมาย)
+- Execution Policy: **DRY_RUN=1 default · ยังไม่สร้าง reorg/move script จนกว่าอนุมัติ**
+- ⛔ ไม่แตะของจริง · ทุกโฟลเดอร์ = บันทึกธุรกิจ active จนพิสูจน์ตรงข้าม
+
 ### 2026-06-14 · D-013 · NIRVA LIFE OS — โครง `~/HQ` 10 หมวด (10-year blueprint)
 - รับ blueprint ใหม่จากผู้ใช้ → `HQ_BLUEPRINT.md` = เอกสารหลัก (แทนโครง `~/NIRVA-HQ` 7 หมวดเดิม)
 - โครง: 01_CORE..10_SYSTEM + policies (Downloads inbox/30วัน, new-file, truth hierarchy, NAS nightly, yearly review, retention)
