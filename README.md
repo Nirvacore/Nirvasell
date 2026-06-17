@@ -32,6 +32,16 @@ python3 -m streamlit run app.py --server.port 8501
 
 ---
 
+## สำหรับนักพัฒนา / โคเซอร์
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — อะไรทำใน repo นี้ได้ · module ย้ายแล้ว/รอ port · Python→TypeScript
+- **[ECOSYSTEM_MAP.md](ECOSYSTEM_MAP.md)** — NirvaSell อยู่ตรงไหนใน BEST GROUP / NIRVA
+- **[NIRVACORE_V1_PLAN.md](NIRVACORE_V1_PLAN.md)** — แผน monorepo (รอ audit ก่อน merge จริง)
+
+> **Feature ใหม่ → [nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1)** · repo นี้ = legacy + reference
+
+---
+
 ## หน้าทั้งหมด (142 หน้า)
 
 ### 🧠 Knowledge & Compliance
@@ -132,10 +142,15 @@ nirva/
 ├── app.py                  # Entry point
 ├── _sidebar.py             # Sidebar shared component
 ├── _theme.py               # Zen minimal CSS theme
-├── i18n.py                 # 3,749 keys · 19 ภาษา
+├── i18n.py                 # 3,800+ keys · 19 ภาษา
 ├── auth.py                 # Multi-provider auth (8 วิธี)
 ├── db.py                   # SQLite multi-tenant
-├── pages/                  # 140 หน้า (A0–H9 + เดิม)
+├── knowledge_hub.py        # Knowledge graph (v80)
+├── policy_watcher.py       # Marketplace policy cron (v81 bridge)
+├── standards_kb/           # Universal Compliance Graph (v80)
+├── nirva_os/               # Architecture blueprint (JSON)
+├── nirva_research/         # Payroll / SOP research pack
+├── pages/                  # 142 หน้า
 ├── *.py                    # 80+ backend modules
 └── data/users/             # Per-user SQLite databases
 ```

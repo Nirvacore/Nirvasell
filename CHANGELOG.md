@@ -5,9 +5,10 @@ Built iteratively. Current stats:
 
 ---
 
----
-
----
+## v82 — Ecosystem docs alignment (safe / docs-only)
+- `CONTRIBUTING.md` — single guide: what to do here vs NirvaCore, module migration checklist (RFM/Forecast done, v80–v81 Python-only noted)
+- README — developer links (ECOSYSTEM_MAP, NIRVACORE_V1_PLAN), file tree updated
+- No runtime / dependency changes
 
 ## v81 — Policy → Knowledge Hub bridge
 - `knowledge_hub.capture_policy_change()` — idempotent policy/fee events pushed into Hub
