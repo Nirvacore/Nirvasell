@@ -3,7 +3,29 @@
 > **สถานะ: Legacy reference · feature ใหม่ไปที่ NirvaCore**
 >
 > Repo นี้เป็น Python/Streamlit (nirva.sell) — **ใช้รันได้ แต่ไม่เพิ่มฟีเจอร์ใหม่ที่นี่**
-> งานใหม่เขียนเป็น TypeScript ใน [nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1)
+> งานใหม่เขียนเป็น **TypeScript** ใน [nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1)
+
+---
+
+## ภาษา / stack ต่อ repo (NIRVA Ecosystem)
+
+| Repo | ภาษา | Framework / DB | บทบาท |
+|------|------|----------------|-------|
+| **[nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1)** | **TypeScript** | NestJS 10 · Next.js 14 · Prisma · PostgreSQL | **ERP หลัก — ที่เขียนต่อ** |
+| **Nirvasell** (repo นี้) | Python 3.11+ | Streamlit · SQLite per-user | Legacy + reference · maintenance เท่านั้น |
+| **Nirvaprocure** | TypeScript | (กำลังรวมเข้า nirvacore-v1) | Procurement OS |
+| **nirvadeploy** | TypeScript | — | Deploy / infra tooling |
+| `nirva_research/` (ใน repo นี้) | Python (stdlib) | JSON data + `payroll_engine.py` | สูตร/กฎธุรกิจ — **port logic ไป TS** ไม่ deploy Python ใหม่ |
+| `standards_kb/` (ใน repo นี้) | Python + JSON | dependency-free graph | Compliance — บ้านในอนาคต = **NirvaGov** package ใน nirvacore-v1 |
+
+**กฎภาษา (บังคับ):**
+
+1. ฟีเจอร์ production ใหม่ → **TypeScript ใน nirvacore-v1** เท่านั้น
+2. Repo นี้ → แก้ bug / docs / i18n / cron ได้ · **ห้าม** เพิ่มหน้า Streamlit หรือ module Python ใหม่
+3. Python ใน `nirva_research/` และ `standards_kb/` = **อ้างอิง business logic** — อ่านแล้วแปลเป็น NestJS service + Prisma
+4. มี prototype Python ERP บน branch เก่า (`claude/nirva-ecosystem-v3`) — **ไม่ใช่ Source of Truth**; SoT คือ TypeScript ใน nirvacore-v1 (ดู [REPO_REGISTRY.md](REPO_REGISTRY.md))
+
+ดูสถาปัตยกรรมเต็ม: [docs/NIRVA_ARCHITECTURE.md](docs/NIRVA_ARCHITECTURE.md) · [docs/NIRVAFORGE.md](docs/NIRVAFORGE.md) (NestJS + FastAPI สำหรับงาน AI)
 
 ---
 
