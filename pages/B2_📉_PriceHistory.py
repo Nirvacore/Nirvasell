@@ -50,8 +50,8 @@ with st.form("update_price"):
     else:
         prod_opts = [
             p["sku"] + " — " + (p["name"] or "")[:25] +
-            " (ทุน ฿" + "{:,.0f}".format(p["cost_price"] or 0) +
-            " / ขาย ฿" + "{:,.0f}".format(p["sell_price"] or 0) + ")"
+            " (" + t("common.cost_price") + " ฿" + "{:,.0f}".format(p["cost_price"] or 0) +
+            " / " + t("common.sell_price") + " ฿" + "{:,.0f}".format(p["sell_price"] or 0) + ")"
             for p in products
         ]
         sel_idx = st.selectbox(
@@ -132,8 +132,8 @@ if products:
             for d in dates:
                 df_data.append({
                     "date": d,
-                    "ราคาทุน": cost_map.get(d),
-                    "ราคาขาย": sell_map.get(d),
+                    t("common.cost_price"): cost_map.get(d),
+                    t("common.sell_price"): sell_map.get(d),
                 })
 
             df = pd.DataFrame(df_data).set_index("date")

@@ -116,7 +116,7 @@ if platform_data:
             "padding:6px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<span><strong>" + (p["platform"] or "direct") + "</strong></span>"
             "<span style='display:flex;gap:16px;font-size:13px'>"
-            "<span>" + str(p["count"]) + " รายการ</span>"
+            "<span>" + str(p["count"]) + " " + t("common.items") + "</span>"
             "<span style='color:#c54c4c'>-฿{:,.0f}".format(p["refund"] or 0) + "</span>"
             "</span></div>",
             unsafe_allow_html=True,

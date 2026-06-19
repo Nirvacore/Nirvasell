@@ -58,10 +58,11 @@ if risks:
             "<div style='display:flex;justify-content:space-between'>"
             "<span><strong>" + r["sku"] + "</strong></span>"
             "<span style='display:flex;gap:12px;font-size:12px'>"
-            "<span>สต็อก " + str(r["current_stock"]) + "</span>"
-            "<span>ต้องการ " + str(r["forecast_need"]) + "</span>"
+            "<span>" + t("common.stock") + " " + str(r["current_stock"]) + "</span>"
+            "<span>" + t("common.need") + " " + str(r["forecast_need"]) + "</span>"
             "<span style='color:" + r_color + ";font-weight:600'>"
-            "ขาด " + str(r["deficit"]) + " · " + str(r["coverage_days"]) + " วัน</span>"
+            + t("common.deficit") + " " + str(r["deficit"]) + " · " +
+            str(r["coverage_days"]) + " " + t("common.day_unit") + "</span>"
             "</span></div></div>",
             unsafe_allow_html=True,
         )
@@ -110,9 +111,10 @@ for item in forecasts:
         str(item["trend_pct"]) + "%</span>"
         " " + conf_icon + "</span>"
         "<span style='display:flex;gap:12px;font-size:13px'>"
-        "<span>เฉลี่ย " + str(item["avg_weekly_recent"]) + " ชิ้น/สัปดาห์</span>"
-        "<span style='font-weight:600'>พยากรณ์ " + str(item["forecast_qty"]) +
-        " ชิ้น</span>"
+        "<span>" + t("common.average") + " " + str(item["avg_weekly_recent"]) +
+        " " + t("common.pieces_per_week") + "</span>"
+        "<span style='font-weight:600'>" + t("common.forecast") + " " +
+        str(item["forecast_qty"]) + " " + t("common.pieces") + "</span>"
         "<span style='color:#4d6c5c;font-weight:600'>"
         "฿{:,.0f}".format(item["forecast_revenue"]) + "</span>"
         "</span></div>"

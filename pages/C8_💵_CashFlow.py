@@ -121,5 +121,5 @@ st.divider()
 s = cf.summary()
 st.caption(
     t("cf.avg_net_caption") + " ฿{:,.0f}".format(s["avg_monthly_net"]) +
-    " · trend: " + s["trend"]
+    " · " + t("common.trend") + ": " + s["trend"]
 )

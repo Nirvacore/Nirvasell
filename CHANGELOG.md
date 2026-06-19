@@ -9,6 +9,11 @@ Built iteratively. Current stats:
 
 ---
 
+## v82 — B/C pack i18n (Thai source of truth)
+- Replace hardcoded Thai/English inline strings in B0–B9 and C0–C9 pages with `t()` keys
+- Add `common.*` inline labels + module format strings (`goal.progress_line`, `inv.subtotal_line`, …)
+- Thai remains source of truth per NIRVA ecosystem i18n convention
+
 ## v81 — Policy → Knowledge Hub bridge
 - `knowledge_hub.capture_policy_change()` — idempotent policy/fee events pushed into Hub
 - `scripts/policy_check.py` — cron captures policy changes per user DB

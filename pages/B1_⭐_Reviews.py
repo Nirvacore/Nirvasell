@@ -55,7 +55,7 @@ with st.expander(t("rev.add_title"), expanded=s["total"] == 0):
                     "SELECT sku, name FROM products ORDER BY sku"
                 ).fetchall()
             if products:
-                prod_opts = ["(ไม่ระบุ สินค้า)"] + [
+                prod_opts = [t("rev.no_product")] + [
                     p["sku"] + " — " + (p["name"] or "")[:25] for p in products
                 ]
                 sel_idx = st.selectbox(t("rev.f_sku"), range(len(prod_opts)),
@@ -106,7 +106,7 @@ if unanswered:
                 "<div style='padding:8px 14px;border-left:3px solid " + color + ";"
                 "border-bottom:0.5px solid rgba(40,30,20,0.04)'>"
                 + stars_str +
-                " <strong>" + (rev.get("reviewer_name") or "ไม่ระบุ") + "</strong>"
+                " <strong>" + (rev.get("reviewer_name") or t("common.unknown")) + "</strong>"
                 " · " + rev["platform"] +
                 " · " + (rev.get("sku") or "—") +
                 " <span style='color:#9a9485;font-size:11px'>"
@@ -145,12 +145,13 @@ if platform_data:
             "border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<span style='font-weight:600'>" + p["platform"].capitalize() + "</span>"
             "<span style='display:flex;gap:16px;font-size:13px'>"
-            "<span>" + str(p["total"]) + " รีวิว</span>"
+            "<span>" + t("rev.reviews_count", n=p["total"]) + "</span>"
             "<span style='color:" + p_color + ";font-weight:600'>"
             "⭐ " + "{:.1f}".format(p["avg_rating"] or 0) + "</span>"
             "<span style='color:#4d6c5c'>" + str(p["positive"]) + " 👍</span>"
             "<span style='color:#c54c4c'>" + str(p["negative"]) + " 👎</span>"
-            + ("<span style='color:#c5963d'>" + str(p["unanswered"]) + " รอตอบ</span>"
+            + ("<span style='color:#c5963d'>" + str(p["unanswered"]) + " " +
+               t("common.awaiting") + "</span>"
                if p["unanswered"] > 0 else "") +
             "</span></div>",
             unsafe_allow_html=True,
@@ -192,7 +193,7 @@ for rev in reviews:
         "<div style='padding:8px 14px;"
         "border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
         + stars_str +
-        " <strong>" + (rev.get("reviewer_name") or "ไม่ระบุ") + "</strong>"
+        " <strong>" + (rev.get("reviewer_name") or t("common.unknown")) + "</strong>"
         " · " + rev["platform"] +
         " · " + (rev.get("sku") or "—") +
         " <span style='color:#9a9485;font-size:11px'>"

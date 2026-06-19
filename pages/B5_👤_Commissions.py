@@ -115,10 +115,10 @@ for staff_row in period_data:
         " <span style='color:#9a9485;font-size:12px'>"
         + str(staff_row["commission_pct"]) + "%</span></div>"
         "<div style='display:flex;gap:16px;font-size:13px'>"
-        "<span>ยอดขาย ฿{:,.0f}".format(staff_row["total_sales"]) + "</span>"
-        "<span>ค่าคอม ฿<strong>{:,.0f}".format(staff_row["total_commission"]) + "</strong></span>"
+        "<span>" + t("common.sales") + " ฿{:,.0f}".format(staff_row["total_sales"]) + "</span>"
+        "<span>" + t("common.commission") + " ฿<strong>{:,.0f}".format(staff_row["total_commission"]) + "</strong></span>"
         "<span style='color:" + p_color + ";font-weight:600'>"
-        "ค้าง ฿{:,.0f}".format(staff_row["pending"]) + "</span>"
+        + t("common.pending_pay") + " ฿{:,.0f}".format(staff_row["pending"]) + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )

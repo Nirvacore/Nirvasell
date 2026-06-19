@@ -50,9 +50,9 @@ if active:
         st.markdown(
             "<div style='padding:10px 14px;background:rgba(197,76,76,0.04);"
             "border:1px solid #c54c4c;border-radius:10px;margin-bottom:6px'>"
-            "🔴 <strong>LIVE:</strong> " + sess["title"] +
+            " 🔴 <strong>" + t("common.live_label") + "</strong> " + sess["title"] +
             " · " + sess["platform"] +
-            " · " + str(sess["order_count"]) + " ออเดอร์"
+            " · " + str(sess["order_count"]) + " " + t("common.orders") +
             " · ฿{:,.0f}".format(sess["revenue"]) + "</div>",
             unsafe_allow_html=True,
         )
@@ -83,8 +83,8 @@ if st.session_state.get("active_live_session"):
 
     st.divider()
     st.markdown(
-        "### 🔴 " + summary_data.get("title", "Live") +
-        " — " + str(summary_data.get("total_orders", 0)) + " ออเดอร์" +
+        "### 🔴 " + summary_data.get("title", t("live.default_title")) +
+        " — " + str(summary_data.get("total_orders", 0)) + " " + t("common.orders") +
         " · ฿{:,.0f}".format(summary_data.get("total_revenue", 0))
     )
 
@@ -160,7 +160,7 @@ for sess in sessions:
         " <span style='color:#9a9485;font-size:11px'>"
         + sess["platform"] + "</span></span>"
         "<span style='display:flex;gap:12px;font-size:13px'>"
-        "<span>" + str(sess.get("order_count") or 0) + " ออเดอร์</span>"
+        "<span>" + str(sess.get("order_count") or 0) + " " + t("common.orders") + "</span>"
         "<span style='color:#4d6c5c;font-weight:600'>" + rev_str + "</span>"
         "<span style='font-size:11px;color:#9a9485'>"
         + (sess.get("created_at") or "")[:10] + "</span>"
