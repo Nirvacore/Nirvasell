@@ -6,7 +6,7 @@ Built iteratively. Current stats:
 ---
 
 ## v82 — Ecosystem docs alignment (safe / docs-only)
-- `CONTRIBUTING.md` — single guide: what to do here vs NirvaCore, module migration checklist (RFM/Forecast done, v80–v81 Python-only noted)
+- `CONTRIBUTING.md` — single guide: what to do here vs NirvaCore, **language/stack matrix per repo** (TS = nirvacore-v1, Python = legacy reference only), module migration checklist (RFM/Forecast done, v80–v81 Python-only noted)
 - README — developer links (ECOSYSTEM_MAP, NIRVACORE_V1_PLAN), file tree updated
 - No runtime / dependency changes
 

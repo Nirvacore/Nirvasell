@@ -38,7 +38,7 @@ python3 -m streamlit run app.py --server.port 8501
 - **[ECOSYSTEM_MAP.md](ECOSYSTEM_MAP.md)** — NirvaSell อยู่ตรงไหนใน BEST GROUP / NIRVA
 - **[NIRVACORE_V1_PLAN.md](NIRVACORE_V1_PLAN.md)** — แผน monorepo (รอ audit ก่อน merge จริง)
 
-> **Feature ใหม่ → [nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1)** · repo นี้ = legacy + reference
+> **Feature ใหม่ → [nirvacore-v1](https://github.com/Nirvacore/nirvacore-v1) (TypeScript)** · repo นี้ = Python legacy + reference
 
 ---
 
