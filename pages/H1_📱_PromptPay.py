@@ -56,12 +56,12 @@ with tab_settings:
     with st.form("pay_settings_form"):
         new_id   = st.text_input(t("pay.f_id"),
                                   value=pp_id,
-                                  placeholder="0812345678 / 0-1234-56789-00-0")
+                                  placeholder=t("pay.id_ph"))
         shop_name= st.text_input(t("pay.f_shop"),
                                   value=settings.get("shop_name","") if settings else "")
         bank_name= st.text_input(t("pay.f_bank"),
                                   value=settings.get("bank_name","") if settings else "",
-                                  placeholder="กสิกรไทย / SCB / BBL")
+                                  placeholder=t("pay.bank_ph"))
         if st.form_submit_button(t("pay.save_btn")):
             pm.set_settings(promptpay_id=new_id.strip(),
                              shop_name=shop_name.strip(),

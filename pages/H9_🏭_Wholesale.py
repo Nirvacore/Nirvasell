@@ -69,7 +69,7 @@ with tab_quote:
             qi["qty"] = col2.number_input(t("ws.f_qty"), min_value=1, value=qi["qty"],
                                            key="qq_" + str(i))
             price_at  = wp.price_for_qty(qi["sku"], qi["qty"])
-            col3.metric("฿/ชิ้น", "฿{:,.2f}".format(price_at) if price_at else "—")
+            col3.metric(t("ws.price_per_unit"), "฿{:,.2f}".format(price_at) if price_at else "—")
 
         col_a, col_c = st.columns(2)
         if col_a.button("+" + t("ws.add_line")):
@@ -81,10 +81,11 @@ with tab_quote:
             st.subheader("฿{:,.2f}".format(total))
             if result:
                 for r in result:
-                    st.write("• " + r.get("sku","?") +
-                             " × " + str(r.get("qty",0)) +
-                             " @ ฿{:,.2f}".format(r.get("unit_price",0)) +
-                             " = ฿{:,.2f}".format(r.get("subtotal",0)))
+                    st.write(t("ws.quote_line",
+                               sku=r.get("sku", "?"),
+                               qty=str(r.get("qty", 0)),
+                               price="{:,.2f}".format(r.get("unit_price", 0)),
+                               subtotal="{:,.2f}".format(r.get("subtotal", 0))))
 
 with tab_set:
     st.subheader(t("ws.set_tiers_title"))

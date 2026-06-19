@@ -102,7 +102,7 @@ for cust in customers:
         "<span style='color:#9a9485'>" + str(cust["frequency"]) + " " + t("common.times") + "</span>"
         "<span>฿{:,.0f}".format(cust["monetary"] or 0) + "</span>"
         "<span style='color:#9a9485;font-size:11px'>" +
-        str(cust["recency_days"] or 0) + "d ago</span>"
+        t("common.days_ago", n=str(cust["recency_days"] or 0)) + "</span>"
         "<span style='font-size:11px;font-weight:600;color:" +
         seg_info["color"] + "'>" + seg_info["label"] + "</span>"
         "</div></div></div>",

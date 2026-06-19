@@ -105,13 +105,13 @@ for p in platforms:
         "<div style='width:" + str(int(bar_width)) + "%;height:100%;"
         "background:#4d6c5c;border-radius:4px'></div></div>"
         "<div style='display:flex;gap:18px;font-size:12px;color:#7a7569'>"
-        "<span>📦 " + orders_str + " orders</span>"
-        "<span>👥 " + cust_str + " customers</span>"
+        "<span>📦 " + orders_str + " " + t("common.orders") + "</span>"
+        "<span>👥 " + cust_str + " " + t("common.customers") + "</span>"
         "<span>💰 AOV ฿" + aov_str + "</span>"
         "<span style='color:" + margin_color + ";font-weight:600'>"
-        "Margin " + margin_str + "</span>"
-        "<span>💵 Profit ฿" + profit_str + "</span>"
-        "<span>↩️ Return " + ret_str + "</span>"
+        + t("common.margin") + " " + margin_str + "</span>"
+        "<span>💵 " + t("common.profit") + " ฿" + profit_str + "</span>"
+        "<span>↩️ " + t("common.return_label") + " " + ret_str + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )
@@ -136,6 +136,6 @@ if growth:
             "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<span>" + icon + " <strong>" + g["platform"].title() + "</strong></span>"
             "<span style='font-weight:600;color:" + chg_color + "'>"
-            + chg_icon + " " + chg_str + " MoM</span></div>",
+            + chg_icon + " " + chg_str + t("common.mom") + "</span></div>",
             unsafe_allow_html=True,
         )

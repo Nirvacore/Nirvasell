@@ -53,9 +53,9 @@ def _render_items(items):
         color   = CLASS_COLORS.get(cls,"#9a9485")
         icon    = CLASS_ICONS.get(cls,"⚫")
         label   = icon + " **" + name + "**" + \
-                  " · " + str(rev_pct) + "% rev" + \
+                  t("abcx.expander_rev", pct=str(rev_pct)) + \
                   " · ฿{:,.0f}".format(rev) + \
-                  " · stock ฿{:,.0f}".format(sv)
+                  t("abcx.expander_stock", amount="{:,.0f}".format(sv))
         with st.expander(label):
             c1, c2, c3 = st.columns(3)
             c1.metric(t("abcx.revenue"), "฿{:,.0f}".format(rev))

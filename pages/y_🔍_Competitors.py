@@ -121,8 +121,9 @@ if undercuts:
             "🔴 <strong>" + u["sku"] + "</strong>"
             " — " + u["competitor"] +
             " (" + (u.get("platform") or "") + ")"
-            " · You ฿" + my_str + " vs ฿" + their_str +
-            " · <span style='color:#c54c4c;font-weight:600'>-฿" + diff_str + " cheaper</span></div>",
+            + t("comp.you_vs", you=my_str, them=their_str) +
+            " · <span style='color:#c54c4c;font-weight:600'>" +
+            t("comp.cheaper_by", amount=diff_str) + "</span></div>",
             unsafe_allow_html=True,
         )
 

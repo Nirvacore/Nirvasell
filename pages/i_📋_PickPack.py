@@ -74,7 +74,7 @@ with tab_pick:
                 "<span style='font-size:1.2rem;font-weight:600;color:#4d6c5c'>"
                 "×" + str(item["total_qty"]) + "</span>"
                 "<span style='color:#9a9485;font-size:11px'>" +
-                str(item["order_count"]) + " orders</span>"
+                str(item["order_count"]) + t("pp.orders_unit") + "</span>"
                 "</div></div>",
                 unsafe_allow_html=True,
             )

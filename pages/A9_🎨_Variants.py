@@ -64,13 +64,13 @@ with st.expander(t("var.add_title"), expanded=s["groups"] == 0):
             ac1, ac2, ac3 = st.columns(3)
             with ac1:
                 axis1_name = st.text_input(
-                    t("var.f_axis1"), placeholder="สี", key="_va1n")
+                    t("var.f_axis1"), placeholder=t("var.axis1_ph"), key="_va1n")
                 axis1_vals = st.text_input(
-                    t("var.f_axis1_vals"), placeholder="แดง,น้ำเงิน,เขียว",
+                    t("var.f_axis1_vals"), placeholder=t("var.axis1_vals_ph"),
                     key="_va1v")
             with ac2:
                 axis2_name = st.text_input(
-                    t("var.f_axis2"), placeholder="ไซซ์", key="_va2n")
+                    t("var.f_axis2"), placeholder=t("var.axis2_ph"), key="_va2n")
                 axis2_vals = st.text_input(
                     t("var.f_axis2_vals"), placeholder="S,M,L,XL",
                     key="_va2v")
@@ -175,9 +175,9 @@ for grp in groups:
                     st.rerun()
             with vc3:
                 st.caption(
-                    "ทุน ฿" + "{:,.0f}".format(var["cost_price"] or 0)
+                    t("var.cost_line", amount="{:,.0f}".format(var["cost_price"] or 0))
                 )
             with vc4:
                 st.caption(
-                    "ขาย ฿" + "{:,.0f}".format(var["sell_price"] or 0)
+                    t("var.sell_line", amount="{:,.0f}".format(var["sell_price"] or 0))
                 )

@@ -122,7 +122,7 @@ if bp:
             "padding:10px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<div>" + icon + " " + plat.replace("_", " ").title() +
             " <span style='color:#7a7569;font-size:12px'>" +
-            str(r.get("campaigns", 0)) + " campaigns</span></div>"
+            str(r.get("campaigns", 0)) + t("ads.campaigns_unit") + "</span></div>"
             "<div style='display:flex;gap:18px;align-items:center;font-size:13px'>"
             "<span>" + t("ads.kpi_spent") + " ฿" + "{:,.0f}".format(float(r.get("spent", 0))) + "</span>"
             "<span>" + t("ads.kpi_revenue") + " ฿" + "{:,.0f}".format(float(r.get("revenue", 0))) + "</span>"
