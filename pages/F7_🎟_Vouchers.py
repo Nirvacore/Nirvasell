@@ -8,6 +8,12 @@ from auth import require_auth
 from i18n import t
 from sidebar import render_sidebar
 
+_VOUCHER_TYPES = {
+    "percent": "vou.type_percent",
+    "fixed": "vou.type_fixed",
+    "shipping": "vou.type_shipping",
+}
+
 apply_theme()
 require_auth()
 vc.init()
@@ -61,7 +67,7 @@ with tab_create:
         col3, col4 = st.columns(2)
         dtype     = col3.selectbox(t("vou.f_type"),
                                     ["percent","fixed","shipping"],
-                                    format_func=lambda d: {"percent":"ลด %","fixed":"ลดบาท","shipping":"ฟรีค่าส่ง"}[d])
+                                    format_func=lambda d: t(_VOUCHER_TYPES[d]))
         dvalue    = col4.number_input(t("vou.f_value"), min_value=0.0, step=5.0)
         col5, col6 = st.columns(2)
         min_spend = col5.number_input(t("vou.f_min_spend"), min_value=0.0, step=50.0)
@@ -118,8 +124,8 @@ with tab_templates:
             "<span style='width:28px;display:inline-block'>" + tmpl["icon"] + "</span>"
             "<b style='color:#d4d0c8;width:220px;display:inline-block'>" + tmpl["label"] + "</b>"
             "<span style='color:#9a9485'>" + disc_str +
-            (" · ขั้นต่ำ ฿" + str(s["min_spend"]) if s["min_spend"] > 0 else "") +
-            " · " + str(s["duration_days"]) + " วัน</span>"
+            (t("vou.min_spend_line", amount=str(s["min_spend"])) if s["min_spend"] > 0 else "") +
+            " · " + str(s["duration_days"]) + t("vou.days") + "</span>"
             "</div>"
         )
         st.html(row_html)

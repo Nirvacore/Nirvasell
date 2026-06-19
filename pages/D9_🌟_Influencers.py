@@ -43,7 +43,7 @@ with tab_list:
         si = inf["status_info"]
         followers_str = "{:,}".format(inf["followers"]) if inf["followers"] else "—"
         label = si["icon"] + " **" + inf["name"] + "**" + \
-                " · " + inf.get("platform","") + " · " + followers_str + " followers"
+                " · " + inf.get("platform","") + " · " + followers_str + t("inf.followers_unit")
         with st.expander(label):
             col1, col2 = st.columns(2)
             col1.write(t("inf.handle") + ": @" + (inf.get("handle") or "—"))
@@ -79,7 +79,7 @@ with tab_add:
         platform  = col1.selectbox(t("inf.f_platform"), it.PLATFORMS)
         followers = col2.number_input(t("inf.f_followers"), min_value=0, step=100)
         niche     = col1.text_input(t("inf.f_niche"), placeholder="beauty, tech, food...")
-        contact   = col2.text_input(t("inf.f_contact"), placeholder="LINE / โทร / อีเมล")
+        contact   = col2.text_input(t("inf.f_contact"), placeholder=t("inf.contact_ph"))
         comm_type = col1.selectbox(t("inf.f_comm_type"),
                                     list(it.COMMISSION_TYPES.keys()),
                                     format_func=lambda k: it.COMMISSION_TYPES[k])

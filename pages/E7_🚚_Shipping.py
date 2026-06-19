@@ -110,7 +110,9 @@ with tab_margin:
                 "<span style='color:#9a9485;width:180px;display:inline-block'>"
                 + r["icon"] + " " + r["name"] + "</span>"
                 "<span style='color:" + color + "'>" +
-                str(m2["margin"]) + "% margin · ฿{:,.0f}".format(m2["profit"]) + " profit</span>"
+                t("ship.carrier_margin_line",
+                  margin=str(m2["margin"]),
+                  profit="{:,.0f}".format(m2["profit"])) + "</span>"
                 "</div>"
             )
             st.html(row_html)
@@ -124,7 +126,7 @@ with tab_rates:
             col1.write(t("ship.est_days") + ": " + info["est_days"])
             col2.write(t("ship.cod_flat") + ": ฿" + str(info["cod_fee"]))
             rate_html = "<table style='font-size:0.82rem;border-collapse:collapse'>"
-            rate_html += "<tr style='color:#9a9485'><th style='padding:2px 8px'>น้ำหนัก (kg)</th><th style='padding:2px 8px'>ราคา</th></tr>"
+            rate_html += "<tr style='color:#9a9485'><th style='padding:2px 8px'>" + t("ship.weight") + "</th><th style='padding:2px 8px'>" + t("ship.rate_price") + "</th></tr>"
             for w, p in info["rates"]:
                 rate_html += "<tr><td style='padding:2px 8px;color:#9a9485'>≤ " + str(w) + " kg</td>"
                 rate_html += "<td style='padding:2px 8px'>฿" + str(p) + "</td></tr>"

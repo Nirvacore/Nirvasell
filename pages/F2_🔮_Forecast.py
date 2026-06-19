@@ -82,11 +82,11 @@ with tab_risks:
                 "<div style='margin:4px 0;padding:6px 10px;border-left:3px solid " +
                 risk_color + ";font-size:0.84rem'>"
                 "<b>" + risk_icon + " " + r["sku"] + "</b>"
-                " — สต็อก " + str(r["current_stock"]) + " ชิ้น"
-                " · ต้องการ " + str(int(r["forecast_need"])) + " ชิ้น"
-                " · ขาด " + str(r["deficit"]) + " ชิ้น"
-                " · <span style='color:" + risk_color + "'>เหลือ " +
-                str(r["coverage_days"]) + t("fcast.days") + "</span>"
-                "</div>"
+                + " — " + t("common.stock") + " " + str(r["current_stock"]) + " " + t("common.pieces")
+                + " · " + t("common.need") + " " + str(int(r["forecast_need"])) + " " + t("common.pieces")
+                + " · " + t("common.deficit") + " " + str(r["deficit"]) + " " + t("common.pieces")
+                + " · <span style='color:" + risk_color + "'>" + t("common.remaining") + " "
+                + str(r["coverage_days"]) + t("common.day_unit") + "</span>"
+                + "</div>"
             )
             st.html(risk_html)

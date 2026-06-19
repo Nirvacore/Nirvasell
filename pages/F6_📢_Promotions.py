@@ -45,7 +45,7 @@ with tab_all:
         pi, si = p["promo_info"], p["status_info"]
         label = pi["icon"] + " **" + p["title"] + "**" + \
                 " · " + pi["label"] + \
-                " · " + ("ลด " + str(p["discount_value"]) +
+                " · " + (t("common.discount") + " " + str(p["discount_value"]) +
                           ("%" if "percent" in p["promo_type"] else " ฿")) + \
                 " · " + si["icon"] + " " + si["label"]
         with st.expander(label):

@@ -114,7 +114,7 @@ with tab_analysis:
                 "<span style='color:#9a9485;width:120px;display:inline-block'>"
                 + (p["platform"] or "—") + "</span>"
                 "<span style='color:#d4d0c8'>" + str(p["count"]) + t("ret.returns_unit") +
-                " · ฿{:,.0f}".format(loss) + " total loss</span>"
+                t("ret.total_loss_line", amount="{:,.0f}".format(loss)) + "</span>"
                 "</div>"
             )
             st.html(prow_html)

@@ -123,8 +123,8 @@ with tab_tiers:
             " <b style='color:#d4d0c8'>" + tier_info["label_th"] + "</b>"
             " &nbsp;·&nbsp; <span style='color:#9a9485'>" +
             "{:,}".format(tier_info["min_points"]) + t("loy.pts_min") + "</span>"
-            + (" &nbsp;·&nbsp; ส่วนลด " + str(tier_info["discount_pct"]) + "%" if tier_info["discount_pct"] > 0 else "") +
+            + (" &nbsp;·&nbsp; " + t("loy.discount_pct", pct=str(tier_info["discount_pct"])) if tier_info["discount_pct"] > 0 else "") +
             "</div>"
         )
         st.html(tier_html)
-    st.caption(t("loy.points_rate") + ": 1 " + t("loy.pts") + " / 1 ฿")
+    st.caption(t("loy.points_rate") + ": " + t("loy.points_per_baht"))

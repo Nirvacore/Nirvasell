@@ -53,7 +53,8 @@ with tab_calc:
         breakdown_html += t("fees.payment_fee") + ": ฿{:,.2f}".format(result["payment_fee"]) + "<br>"
         if result["transaction_fee"]:
             breakdown_html += t("fees.transaction_fee") + ": ฿{:,.2f}".format(result["transaction_fee"]) + "<br>"
-        breakdown_html += "VAT on fees: ฿{:,.2f}".format(result["vat_on_fees"]) + "<br>"
+        breakdown_html += t("fees.vat_on_fees",
+                            amount="{:,.2f}".format(result["vat_on_fees"])) + "<br>"
         breakdown_html += "</div>"
         st.html(breakdown_html)
 
