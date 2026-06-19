@@ -129,16 +129,12 @@ else:
 
 st.divider()
 import random
-quotes_th = [
-    "💪 วันนี้ก็สู้ต่อนะคะ!",
-    "🌟 ทุกออเดอร์คือความไว้วางใจ",
-    "🚀 ขายดีเริ่มจากวันนี้",
-    "💕 ลูกค้าทุกคนมีค่า",
-    "🎯 ตั้งเป้า ทำจริง วัดผล",
-]
+_BRIEF_QUOTES = (
+    "brief.quote_1", "brief.quote_2", "brief.quote_3", "brief.quote_4", "brief.quote_5",
+)
 st.markdown(
     "<div style='text-align:center;padding:16px;color:#9a9485;"
     "font-style:italic;font-size:14px'>"
-    + quotes_th[hash(b["date"]) % len(quotes_th)] + "</div>",
+    + t(_BRIEF_QUOTES[hash(b["date"]) % len(_BRIEF_QUOTES)]) + "</div>",
     unsafe_allow_html=True,
 )

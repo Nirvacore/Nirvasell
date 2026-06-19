@@ -77,7 +77,7 @@ for tmpl in filtered:
 
     with st.expander(
         cat_info["icon"] + " " + tmpl["name"] +
-        " · " + str(uses) + "x used",
+        " · " + t("msg.used_count", n=str(uses)),
         expanded=False,
     ):
         # Show template with variable placeholders
@@ -151,7 +151,7 @@ with st.expander(t("msg.create_title"), expanded=False):
         )
         m_vars = st.text_input(
             t("msg.f_vars"),
-            placeholder="buyer_name,product,total",
+            placeholder=t("msg.vars_ph"),
         )
 
         if st.form_submit_button(t("msg.create_btn"), type="primary"):

@@ -43,19 +43,19 @@ with k1:
 with k2:
     a_pct = round(s["A"]["count"] / s["total_skus"] * 100, 0) if s["total_skus"] else 0
     metric_with_hint(
-        "🅰️ A items", str(s["A"]["count"]),
-        hint=str(int(a_pct)) + "% of SKUs = 80% revenue",
+        t("abc.kpi_a_items"), str(s["A"]["count"]),
+        hint=t("abc.hint_a_pct", pct=str(int(a_pct))),
         hint_tone="ok",
     )
 with k3:
     metric_with_hint(
-        "🅱️ B items", str(s["B"]["count"]),
-        hint="15% of revenue", hint_tone="info",
+        t("abc.kpi_b_items"), str(s["B"]["count"]),
+        hint=t("abc.hint_b_revenue"), hint_tone="info",
     )
 with k4:
     metric_with_hint(
-        "🆑 C items", str(s["C"]["count"]),
-        hint="5% of revenue", hint_tone="warn",
+        t("abc.kpi_c_items"), str(s["C"]["count"]),
+        hint=t("abc.hint_c_revenue"), hint_tone="warn",
     )
 
 
@@ -80,11 +80,11 @@ for i, (icon, cls, color, data) in enumerate(class_data):
             "text-align:center'>"
             "<div style='font-size:1.8rem'>" + icon + "</div>"
             "<div style='font-size:1.6rem;font-weight:600;color:" + color + "'>"
-            + str(data["count"]) + " SKUs</div>"
+            + t("abc.card_skus", n=str(data["count"])) + "</div>"
             "<div style='color:#7a7569;font-size:13px;margin-top:6px'>"
-            "💵 Revenue: ฿" + rev_str + "</div>"
+            + t("abc.card_revenue", amount=rev_str) + "</div>"
             "<div style='color:#7a7569;font-size:13px'>"
-            "📦 Stock value: ฿" + stk_str + "</div></div>",
+            + t("abc.card_stock_value", amount=stk_str) + "</div></div>",
             unsafe_allow_html=True,
         )
 
@@ -117,7 +117,8 @@ def _render_items(items, color):
             "<div style='display:flex;gap:14px;align-items:center;font-size:13px'>"
             "<span>📦 " + stk_str + "</span>"
             "<span>" + pct_str + "</span>"
-            "<span style='color:#9a9485;font-size:11px'>cum " + cum_str + "</span>"
+            "<span style='color:#9a9485;font-size:11px'>" +
+            t("abc.cum_label", pct=cum_str) + "</span>"
             "<span style='font-weight:600;color:" + color + "'>฿" + rev_str + "</span>"
             "</div></div>",
             unsafe_allow_html=True,
@@ -148,7 +149,7 @@ if advice:
             "<div style='padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             + p_icon + " <strong>" + a["sku"] + "</strong>"
             " — " + (a["name"] or "")[:25] +
-            " · stock " + str(a["stock"]) +
+            + t("abc.advice_stock", n=str(a["stock"])) +
             " · <span style='color:#4d6c5c'>" + a_label + "</span></div>",
             unsafe_allow_html=True,
         )

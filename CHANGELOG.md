@@ -9,6 +9,11 @@ Built iteratively. Current stats:
 
 ---
 
+## v86 — Final i18n pass (I/J/A0/l_/S_/j_/s_/e_)
+- `A0` motivational quotes, `l_` ABC inline labels, `I_` Notifications full form labels
+- `S_` PhotoStudio backgrounds, `J_` custom task prompt/sample, `j_` rule fires line, `s_` Messages
+- `e_` Calendar uses `i18n_inline.day_names_mon_first()`
+
 ## v85 — World-class i18n (format strings + shared helpers)
 - Add `i18n_inline.py` — `day_name()` helper shared across pages
 - Add `{n}` / `{amount}` format keys (`common.n_orders`, `rst.line_*`, `srch.*`, …)
