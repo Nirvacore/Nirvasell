@@ -164,7 +164,7 @@ if bundles:
                 "<span style='text-decoration:line-through;color:#9a9485'>฿" + individual_str + "</span>"
                 "<span style='font-weight:600;color:#4d6c5c'>฿" + bundle_str + "</span>"
                 "<span style='color:#7a7569'>-" + "{:.0f}%".format(discount) + "</span>"
-                "<span>📦 " + str(sold) + " sold</span>"
+                "<span>📦 " + t("common.n_sold", n=str(sold)) + "</span>"
                 "</div></div></div>",
                 unsafe_allow_html=True,
             )

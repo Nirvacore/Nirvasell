@@ -71,7 +71,7 @@ if query and len(query.strip()) >= 2:
             margin = ""
             if p.get("sell_price") and p.get("cost_price"):
                 m = p["sell_price"] - p["cost_price"]
-                margin = " · กำไร ฿" + "{:,.0f}".format(m)
+                margin = t("srch.profit_line", amount="{:,.0f}".format(m))
 
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
@@ -85,7 +85,8 @@ if query and len(query.strip()) >= 2:
                 "</div>"
                 "<div style='display:flex;gap:12px;font-size:13px'>"
                 "<span>฿" + "{:,.0f}".format(p.get("sell_price") or 0) + "</span>"
-                "<span style='color:#9a9485'>สต็อก " + str(p.get("stock") or 0) + "</span>"
+                "<span style='color:#9a9485'>" +
+                t("srch.stock_line", n=str(p.get("stock") or 0)) + "</span>"
                 + ("<span style='color:#4d6c5c'>" + margin + "</span>" if margin else "") +
                 "</div></div>",
                 unsafe_allow_html=True,

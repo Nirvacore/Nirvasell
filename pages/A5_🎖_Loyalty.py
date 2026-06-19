@@ -59,7 +59,8 @@ for i, (tname, tinfo) in enumerate(loy.TIERS.items()):
             "border:0.5px solid rgba(40,30,20,0.07);border-radius:10px'>"
             "<div style='font-size:1.8rem'>" + tinfo["icon"] + "</div>"
             "<div style='font-weight:600'>" + tinfo["label_th"] + "</div>"
-            "<div style='font-size:12px;color:#7a7569'>ส่วนลด " + str(tinfo["discount_pct"]) + "%</div>"
+            "<div style='font-size:12px;color:#7a7569'>" +
+            t("loy.discount_pct", pct=str(tinfo["discount_pct"])) + "</div>"
             "<div style='font-size:12px;color:#9a9485'>" + str(tinfo["min_points"]) + t("loy.pts_min_suffix") + "</div>"
             "<div style='font-size:1.3rem;font-weight:600;color:#4d6c5c;margin-top:4px'>"
             + str(cnt) + "</div></div>",
@@ -141,7 +142,8 @@ if leaders:
             "<span style='display:flex;gap:12px'>"
             "<span style='color:#4d6c5c;font-weight:600'>"
             + "{:,}".format(lb["lifetime_points"]) + t("loy.pts_suffix") + "</span>"
-            "<span style='color:#9a9485'>คงเหลือ " + "{:,}".format(lb["points"]) + "</span>"
+            "<span style='color:#9a9485'>" +
+            t("loy.balance_pts", n="{:,}".format(lb["points"])) + "</span>"
             "</span></div>",
             unsafe_allow_html=True,
         )

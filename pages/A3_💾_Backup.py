@@ -106,4 +106,4 @@ if uploaded:
                 st.balloons()
                 st.rerun()
             else:
-                st.error("❌ " + result.get("error", "Unknown error"))
+                st.error("❌ " + result.get("error", t("common.unknown_error")))

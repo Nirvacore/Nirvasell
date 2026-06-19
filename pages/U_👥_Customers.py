@@ -225,7 +225,7 @@ if detail_id:
                                 import customer_ai
                                 import user_settings as _us
                                 _us.init()
-                                shop = _us.get("fulfill.seller_name", "") or "ร้านเรา"
+                                shop = _us.get("fulfill.seller_name", "") or t("cust.default_shop")
                                 msg = customer_ai.generate_message(
                                     segment=seg, customer=c_info,
                                     shop_name=shop, api_key=api_key,

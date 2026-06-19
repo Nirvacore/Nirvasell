@@ -154,8 +154,8 @@ if comp:
             "vs " + c_item["competitor"] + " (" + (c_item.get("platform") or "") + ")</span>"
             "</div>"
             "<div style='display:flex;gap:12px;font-size:13px'>"
-            "<span>You ฿" + my_str + "</span>"
-            "<span>They ฿" + their_str + "</span>"
+            "<span>" + t("comp.price_you", amount=my_str) + "</span>"
+            "<span>" + t("comp.price_them", amount=their_str) + "</span>"
             "<span style='font-weight:600;color:" + pos_color + "'>" + diff_str + "</span>"
             "</div></div>",
             unsafe_allow_html=True,

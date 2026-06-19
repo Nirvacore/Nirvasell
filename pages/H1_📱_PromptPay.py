@@ -25,7 +25,7 @@ with tab_qr:
     if not pp_id:
         st.warning(t("pay.no_id"))
     else:
-        st.info("📱 PromptPay ID: **" + pp_id + "**")
+        st.info(t("pay.id_display", id=pp_id))
         col1, col2 = st.columns(2)
         amount = col1.number_input(t("pay.f_amount"), min_value=0.0, step=10.0,
                                     value=0.0, help=t("pay.amount_hint"))

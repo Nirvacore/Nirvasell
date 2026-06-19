@@ -119,7 +119,8 @@ with cP:
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
                 "padding:8px 0;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-                "<div>" + icon + " " + plat.title() + " · " + str(r["count"]) + " returns</div>"
+                "<div>" + icon + " " + plat.title() + " · " +
+                t("common.n_returns", n=str(r["count"])) + "</div>"
                 "<div style='color:#c54c4c'>-฿" + "{:,.0f}".format(loss) + "</div>"
                 "</div>",
                 unsafe_allow_html=True,

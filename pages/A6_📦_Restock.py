@@ -118,11 +118,11 @@ for item in filtered:
             "<span style='font-size:12px;color:#9a9485'>"
             + (item["supplier"] or "") + "</span></div>"
             "<div style='display:flex;gap:16px;font-size:12px;color:#7a7569;margin-top:4px'>"
-            "<span>สต็อก: " + str(item["stock"]) + "</span>"
-            "<span>ขาย/วัน: " + str(item["velocity_day"]) + "</span>"
-            "<span>หมด: " + days_str + "</span>"
-            "<span>สั่ง: <strong style='color:" + urg_color + "'>"
-            + str(item["reorder_qty"]) + " ชิ้น</strong></span>"
+            "<span>" + t("rst.line_stock", n=str(item["stock"])) + "</span>"
+            "<span>" + t("rst.line_velocity", n=str(item["velocity_day"])) + "</span>"
+            "<span>" + t("rst.line_days_out", label=days_str) + "</span>"
+            "<span>" + t("rst.line_reorder") + " <strong style='color:" + urg_color + "'>"
+            + t("rst.reorder_pieces", n=str(item["reorder_qty"])) + "</strong></span>"
             + ("<span>฿" + "{:,.0f}".format(item["reorder_cost"]) + "</span>"
                if item["reorder_cost"] > 0 else "") +
             "</div></div>",

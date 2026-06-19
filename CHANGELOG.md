@@ -9,6 +9,11 @@ Built iteratively. Current stats:
 
 ---
 
+## v85 — World-class i18n (format strings + shared helpers)
+- Add `i18n_inline.py` — `day_name()` helper shared across pages
+- Add `{n}` / `{amount}` format keys (`common.n_orders`, `rst.line_*`, `srch.*`, …)
+- Wire remaining A/U/K/Z/M/7_/T_/i_ pages; refactor E1 to use `i18n_inline`
+
 ## v84 — G/H/W pack i18n (Thai source of truth)
 - Replace hardcoded Thai/English inline strings in G/H/W pages and lowercase companions with `t()` keys
 - Add `common.customers`, `turn.item_stock_doh`, `pay.bank_ph`, `comp.cheaper_by`, `var.cost_line`, etc.

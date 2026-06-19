@@ -112,7 +112,9 @@ with tab_pack:
             with st.expander(
                 plat_icon + " " + slip["order_id"] +
                 " · " + (slip["buyer_name"] or "—") +
-                " · " + str(items_count) + " items · ฿" + total_str,
+                " · " + t("pp.slip_summary",
+                           items=t("common.n_items", n=str(items_count)),
+                           total=total_str),
                 expanded=False,
             ):
                 if slip["buyer_name"]:

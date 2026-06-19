@@ -236,7 +236,7 @@ with tab_history:
                                        "zh": "🇨🇳 中文"}.get(l, l),
             )
         with n3:
-            shop_name = us.get("fulfill.seller_name", "") or "เรา"
+            shop_name = us.get("fulfill.seller_name", "") or t("fulfill.default_shop")
             st.caption(t("fulfill.notify_using_shop", name=shop_name))
 
         # Compose for the 10 most recent shipments

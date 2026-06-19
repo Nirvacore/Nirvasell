@@ -74,19 +74,19 @@ fees = fees_mod.load()
 
 strategies = [
     {
-        "name": "🎯 Match avg",
+        "name": t("pricing.strat_match"),
         "price": int(round(avg / 10) * 10),
-        "note": "ขายเท่าราคากลาง — ปลอดภัย",
+        "note": t("pricing.strat_match_note"),
     },
     {
-        "name": "💸 Undercut min",
+        "name": t("pricing.strat_undercut"),
         "price": int(round((lo - 50) / 10) * 10),
-        "note": "ต่ำกว่าคู่แข่งถูกสุด ฿50 — เร่งขายเร็ว",
+        "note": t("pricing.strat_undercut_note"),
     },
     {
-        "name": "💎 Premium",
+        "name": t("pricing.strat_premium"),
         "price": int(round(hi * 1.02 / 10) * 10),
-        "note": "สูงกว่าคู่แข่งสูงสุด 2% — เน้น quality + ประกัน",
+        "note": t("pricing.strat_premium_note"),
     },
 ]
 

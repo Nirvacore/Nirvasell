@@ -7,16 +7,7 @@ from theme import apply_theme
 from auth import require_auth
 from i18n import t
 from sidebar import render_sidebar
-
-_DAY_KEYS = [
-    "analytics.sun", "analytics.mon", "analytics.tue", "analytics.wed",
-    "analytics.thu", "analytics.fri", "analytics.sat",
-]
-
-
-def _day_name(dow: int) -> str:
-    return t(_DAY_KEYS[dow]) if 0 <= dow <= 6 else str(dow)
-
+from i18n_inline import day_name
 
 apply_theme()
 require_auth()
@@ -83,7 +74,7 @@ with tab_time:
             cnt = r["count"] or 0
             bar_w = int((cnt / max_d) * 180)
             dow = r["dow"]
-            name = _day_name(dow)
+            name = day_name(dow)
             d_html = (
                 "<div style='margin:2px 0;font-size:0.83rem'>"
                 "<span style='color:#9a9485;width:80px;display:inline-block'>" + name + "</span>"
@@ -143,7 +134,7 @@ with tab_repeat:
     best = oa.best_day()
     if best:
         dow = best.get("dow", 0)
-        name = _day_name(dow)
+        name = day_name(dow)
         rev = best.get("revenue") or 0
         st.write("**" + t("ana.best_day") + "**: " + name +
                  " · ฿{:,.0f}".format(rev))

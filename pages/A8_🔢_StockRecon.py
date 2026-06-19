@@ -120,8 +120,8 @@ else:
                 "<span style='font-size:13px'><strong>" + item["sku"] + "</strong>"
                 " <span style='color:#9a9485'>" + (item.get("name") or "")[:30] + "</span></span>"
                 "<span style='display:flex;gap:12px;font-size:13px'>"
-                "<span>ระบบ: " + str(item["system_qty"]) + "</span>"
-                "<span>จริง: <strong>" + str(item["physical_qty"]) + "</strong></span>"
+                "<span>" + t("recon.system_qty", n=str(item["system_qty"])) + "</span>"
+                "<span>" + t("recon.physical_qty", n=str(item["physical_qty"])) + "</span>"
                 "<span style='color:" + var_color + ";font-weight:600'>"
                 + var_str + "</span></span></div>",
                 unsafe_allow_html=True,

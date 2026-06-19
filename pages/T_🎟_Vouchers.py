@@ -18,6 +18,12 @@ from _auth_gate import require_auth
 from _components import page_header, toast, friendly_error
 from i18n import t
 
+_VOUCHER_TYPES = {
+    "percent": "vouch.type_percent",
+    "fixed": "vouch.type_fixed",
+    "shipping": "vouch.type_shipping",
+}
+
 st.set_page_config(page_title="nirva.sell · Voucher Studio",
                    page_icon="🎟", layout="wide")
 apply_theme()
@@ -106,11 +112,7 @@ with st.form("create_voucher"):
             t("vouch.f_type"),
             ["percent", "fixed", "shipping"],
             index=["percent","fixed","shipping"].index(defaults["discount_type"]),
-            format_func=lambda k: {
-                "percent":  "% ลด",
-                "fixed":    "฿ ลด",
-                "shipping": "🚚 ส่งฟรี",
-            }.get(k, k),
+            format_func=lambda k: t(_VOUCHER_TYPES[k]),
         )
 
     c4, c5, c6 = st.columns(3)
@@ -120,7 +122,7 @@ with st.form("create_voucher"):
             st.markdown("&nbsp;", unsafe_allow_html=True)
         else:
             n_value = st.number_input(
-                "% หรือ ฿" if n_type == "percent" else "฿",
+                t("vouch.value_pct_or_baht") if n_type == "percent" else "฿",
                 min_value=0.0, value=float(defaults["discount_value"]), step=1.0,
             )
     with c5:

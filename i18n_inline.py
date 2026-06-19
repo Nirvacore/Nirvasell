@@ -1,0 +1,18 @@
+"""Shared inline i18n helpers — Thai source of truth via i18n.t()."""
+from i18n import t
+
+DAY_KEYS = (
+    "analytics.sun",
+    "analytics.mon",
+    "analytics.tue",
+    "analytics.wed",
+    "analytics.thu",
+    "analytics.fri",
+    "analytics.sat",
+)
+
+
+def day_name(dow: int) -> str:
+    if 0 <= dow <= 6:
+        return t(DAY_KEYS[dow])
+    return str(dow)

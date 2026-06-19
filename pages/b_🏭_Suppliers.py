@@ -212,7 +212,7 @@ if po_sup_id:
                     "<div style='display:flex;justify-content:space-between;"
                     "padding:6px 0;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
                     "<div>📋 " + (po.get("order_date") or "—") +
-                    " · " + str(po.get("items_count", 0)) + " items"
+                    " · " + t("common.n_items", n=str(po.get("items_count", 0))) +
                     " <span style='color:#9a9485;font-size:11px'>" +
                     (po.get("note") or "") + "</span></div>"
                     "<div style='font-weight:600'>฿" +
