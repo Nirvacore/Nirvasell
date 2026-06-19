@@ -76,7 +76,7 @@ for ch in stats:
     with st.expander(
         ch["icon"] + " " + ch["label"] +
         " · ฿{:,.0f}".format(ch["revenue"]) +
-        " · " + str(ch["orders"]) + " ออเดอร์"
+        " · " + str(ch["orders"]) + " " + t("common.orders")
     ):
         dc1, dc2, dc3, dc4 = st.columns(4)
         with dc1:
@@ -95,7 +95,7 @@ for ch in stats:
                 st.markdown(
                     "<div style='font-size:12px;padding:2px 0'>"
                     "📦 <strong>" + sku_r["sku"] + "</strong>"
-                    " · " + str(sku_r["total_qty"]) + " ชิ้น"
+                    " · " + str(sku_r["total_qty"]) + " " + t("common.pieces") +
                     " · ฿{:,.0f}".format(sku_r["revenue"]) + "</div>",
                     unsafe_allow_html=True,
                 )

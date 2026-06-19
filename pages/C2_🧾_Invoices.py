@@ -98,9 +98,10 @@ with st.expander(t("inv.create_title"), expanded=False):
     vat = round(subtotal * 0.07, 2) if include_vat else 0
     st.markdown(
         "<div style='text-align:right;padding:8px 0'>"
-        "ยอดก่อน VAT: ฿{:,.2f}".format(subtotal) +
-        (" · VAT 7%: ฿{:,.2f}".format(vat) if include_vat else "") +
-        " · <strong>รวม: ฿{:,.2f}".format(subtotal + vat) + "</strong></div>",
+        + t("inv.subtotal_line", amount="{:,.2f}".format(subtotal))
+        + (" · " + t("inv.vat_line", amount="{:,.2f}".format(vat)) if include_vat else "")
+        + " · <strong>" + t("inv.total_line", amount="{:,.2f}".format(subtotal + vat))
+        + "</strong></div>",
         unsafe_allow_html=True,
     )
 

@@ -176,10 +176,10 @@ for order in active:
                             "<span style='font-size:13px'><strong>" +
                             item["sku"] + "</strong> · " +
                             (item.get("product_name") or "")[:25] +
-                            " · สั่ง " + str(item["qty_ordered"]) +
-                            " รับแล้ว " + str(item["qty_received"]) +
-                            " <strong style='color:#c54c4c'>รอ " +
-                            str(item["pending_qty"]) + "</strong></span>",
+                            " · " + t("po.ordered_qty", n=item["qty_ordered"]) +
+                            " " + t("po.received_qty", n=item["qty_received"]) +
+                            " <strong style='color:#c54c4c'>" +
+                            t("po.waiting_qty", n=item["pending_qty"]) + "</strong></span>",
                             unsafe_allow_html=True,
                         )
                     with rc2:

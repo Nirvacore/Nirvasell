@@ -99,7 +99,7 @@ for cust in customers:
         + (" · " + (cust.get("phone") or "") if cust.get("phone") else "") +
         " " + tags_html + "</div>"
         "<div style='display:flex;gap:14px;font-size:13px'>"
-        "<span style='color:#9a9485'>" + str(cust["frequency"]) + " ครั้ง</span>"
+        "<span style='color:#9a9485'>" + str(cust["frequency"]) + " " + t("common.times") + "</span>"
         "<span>฿{:,.0f}".format(cust["monetary"] or 0) + "</span>"
         "<span style='color:#9a9485;font-size:11px'>" +
         str(cust["recency_days"] or 0) + "d ago</span>"

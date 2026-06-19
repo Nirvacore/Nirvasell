@@ -156,7 +156,7 @@ if fetch_btn:
                 } for r in results]
                 st.dataframe(pd.DataFrame(rows), width='stretch', hide_index=True)
             else:
-                st.info("No results")
+                st.info(t("common.no_results"))
         except Exception as e:
             st.error(str(e))
 

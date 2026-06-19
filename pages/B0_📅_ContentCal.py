@@ -115,7 +115,10 @@ week_date = st.date_input(t("ccal.f_week"), value=date.today(),
                           key="_cc_week")
 week = cc.week_items(str(week_date))
 
-DAYS_TH = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"]
+DAYS_TH = [
+    t("ccal.day_mon"), t("ccal.day_tue"), t("ccal.day_wed"),
+    t("ccal.day_thu"), t("ccal.day_fri"), t("ccal.day_sat"), t("ccal.day_sun"),
+]
 day_cols = st.columns(7)
 for i, (day_str, items) in enumerate(week.items()):
     d_obj = datetime.strptime(day_str, "%Y-%m-%d")

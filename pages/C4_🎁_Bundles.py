@@ -92,11 +92,15 @@ with st.expander(t("bndl.create_title"), expanded=s["total"] == 0):
         if bprice > 0:
             st.markdown(
                 "<div style='text-align:right;font-size:12px;color:#9a9485'>"
-                "ราคาปกติรวม: ฿{:,.0f}".format(component_value) +
-                " · ราคา bundle: ฿{:,.0f}".format(bprice) +
-                (" · <span style='color:#4d6c5c'>ประหยัด ฿{:,.0f}".format(savings) +
-                 " ({:.0f}%)</span>".format(savings / component_value * 100)
-                 if component_value > 0 else "") + "</div>",
+                + t("bndl.regular_price", amount="{:,.0f}".format(component_value))
+                + " · " + t("bndl.bundle_price", amount="{:,.0f}".format(bprice))
+                + (" · <span style='color:#4d6c5c'>"
+                   + t("bndl.savings",
+                       amount="{:,.0f}".format(savings),
+                       pct="{:.0f}".format(savings / component_value * 100))
+                   + "</span>"
+                   if component_value > 0 else "")
+                + "</div>",
                 unsafe_allow_html=True,
             )
 
@@ -147,7 +151,7 @@ for bundle in all_bundles:
         + ("<span style='font-size:11px;color:#4d6c5c'>-" +
            str(savings_pct) + "%</span>" if savings_pct > 0 else "") +
         "<span style='font-size:11px;color:" + active_color + ";font-weight:600'>"
-        + ("✅ Active" if bundle["active"] else "⏸ Inactive") + "</span>"
+        + ("✅ " + t("common.active") if bundle["active"] else "⏸ " + t("common.inactive")) + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )

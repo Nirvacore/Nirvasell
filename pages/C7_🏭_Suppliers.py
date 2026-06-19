@@ -155,7 +155,8 @@ for sup in suppliers:
                         "📦 <strong>" + sku_r["sku"] + "</strong>"
                         + (" · " + (sku_r.get("product_name") or "")[:20]
                            if sku_r.get("product_name") else "") +
-                        " · ฿{:,.0f}/ชิ้น".format(sku_r.get("cost_price") or 0) +
+                        " · ฿{:,.0f}".format(sku_r.get("cost_price") or 0) +
+                        t("common.per_piece") +
                         " · Lead " + str(sku_r.get("lead_days", 7)) + "d"
                         "</div>",
                         unsafe_allow_html=True,

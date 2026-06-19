@@ -96,8 +96,8 @@ for tmpl in templates:
         "<span>" + cat_info["icon"] + " <strong>" + tmpl["title"] + "</strong>"
         " <span style='font-size:11px;color:#9a9485;margin-left:6px'>"
         + tmpl["platforms"] + "</span></span>"
-        "<span style='font-size:11px;color:#9a9485'>ใช้ " +
-        str(tmpl["use_count"]) + " ครั้ง</span></div>"
+        "<span style='font-size:11px;color:#9a9485'>" +
+        t("common.used_times", n=tmpl["use_count"]) + "</span></div>"
         "<div style='font-size:13px;color:#3d3530;white-space:pre-wrap'>"
         + tmpl["content"][:200] +
         ("..." if len(tmpl["content"]) > 200 else "") + "</div></div>",

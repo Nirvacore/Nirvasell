@@ -88,9 +88,10 @@ for g in goals:
         "</strong> <span style='font-size:11px;color:#9a9485'>[" +
         period_label + "]</span></span>"
         "<span style='font-size:13px'>"
-        "ทำได้: <strong>฿{:,.0f}".format(g["actual"]) + "</strong>"
-        " / เป้า: ฿{:,.0f}".format(g["target"]) +
-        " <span style='font-weight:700;color:" + bar_color + "'>" +
+        + t("goal.progress_line",
+            actual="{:,.0f}".format(g["actual"]),
+            target="{:,.0f}".format(g["target"]))
+        + " <span style='font-weight:700;color:" + bar_color + "'>" +
         str(pct) + "%</span></span></div>"
         "<div style='background:rgba(40,30,20,0.06);border-radius:4px;height:10px'>"
         "<div style='width:" + str(pct) + "%;height:100%;background:" + bar_color + ";"

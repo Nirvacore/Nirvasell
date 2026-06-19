@@ -87,7 +87,7 @@ with st.expander(t("ws.set_title"), expanded=s["skus_with_wholesale"] == 0):
                     "฿{:,.0f}".format(price) +
                     " <span style='color:" +
                     ("#4d6c5c" if margin > 15 else "#c54c4c") + "'>"
-                    + str(margin) + "% margin</span></div>",
+                    + str(margin) + "% " + t("common.margin") + "</span></div>",
                     unsafe_allow_html=True,
                 )
             tier_rows.append({
@@ -127,7 +127,7 @@ with st.form("quick_quote"):
         if result.get("price"):
             st.success(
                 "💬 " + str(q_qty) + "x " + q_sku +
-                " → **฿{:,.0f}**".format(result["price"]) + "/ชิ้น" +
+                " → **฿{:,.0f}**".format(result["price"]) + t("common.per_piece") +
                 " = ฿{:,.0f}".format(result["total"]) +
                 " (" + result.get("tier_label", "") + ")"
             )
@@ -147,7 +147,7 @@ for grp in skus:
     tiers = wp.get_tiers(grp["parent_sku"] if "parent_sku" in grp else grp["sku"])
     with st.expander(
         "📦 " + grp["sku"] + " — " + (grp.get("name") or "")[:25] +
-        " (" + str(grp["tier_count"]) + " tiers)"
+        " (" + str(grp["tier_count"]) + " " + t("common.tiers_count") + ")"
     ):
         hc = st.columns(len(tiers))
         for i, tier in enumerate(tiers):
@@ -158,14 +158,14 @@ for grp in skus:
                     "<div style='text-align:center;padding:8px;"
                     "border:0.5px solid rgba(40,30,20,0.08);border-radius:8px'>"
                     "<div style='font-size:11px;color:#7a7569'>"
-                    + str(tier["min_qty"]) + "+ ชิ้น</div>"
+                    + str(tier["min_qty"]) + t("common.pieces_plus") + "</div>"
                     "<div style='font-weight:600'>" + tier["label"] + "</div>"
                     "<div style='font-size:1.1rem;font-weight:600'>"
                     + price_str + "</div>"
                     "<div style='font-size:11px;color:#9a9485'>"
-                    "-" + str(tier["discount_pct"]) + "% ลด</div>"
+                    "-" + str(tier["discount_pct"]) + "% " + t("common.discount") + "</div>"
                     + ("<div style='font-size:11px;color:" + m_color + "'>"
-                       + str(tier.get("margin_pct") or 0) + "% margin</div>"
+                       + str(tier.get("margin_pct") or 0) + "% " + t("common.margin") + "</div>"
                        if tier.get("margin_pct") is not None else "") +
                     "</div>",
                     unsafe_allow_html=True,
