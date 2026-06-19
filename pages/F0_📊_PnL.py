@@ -115,9 +115,9 @@ with tab_trend:
                 "<div style='display:inline-block;background:#2a2a2a;width:" +
                 str(bar_w) + "px;height:12px;vertical-align:middle'></div>"
                 " <span style='color:#d4d0c8'>฿{:,.0f}".format(r["revenue"]) +
-                " rev</span>"
+                t("pnl.trend_rev") + "</span>"
                 " <span style='color:" + color + ";margin-left:8px'>"
-                "฿{:,.0f}".format(np) + " net</span>"
+                "฿{:,.0f}".format(np) + t("pnl.trend_net") + "</span>"
                 "</div>"
             )
             st.html(row_html)

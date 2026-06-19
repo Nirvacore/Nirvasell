@@ -70,7 +70,7 @@ for w in weeks[-8:]:  # last 8 weeks
         "<div>"
         "<span style='font-weight:600;font-size:13px;color:#7a7569'>"
         + w["start"][:10] + " → " + w["end"][:10] + "</span>"
-        " <span style='font-size:11px;color:#9a9485'>" + days_str + " days</span>"
+        " <span style='font-size:11px;color:#9a9485'>" + days_str + t("pcal.week_days_suffix") + "</span>"
         "</div>"
         "<div style='display:flex;gap:14px;align-items:center'>"
         "<span style='font-size:12px;color:#9a9485'>💵 ฿" + rev_str + "</span>"

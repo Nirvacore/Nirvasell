@@ -127,8 +127,9 @@ if items:
             "</div>"
             "<div style='display:flex;gap:14px;align-items:center;font-size:13px'>"
             "<span>📦 " + stock_str + "</span>"
-            "<span>📅 " + days_str + " ago</span>"
-            "<span style='font-weight:600;color:" + sev_color + "'>฿" + trapped_str + " trapped</span>"
+            "<span>📅 " + t("common.days_ago", n=str(item["days_since_sale"])) + "</span>"
+            "<span style='font-weight:600;color:" + sev_color + "'>" +
+            t("dead.trapped_cash", amount=trapped_str) + "</span>"
             "</div></div>",
             unsafe_allow_html=True,
         )

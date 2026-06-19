@@ -10,6 +10,15 @@ Built iteratively. Current stats:
 - README — developer links (ECOSYSTEM_MAP, NIRVACORE_V1_PLAN), file tree updated
 - No runtime / dependency changes
 
+## v84 — G/H/W pack i18n (Thai source of truth)
+- Replace hardcoded Thai/English inline strings in G/H/W pages and lowercase companions with `t()` keys
+- Add `common.customers`, `turn.item_stock_doh`, `pay.bank_ph`, `comp.cheaper_by`, `var.cost_line`, etc.
+
+## v83 — D/E/F pack i18n (Thai source of truth)
+- Replace hardcoded Thai/English inline strings in D0–D9, E0–E8, F0–F9 pages with `t()` keys
+- Add `common.remaining`, `tax.quarter_line`, `ship.carrier_margin_line`, `vou.type_*`, `skup.detail_*`, etc.
+- Reuse `common.*` and `analytics.*` day keys where applicable
+
 ## v82 — B/C pack i18n (Thai source of truth)
 - Replace hardcoded Thai/English inline strings in B0–B9 and C0–C9 pages with `t()` keys
 - Add `common.*` inline labels + module format strings (`goal.progress_line`, `inv.subtotal_line`, …)

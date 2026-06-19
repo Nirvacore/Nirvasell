@@ -44,7 +44,7 @@ with tab_all:
             row_html = (
                 "<div style='margin:4px 0;font-size:0.83rem'>"
                 "<div style='color:#d4d0c8'>" + name + " <span style='color:#9a9485'>(" + sku + ")</span>"
-                " · stock " + str(stock) + " · DOH " + str(doh) + t("turn.days") +
+                + t("turn.item_stock_doh", stock=str(stock), doh=str(doh)) +
                 "</div>"
                 "<div style='display:flex;align-items:center;gap:6px;margin-top:2px'>"
                 "<div style='background:" + bar_color + ";width:" + str(bar_w) + "px;height:8px'></div>"

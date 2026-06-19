@@ -138,7 +138,12 @@ for s in sources:
             st.markdown(f"**{t('policy.extracted')}**")
             current = fees_mod.load().get(platform, {})
             row = {
-                t("policy.field"): ["Commission %", "Payment %", "Transaction %", "VAT on fees %"],
+                t("policy.field"): [
+                    t("policy.field_commission"),
+                    t("policy.field_payment"),
+                    t("policy.field_transaction"),
+                    t("policy.field_vat_on_fees"),
+                ],
                 t("policy.current"): [
                     current.get("commission_pct", 0),
                     current.get("payment_pct", 0),

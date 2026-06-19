@@ -114,7 +114,7 @@ for g in goal_list:
         "border-radius:4px;transition:width 0.3s'></div></div>"
         "<div style='display:flex;justify-content:space-between;font-size:11px;"
         "color:#9a9485;margin-top:4px'>"
-        "<span>" + pct_str + " · " + str(g["days_elapsed"]) + "d elapsed</span>"
-        "<span>" + str(g["days_remaining"]) + "d remaining</span></div></div>",
+        "<span>" + pct_str + " · " + t("goal.days_elapsed", n=str(g["days_elapsed"])) + "</span>"
+        "<span>" + t("goal.days_remaining", n=str(g["days_remaining"])) + "</span></div></div>",
         unsafe_allow_html=True,
     )

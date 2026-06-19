@@ -92,11 +92,10 @@ if uploaded:
 
         if validation.get("meta"):
             m = validation["meta"]
-            st.caption(
-                "📅 สร้างเมื่อ: " + m.get("created_at", "—") +
-                " · 📦 สินค้า: " + str(m.get("products", "?")) +
-                " · 🧾 ออเดอร์: " + str(m.get("orders", "?"))
-            )
+            st.caption(t("bkup.meta_caption",
+                         date=m.get("created_at", "—"),
+                         products=str(m.get("products", "?")),
+                         orders=str(m.get("orders", "?"))))
 
         st.warning(t("bkup.restore_warning"))
 

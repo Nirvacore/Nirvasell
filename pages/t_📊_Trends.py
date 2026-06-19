@@ -134,7 +134,7 @@ if new:
             "<div style='padding:6px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "🆕 <strong>" + p["sku"] + "</strong>"
             " — " + (p["name"] or "")[:25] +
-            " · 📦 " + str(sold) + " sold"
+            t("trend.sold_count", n=str(sold)) +
             " · 💵 ฿" + rev + "</div>",
             unsafe_allow_html=True,
         )

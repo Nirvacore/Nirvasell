@@ -31,7 +31,8 @@ if vat["requires_vat"]:
     c3.metric(t("tax.kpi_vat_status"), t("tax.vat_required"), delta=t("tax.must_register"))
 else:
     c3.metric(t("tax.kpi_vat_status"), t("tax.vat_safe"),
-              delta="เหลือ ฿{:,.0f}".format(vat["remaining_headroom"]))
+              delta=t("tax.remaining_headroom",
+                      amount="{:,.0f}".format(vat["remaining_headroom"])))
 
 st.divider()
 
@@ -93,7 +94,8 @@ with tab_annual:
         st.subheader(t("tax.quarterly_breakdown"))
         for q in ann["by_quarter"]:
             st.write(q["quarter_label"] + ": " +
-                     "ฝ ฿{:,.0f}".format(q["net_revenue"]) +
-                     " · กำไร ฿{:,.0f}".format(q["gross_profit"]))
+                     t("tax.quarter_line",
+                       net="{:,.0f}".format(q["net_revenue"]),
+                       profit="{:,.0f}".format(q["gross_profit"])))
     except Exception as e:
         st.error(t("tax.error") + ": " + str(e))

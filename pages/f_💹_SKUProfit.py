@@ -119,10 +119,10 @@ def _render_sku_rows(sku_list):
             "฿" + net_str + " (" + "{:.1f}%".format(s["net_margin"]) + ")</span>"
             "</div></div>"
             "<div style='color:#9a9485;font-size:11px;margin-top:4px;display:flex;gap:14px'>"
-            "<span>COGS ฿" + cogs_str + "</span>"
-            "<span>Fees ฿" + fees_str + "</span>"
-            "<span>Returns ฿" + ret_str + "</span>"
-            "<span>Per unit ฿" + ppu_str + "</span>"
+            "<span>" + t("skup.detail_cogs") + " ฿" + cogs_str + "</span>"
+            "<span>" + t("skup.detail_fees") + " ฿" + fees_str + "</span>"
+            "<span>" + t("skup.detail_returns") + " ฿" + ret_str + "</span>"
+            "<span>" + t("skup.detail_per_unit") + " ฿" + ppu_str + "</span>"
             "<span>" + s.get("platforms", "") + "</span>"
             "</div></div>",
             unsafe_allow_html=True,

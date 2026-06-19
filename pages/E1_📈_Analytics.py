@@ -8,6 +8,16 @@ from auth import require_auth
 from i18n import t
 from sidebar import render_sidebar
 
+_DAY_KEYS = [
+    "analytics.sun", "analytics.mon", "analytics.tue", "analytics.wed",
+    "analytics.thu", "analytics.fri", "analytics.sat",
+]
+
+
+def _day_name(dow: int) -> str:
+    return t(_DAY_KEYS[dow]) if 0 <= dow <= 6 else str(dow)
+
+
 apply_theme()
 require_auth()
 render_sidebar()
@@ -68,14 +78,12 @@ with tab_time:
     daily = oa.daily_distribution()
     if daily:
         st.write(t("ana.daily_title"))
-        day_names_en = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
-        day_names_th = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"]
         max_d = max((r["count"] or 0) for r in daily) or 1
         for r in daily:
             cnt = r["count"] or 0
             bar_w = int((cnt / max_d) * 180)
             dow = r["dow"]
-            name = day_names_th[dow] if 0 <= dow <= 6 else str(dow)
+            name = _day_name(dow)
             d_html = (
                 "<div style='margin:2px 0;font-size:0.83rem'>"
                 "<span style='color:#9a9485;width:80px;display:inline-block'>" + name + "</span>"
@@ -134,9 +142,8 @@ with tab_repeat:
                      " · ฿{:,.0f}".format(rev))
     best = oa.best_day()
     if best:
-        day_names_th = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"]
         dow = best.get("dow", 0)
-        name = day_names_th[dow] if 0 <= dow <= 6 else str(dow)
+        name = _day_name(dow)
         rev = best.get("revenue") or 0
         st.write("**" + t("ana.best_day") + "**: " + name +
                  " · ฿{:,.0f}".format(rev))

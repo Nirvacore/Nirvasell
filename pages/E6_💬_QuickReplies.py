@@ -97,11 +97,11 @@ with tab_add:
     st.subheader(t("qrep.vars_title"))
     var_html = (
         "<div style='font-size:0.83rem;color:#9a9485'>"
-        "<b style='color:#d4d0c8'>{shop_name}</b> — ชื่อร้าน<br>"
-        "<b style='color:#d4d0c8'>{shipping_cost}</b> — ค่าส่งตั้งต้น<br>"
-        "<b style='color:#d4d0c8'>{prep_days}</b> — วันเตรียมของ<br>"
-        "<b style='color:#d4d0c8'>{bank_name}</b> — ชื่อธนาคาร<br>"
-        "<b style='color:#d4d0c8'>{promptpay}</b> — หมายเลข PromptPay<br>"
+        "<b style='color:#d4d0c8'>{shop_name}</b> — " + t("qrep.var_desc_shop_name") + "<br>"
+        "<b style='color:#d4d0c8'>{shipping_cost}</b> — " + t("qrep.var_desc_shipping_cost") + "<br>"
+        "<b style='color:#d4d0c8'>{prep_days}</b> — " + t("qrep.var_desc_prep_days") + "<br>"
+        "<b style='color:#d4d0c8'>{bank_name}</b> — " + t("qrep.var_desc_bank_name") + "<br>"
+        "<b style='color:#d4d0c8'>{promptpay}</b> — " + t("qrep.var_desc_promptpay") + "<br>"
         "</div>"
     )
     st.html(var_html)

@@ -93,7 +93,7 @@ if seg_options:
     for c in customers_in:
         rfm_str = str(c["r_score"]) + "-" + str(c["f_score"]) + "-" + str(c["m_score"])
         spent_str = "{:,.0f}".format(c["monetary"])
-        days_str = str(c["recency_days"]) + "d"
+        days_str = t("common.days_ago", n=str(c["recency_days"]))
 
         st.markdown(
             "<div style='display:flex;justify-content:space-between;align-items:center;"
