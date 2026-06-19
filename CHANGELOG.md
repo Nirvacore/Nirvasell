@@ -11,6 +11,13 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v88 — i18n auto-translate v82–v87 keys (19 langs)
+- New `scripts/expand_i18n_langs.py` — Google Translate batch expander (resumable, UTF-8 safe)
+- 221 keys from B/C pack → v87 now have all 19 `LANGS` in `i18n.py`
+- Multiline `custom_task.*` prompts remain th+en only (long AI templates)
+
 ## v87 — Residual inline pass (U/b/D6/Y/z/H/2/E7/A9/6)
 - `U_` customer card subline + edit form email/LINE labels
 - `b_` supplier form labels, card SKUs/POs/lead, placeholders, price SKU field
