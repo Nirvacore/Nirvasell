@@ -42,8 +42,8 @@ with c1:
             st.rerun()
 
 with c2:
-    st.text_input("Role", u.get("role") or "user", disabled=True)
-    st.text_input("User ID", str(u["id"]), disabled=True)
+    st.text_input(t("account.role"), u.get("role") or "user", disabled=True)
+    st.text_input(t("account.user_id"), str(u["id"]), disabled=True)
 
 
 # ---- Password ------------------------------------------------------------
@@ -98,15 +98,16 @@ with c2:
 st.divider()
 with st.expander(f"⚠ {t('account.danger_title')}"):
     st.warning(t("account.delete_warning"))
+    _del_word = t("common.delete_confirm_word")
     confirm = st.text_input(
         t("admin.delete_confirm_prompt"),
-        placeholder="DELETE",
+        placeholder=_del_word,
         key="self_delete_confirm",
     )
     if st.button(
         t("account.delete_self_btn"),
         type="primary",
-        disabled=confirm != "DELETE",
+        disabled=confirm != _del_word,
     ):
         ok, msg = auth.delete_user(u["id"])
         if ok:

@@ -12718,6 +12718,29 @@ STRINGS: dict[str, dict[str, str]] = {
     "rule.fires_line":       {"th": "🔥 {n}x · ล่าสุด: {when}", "en": "🔥 {n}x · last: {when}"},
     "msg.used_count":        {"th": " · ใช้ {n} ครั้ง", "en": " · {n}x used"},
     "msg.vars_ph":           {"th": "buyer_name,product,total", "en": "buyer_name,product,total"},
+
+    # ── v87 Residual inline pass ───────────────────────────────────────────
+    "common.n_skus":              {"th": "{n} SKU", "en": "{n} SKUs"},
+    "common.n_pos":               {"th": "{n} PO", "en": "{n} POs"},
+    "common.delete_confirm_word": {"th": "DELETE", "en": "DELETE"},
+    "common.url":                 {"th": "URL", "en": "URL"},
+    "cust.last_prefix":           {"th": "ล่าสุด", "en": "last"},
+    "sup.lead_days_short":        {"th": "{n} วัน lead", "en": "{n}d lead"},
+    "sup.name_ph":                {"th": "Synnex, VSTECS ฯลฯ", "en": "Synnex, VSTECS, etc."},
+    "sup.terms_ph":               {"th": "Net 30, COD ฯลฯ", "en": "Net 30, COD, etc."},
+    "set.about_version":          {"th": "nirva.sell v72", "en": "nirva.sell v72"},
+    "set.about_tagline":          {"th": "ระบบอัตโนมัติร้านค้าหลายช่องทางสำหรับผู้ขายไทย 🇹🇭", "en": "Multi-channel reseller automation for Thai sellers 🇹🇭"},
+    "set.about_pages_line":       {"th": "หน้า: 47 หน้า", "en": "Pages: 47 total"},
+    "set.about_db_line":          {"th": "ฐานข้อมูล: SQLite แยกตามผู้ใช้", "en": "Database: SQLite per-user isolation"},
+    "set.about_platforms_line":   {"th": "แพลตฟอร์ม: Shopee · Lazada · TikTok Shop · Facebook · Line", "en": "Platforms: Shopee · Lazada · TikTok Shop · Facebook · Line"},
+    "crm.cust_option":            {"th": "{name} · {orders}x · ฿{total}", "en": "{name} · {orders}x · ฿{total}"},
+    "account.role":               {"th": "บทบาท", "en": "Role"},
+    "account.user_id":            {"th": "User ID", "en": "User ID"},
+    "ship.weight_lte":            {"th": "≤ {w} kg", "en": "≤ {w} kg"},
+    "var.axis2_vals_ph":          {"th": "S,M,L,XL", "en": "S,M,L,XL"},
+    "var.group_expander_suffix":  {"th": "{variants} variants · {stock} stock", "en": "{variants} variants · {stock} stock"},
+    "var.f_stock":                {"th": "สต็อก", "en": "stock"},
+    "settings.save_presets_btn":    {"th": "บันทึก presets", "en": "Save presets"},
 }
 
 

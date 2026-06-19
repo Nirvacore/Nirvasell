@@ -83,6 +83,12 @@ def _render_customer_card(c_data: dict):
     t_color = cust.TIER_COLORS[t_key]
     plats = (c_data.get("platforms") or "").replace(",", " · ") or "—"
     plat_icons = plats.replace("shopee", "🛒 Shopee").replace("lazada", "🟧 Lazada").replace("tiktok", "🎵 TikTok")
+    subline = (
+        t("common.n_orders", n=str(c_data.get("order_count", 0)))
+        + " · " + plat_icons
+        + " · " + t("cust.last_prefix") + ": "
+        + (c_data.get("last_order") or "—")[:10]
+    )
 
     cA, cB = st.columns([5, 2])
     with cA:
@@ -99,8 +105,7 @@ def _render_customer_card(c_data: dict):
             f"<div style='font-family:\"Cormorant Garamond\",serif;font-size:1.3rem;"
             f"font-weight:500;color:#4d6c5c'>฿{c_data.get('total_spent',0):,.0f}</div></div>"
             f"<div style='color:#7a7569;font-size:12px'>"
-            f"📦 {c_data.get('order_count',0)} orders · {plat_icons} · "
-            f"last: {(c_data.get('last_order') or '—')[:10]}</div>"
+            f"📦 {subline}</div>"
             f"</div>",
             unsafe_allow_html=True,
         )
@@ -258,9 +263,9 @@ if edit_id:
             c1, c2 = st.columns(2)
             with c1:
                 ne_phone = st.text_input(t("cust.phone"), value=c_info.get("phone", ""))
-                ne_email = st.text_input("Email", value=c_info.get("email", ""))
+                ne_email = st.text_input(t("cust.f_email"), value=c_info.get("email", ""))
             with c2:
-                ne_line = st.text_input("LINE ID", value=c_info.get("line_id", ""))
+                ne_line = st.text_input(t("cust.f_line"), value=c_info.get("line_id", ""))
                 ne_note = st.text_area(t("cust.note"), value=c_info.get("note", ""), height=80)
             ca, cb = st.columns(2)
             with ca:

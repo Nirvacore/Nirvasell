@@ -9,6 +9,16 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v87 — Residual inline pass (U/b/D6/Y/z/H/2/E7/A9/6)
+- `U_` customer card subline + edit form email/LINE labels
+- `b_` supplier form labels, card SKUs/POs/lead, placeholders, price SKU field
+- `D6` About tab HTML → `set.about_*` keys
+- `Y_` batch scope target uses `common.n_skus` / `batch.scope_all`
+- `z_` CRM customer option format, `H_`/`G_` Account role/user/delete word
+- `2_` Catalog URL, `E7` weight ≤ kg, `A9` variant placeholders/stock, `6_` save presets btn
+
 ## v86 — Final i18n pass (I/J/A0/l_/S_/j_/s_/e_)
 - `A0` motivational quotes, `l_` ABC inline labels, `I_` Notifications full form labels
 - `S_` PhotoStudio backgrounds, `J_` custom task prompt/sample, `j_` rule fires line, `s_` Messages

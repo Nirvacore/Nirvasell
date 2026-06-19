@@ -115,15 +115,16 @@ with c2:
 with c3:
     with st.popover(t("admin.delete_btn"), width='stretch'):
         st.warning(t("admin.delete_warning", email=picked["email"]))
+        _del_word = t("common.delete_confirm_word")
         confirm = st.text_input(
             t("admin.delete_confirm_prompt"),
-            placeholder="DELETE",
+            placeholder=_del_word,
             key=f"del_confirm_{picked_id}",
         )
         if st.button(
             t("admin.delete_confirm"),
             type="primary",
-            disabled=confirm != "DELETE" or is_self,
+            disabled=confirm != _del_word or is_self,
             key=f"del_btn_{picked_id}",
         ):
             ok, msg = auth.delete_user(picked_id)

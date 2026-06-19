@@ -92,11 +92,11 @@ with tab_about:
     st.subheader(t("set.about_title"))
     about_html = (
         "<div style='font-size:0.9rem;line-height:1.8'>"
-        "<strong>nirva.sell</strong> v72<br>"
-        "Multi-channel reseller automation for Thai sellers 🇹🇭<br><br>"
-        "<strong>Pages:</strong> 47 total<br>"
-        "<strong>Database:</strong> SQLite per-user isolation<br>"
-        "<strong>Platforms:</strong> Shopee · Lazada · TikTok Shop · Facebook · Line<br>"
+        "<strong>" + t("set.about_version") + "</strong><br>"
+        + t("set.about_tagline") + "<br><br>"
+        "<strong>" + t("set.about_pages_line") + "</strong><br>"
+        "<strong>" + t("set.about_db_line") + "</strong><br>"
+        "<strong>" + t("set.about_platforms_line") + "</strong><br>"
         "</div>"
     )
     st.html(about_html)

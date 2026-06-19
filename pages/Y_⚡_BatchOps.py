@@ -136,7 +136,10 @@ with tab_price:
     if pct != 0:
         direction = t("batch.raise") if pct > 0 else t("batch.lower")
         abs_pct = abs(pct)
-        target = "all" if scope == "all" else str(len(selected_skus)) + " SKUs"
+        target = (
+            t("batch.scope_all") if scope == "all"
+            else t("common.n_skus", n=str(len(selected_skus)))
+        )
         st.info(direction + " " + "{:.1f}%".format(abs_pct) + " — " + target)
 
         if st.button(t("batch.apply_price"), type="primary"):
@@ -181,7 +184,10 @@ with tab_stock:
             key="_stock_skus",
         )
 
-    target_stock = "all" if stock_scope == "all" else str(len(stock_skus)) + " SKUs"
+    target_stock = (
+        t("batch.scope_all") if stock_scope == "all"
+        else t("common.n_skus", n=str(len(stock_skus)))
+    )
     st.info(t("batch.stock_set_to") + " " + str(stock_val) + " — " + target_stock)
 
     if st.button(t("batch.apply_stock"), type="primary"):
