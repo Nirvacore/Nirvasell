@@ -121,7 +121,7 @@ if selected_cust:
         "<span>📦 " + str(profile["orders"]) + "x · ฿" +
         "{:,.0f}".format(profile["total_spent"]) + "</span></div>"
         "<div style='font-size:12px;color:#7a7569;margin-top:4px'>"
-        "Last order: " + (profile.get("last_order") or "—")[:10] + "</div></div>",
+        + t("crm.last_order_line", date=(profile.get("last_order") or "—")[:10]) + "</div></div>",
         unsafe_allow_html=True,
     )
 

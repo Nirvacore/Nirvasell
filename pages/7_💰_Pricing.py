@@ -231,7 +231,7 @@ if opt_cost > 0:
                     "<div style='font-family:Cormorant Garamond,serif;"
                     "font-size:1.6rem;color:" + tone + "'>"
                     + "{:.1f}".format(m["margin_pct"]) + "%</div>"
-                    "<div style='font-size:12px;color:#7a7569'>net ฿"
+                    "<div style='font-size:12px;color:#7a7569'>" + t("pricing.net_label") +
                     + "{:,.0f}".format(m["net"]) + "</div></div>",
                     unsafe_allow_html=True,
                 )

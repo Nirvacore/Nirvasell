@@ -17,6 +17,13 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v91 — Policy/rule/card templates (C/j/G/B4/7/G0/z/q/p/v/n/o)
+- Alerts policy feed, auto-rule templates, turnover DOI/RP lines, CLV tiers
+- Supplier score grades, biz health grade, promo ROI, CRM last order, etc.
+- 34 new keys → 19 langs
+
 ## v90 — Residual card/detail inline pass (A6/C7/k/U/C8/B3/B2/C4/K/p/n/C5/A8/A4/w/6/G0/E1)
 - 23 new keys: supplier detail, CLV lines, tax preview, scorecard dims, recon variance, etc.
 - Quick-win reuse: `rst.reorder_pieces`, `common.n_*`, `cust.email`, `chan.line_aov`

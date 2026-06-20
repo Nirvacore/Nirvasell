@@ -41,7 +41,7 @@ st.markdown(
     "<div style='font-size:4rem;font-weight:700;color:" + grade_color + "'>"
     + str(int(score)) + "</div>"
     "<div style='font-size:1.5rem;font-weight:600;color:" + grade_color + "'>"
-    "Grade " + grade + "</div>"
+    + t("bh.grade_label", grade=grade) + "</div>"
     "<div style='color:#7a7569;font-size:14px;margin-top:6px'>"
     + status_label + "</div></div>",
     unsafe_allow_html=True,

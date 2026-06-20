@@ -47,7 +47,7 @@ with tab_compare:
                 (p.get("platform") or "direct") + "</b>"
                 " · " + str(orders) + t("ch.orders") +
                 " · " + t("chan.line_aov", amount="{:,.0f}".format(aov)) +
-                " · return " + str(rr) + "%</div>"
+                " · " + t("ch.return_rate", n=str(rr)) + "</div>"
                 "<div style='display:flex;align-items:center;gap:8px;margin-top:3px'>"
                 "<div style='background:" + color + ";width:" + str(bar_w) +
                 "px;height:14px'></div>"

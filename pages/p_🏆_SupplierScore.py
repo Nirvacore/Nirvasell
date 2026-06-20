@@ -82,9 +82,9 @@ for i, (grade, icon, count, color, score_range) in enumerate(grade_data):
             "border:0.5px solid rgba(40,30,20,0.07);border-radius:10px;"
             "border-top:3px solid " + color + "'>"
             "<div style='font-size:1.4rem;font-weight:600;color:" + color + "'>"
-            + icon + " Grade " + grade + "</div>"
+            + icon + " " + t("sscore.grade_card", grade=grade) + "</div>"
             "<div style='font-size:1.8rem;font-weight:600'>" + str(count) + "</div>"
-            "<div style='font-size:11px;color:#9a9485'>Score " + score_range + "</div></div>",
+            "<div style='font-size:11px;color:#9a9485'>" + t("sscore.score_range", rng=score_range) + "</div></div>",
             unsafe_allow_html=True,
         )
 

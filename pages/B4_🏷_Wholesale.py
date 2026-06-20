@@ -45,7 +45,7 @@ with st.expander(t("ws.set_title"), expanded=s["skus_with_wholesale"] == 0):
     else:
         prod_opts = [
             p["sku"] + " — " + (p["name"] or "")[:25] +
-            " (ขาย ฿" + "{:,.0f}".format(p["sell_price"] or 0) + ")"
+            t("ws.retail_price_suffix", amount="{:,.0f}".format(p["sell_price"] or 0))
             for p in products
         ]
         sel_idx = st.selectbox(

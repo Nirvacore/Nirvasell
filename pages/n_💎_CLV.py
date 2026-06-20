@@ -65,10 +65,10 @@ st.divider()
 st.markdown("### " + t("clv.tiers_title"))
 
 tier_data = [
-    ("💎", "Platinum", s["tiers"]["platinum"], "฿50K+/yr", "#8B7355"),
-    ("🥇", "Gold", s["tiers"]["gold"], "฿20-50K/yr", "#c5963d"),
-    ("🥈", "Silver", s["tiers"]["silver"], "฿5-20K/yr", "#9a9485"),
-    ("🥉", "Bronze", s["tiers"]["bronze"], "<฿5K/yr", "#7a7569"),
+    ("💎", t("clv.tier_platinum"), s["tiers"]["platinum"], t("clv.threshold_50k"), "#8B7355"),
+    ("🥇", t("clv.tier_gold"), s["tiers"]["gold"], t("clv.threshold_20_50k"), "#c5963d"),
+    ("🥈", t("clv.tier_silver"), s["tiers"]["silver"], t("clv.threshold_5_20k"), "#9a9485"),
+    ("🥉", t("clv.tier_bronze"), s["tiers"]["bronze"], t("clv.threshold_under_5k"), "#7a7569"),
 ]
 tcols = st.columns(4)
 for i, (icon, label, count, threshold, color) in enumerate(tier_data):

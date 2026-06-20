@@ -118,32 +118,32 @@ st.caption(t("rule.templates_help"))
 
 templates = [
     {
-        "name": "📦 Low Stock → LINE Alert",
+        "name": t("rule.tpl_low_stock"),
         "trigger": "low_stock",
         "condition": {"threshold": 5},
         "action": "line_notify",
-        "action_config": {"message": "📦 สินค้าใกล้หมด!"},
+        "action_config": {"message": t("rule.tpl_low_stock_msg")},
     },
     {
-        "name": "↩️ High Return Rate → Flag",
+        "name": t("rule.tpl_high_return"),
         "trigger": "high_return",
         "condition": {"threshold_pct": 5},
         "action": "flag_product",
         "action_config": {},
     },
     {
-        "name": "💎 VIP Order → Notify",
+        "name": t("rule.tpl_vip"),
         "trigger": "vip_order",
         "condition": {"min_orders": 5},
         "action": "line_notify",
-        "action_config": {"message": "💎 VIP customer ordered!"},
+        "action_config": {"message": t("rule.tpl_vip_msg")},
     },
     {
-        "name": "📊 Daily Summary → LINE",
+        "name": t("rule.tpl_daily"),
         "trigger": "daily_summary",
         "condition": {},
         "action": "line_notify",
-        "action_config": {"message": "📊 Daily sales summary"},
+        "action_config": {"message": t("rule.tpl_daily_msg")},
     },
 ]
 
