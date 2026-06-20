@@ -13,6 +13,13 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v89 — Full 19-lang expansion (all i18n keys)
+- `scripts/expand_i18n_langs.py` — translate → `scripts/i18n_lang_cache/{lang}.json` + `merge`
+- All **3,782 keys** now have **19 languages** (parallel Google Translate + en fallback)
+- `th+en only` count: **0**
+
 ## v88 — i18n auto-translate v82–v87 keys (19 langs)
 - New `scripts/expand_i18n_langs.py` — Google Translate batch expander (resumable, UTF-8 safe)
 - 221 keys from B/C pack → v87 now have all 19 `LANGS` in `i18n.py`
