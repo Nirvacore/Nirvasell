@@ -87,7 +87,7 @@ for i, (icon, label, count, color, doi_range) in enumerate(health_data):
             "<div style='font-weight:600;font-size:13px'>" + label + "</div>"
             "<div style='font-size:1.6rem;font-weight:600;color:" + color + "'>"
             + str(count) + "</div>"
-            "<div style='font-size:11px;color:#9a9485'>DOI " + doi_range + "</div></div>",
+            "<div style='font-size:11px;color:#9a9485'>" + t("turn.card_doi_range", rng=doi_range) + "</div></div>",
             unsafe_allow_html=True,
         )
 
@@ -135,10 +135,10 @@ def _render_items(item_list):
             "</div>"
             "<div style='display:flex;gap:12px;align-items:center;font-size:12px'>"
             "<span>📦 " + stock_str + "</span>"
-            "<span>📈 " + daily_str + "/d</span>"
-            "<span style='color:" + h_color + ";font-weight:600'>DOI " + doi_str + "</span>"
-            "<span>" + tr_str + "/yr</span>"
-            "<span>RP " + rp_str + "</span>"
+            "<span>📈 " + t("turn.line_daily", n=daily_str) + "</span>"
+            "<span style='color:" + h_color + ";font-weight:600'>" + t("turn.line_doi", n=doi_str) + "</span>"
+            "<span>" + t("turn.line_turnover", n=tr_str) + "</span>"
+            "<span>" + t("turn.line_rp", n=rp_str) + "</span>"
             "<span style='color:#9a9485'>฿" + stk_val_str + "</span>"
             "</div></div>",
             unsafe_allow_html=True,

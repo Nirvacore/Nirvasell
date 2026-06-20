@@ -154,7 +154,7 @@ for i, (day_str, items) in enumerate(week.items()):
                 sc1, sc2 = st.columns([3, 1])
                 with sc2:
                     new_status = st.selectbox(
-                        "status",
+                        t("ccal.f_status"),
                         list(cc.STATUSES.keys()),
                         index=list(cc.STATUSES.keys()).index(
                             item.get("status", "planned")

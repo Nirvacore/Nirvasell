@@ -160,7 +160,7 @@ if promos:
 
         budget_str = ""
         if p.get("budget") and p["budget"] > 0:
-            budget_str = " · Budget " + str(int(p["budget_used_pct"])) + "%"
+            budget_str = t("promo.budget_used", n=str(int(p["budget_used_pct"])))
 
         cA, cB = st.columns([5, 2])
         with cA:
@@ -172,8 +172,8 @@ if promos:
                 " <span style='color:#9a9485;font-size:11px'>" +
                 (p.get("coupon_code") or "") + "</span></div>"
                 "<div style='font-size:12px;color:#9a9485'>"
-                "🎫 " + redemp + "x · 💵 ฿" + rev_str +
-                " · ROI " + roi_str + budget_str + "</div></div>"
+                + t("promo.list_redemptions", n=redemp) + " · 💵 ฿" + rev_str +
+                t("promo.list_roi", roi=roi_str) + budget_str + "</div></div>"
                 "<div style='font-size:11px;color:#7a7569;margin-top:3px'>"
                 + (p.get("start_date") or "") + " → " + (p.get("end_date") or "") +
                 " · " + p.get("platform", "all") + "</div></div>",

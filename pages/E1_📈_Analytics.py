@@ -97,7 +97,9 @@ with tab_platform:
             p_data = [r for r in trend if r["platform"] == p]
             if p_data:
                 total_rev = sum(r["revenue"] or 0 for r in p_data)
-                st.write("**" + (p or "direct") + "** — ฿{:,.0f}".format(total_rev))
+                st.write(t("ana.platform_revenue_line",
+                           platform=p or t("common.platform_direct"),
+                           amount="{:,.0f}".format(total_rev)))
     else:
         st.info(t("ana.empty"))
     st.divider()
@@ -105,8 +107,11 @@ with tab_platform:
     if top:
         st.write("**" + t("ana.combos_title") + "**")
         for c in top:
-            st.write("- " + (c["sku_a"] or "?") + " + " + (c["sku_b"] or "?") +
-                     " · " + str(c["freq"]) + t("ana.times"))
+            st.write(t("ana.combo_line",
+                       sku_a=c["sku_a"] or "?",
+                       sku_b=c["sku_b"] or "?",
+                       n=str(c["freq"]),
+                       times=t("ana.times")))
 
 with tab_repeat:
     st.subheader(t("ana.repeat_title"))
@@ -128,13 +133,15 @@ with tab_repeat:
         st.write("**" + t("ana.peak_hours_title") + "**")
         for h in peak_h:
             rev = h.get("revenue") or 0
-            st.write("- " + str(h["hour"]).zfill(2) + ":00 — " +
-                     str(h["count"]) + t("ana.orders_unit") +
-                     " · ฿{:,.0f}".format(rev))
+            st.write(t("ana.peak_hour_line",
+                       hour=str(h["hour"]).zfill(2),
+                       n=str(h["count"]),
+                       orders_unit=t("ana.orders_unit"),
+                       amount="{:,.0f}".format(rev)))
     best = oa.best_day()
     if best:
         dow = best.get("dow", 0)
         name = day_name(dow)
         rev = best.get("revenue") or 0
-        st.write("**" + t("ana.best_day") + "**: " + name +
-                 " · ฿{:,.0f}".format(rev))
+        st.write("**" + t("ana.best_day") + "**: " +
+                 t("ana.best_day_line", day=name, amount="{:,.0f}".format(rev)))

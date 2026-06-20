@@ -30,3 +30,8 @@ def day_name(dow: int) -> str:
 
 def day_names_mon_first() -> list[str]:
     return [t(k) for k in DAY_KEYS_MON_FIRST]
+
+
+def return_reason(reason: str) -> str:
+    key = reason if reason else "other"
+    return t("ret.reason_" + key)

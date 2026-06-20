@@ -155,16 +155,18 @@ if POLICY_ALERTS.exists():
             if kind == "content_changed":
                 badge = "📋"
                 diffs = r.get("diffs", [])
-                detail = f" — {len(diffs)} fee changes" if diffs else " — content updated"
+                detail = t("alerts.fee_changes", n=len(diffs)) if diffs else t("alerts.content_updated")
             elif kind == "fetch_failed":
                 badge = "⚠"
-                detail = f" — fetch failed (HTTP {r.get('status','?')})"
+                detail = t("alerts.fetch_failed", status=r.get("status", "?"))
             else:
                 badge = "•"
                 detail = ""
-            st.markdown(f"{badge} **{platform}** · `{at}`{detail}")
+            st.markdown(t("alerts.policy_feed_line",
+                           badge=badge, platform=platform,
+                           fetched_at=at, detail=detail))
             if r.get("effective_date"):
-                st.caption(f"  Effective: {r['effective_date']}")
+                st.caption("  " + t("alerts.effective_date", date=r["effective_date"]))
             if r.get("notes"):
                 st.caption(f"  {r['notes'][:200]}")
         st.page_link("pages/00_🧠_KnowledgeHub.py",

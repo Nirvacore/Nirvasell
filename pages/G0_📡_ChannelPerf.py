@@ -44,10 +44,10 @@ with tab_compare:
             p_html = (
                 "<div style='margin:6px 0'>"
                 "<div style='font-size:0.85rem;color:#d4d0c8'><b>" +
-                (p.get("platform") or "direct") + "</b>"
+                (p.get("platform") or t("common.platform_direct")) + "</b>"
                 " · " + str(orders) + t("ch.orders") +
                 " · " + t("chan.line_aov", amount="{:,.0f}".format(aov)) +
-                " · return " + str(rr) + "%</div>"
+                " · " + t("ch.return_rate", n=str(rr)) + "</div>"
                 "<div style='display:flex;align-items:center;gap:8px;margin-top:3px'>"
                 "<div style='background:" + color + ";width:" + str(bar_w) +
                 "px;height:14px'></div>"
@@ -66,17 +66,19 @@ with tab_growth:
         for plat in plats:
             g_rows = [r for r in growth if r.get("platform") == plat]
             if g_rows:
-                st.write("**" + plat + "**")
+                st.write("**" + (plat or t("common.platform_direct")) + "**")
                 for r in g_rows:
                     grow_pct = r.get("growth_pct", 0)
                     color = "#4d6c5c" if grow_pct >= 0 else "#c54c4c"
                     g_html = (
                         "<div style='margin:2px 0;font-size:0.83rem'>"
                         "<span style='color:#9a9485;width:80px;display:inline-block'>" +
-                        (r.get("month","") or "—") + "</span>"
-                        "฿{:,.0f}".format(r.get("revenue",0)) +
+                        (r.get("month", "") or "—") + "</span>"
+                        "฿{:,.0f}".format(r.get("revenue", 0)) +
                         " <span style='color:" + color + ";margin-left:8px'>" +
-                        ("+" if grow_pct >= 0 else "") + str(grow_pct) + "%</span>"
-                        "</div>"
+                        t("ch.growth_pct",
+                          sign="+" if grow_pct >= 0 else "",
+                          pct=str(grow_pct)) +
+                        "</span></div>"
                     )
                     st.html(g_html)

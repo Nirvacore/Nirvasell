@@ -98,7 +98,7 @@ with c1:
             st.success(t("admin.role_changed"))
             st.rerun()
         else:
-            st.error("Failed")
+            st.error(t("admin.action_failed"))
 
 # Action 2 — reset password
 with c2:
