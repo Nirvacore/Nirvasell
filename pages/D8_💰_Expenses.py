@@ -6,6 +6,7 @@ import expenses as ex
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import expense_category
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -39,7 +40,8 @@ with tab_log:
         category = col1.selectbox(
             t("exp.f_category"),
             ex.CATEGORIES,
-            format_func=lambda c: ex.CATEGORY_ICONS.get(c,"") + " " + c.replace("_"," ").title(),
+            format_func=lambda c: ex.CATEGORY_ICONS.get(c, "") + " " +
+            expense_category(c),
         )
         amount   = col2.number_input(t("exp.f_amount"), min_value=0.0, step=10.0)
         col3, col4 = st.columns(2)
@@ -64,8 +66,11 @@ with tab_list:
     else:
         for e in expenses:
             icon = ex.CATEGORY_ICONS.get(e["category"], "📋")
-            label = icon + " " + e.get("date","") + " · " + \
-                    e["category"] + " · ฿{:,.0f}".format(e["amount"])
+            label = t("exp.list_line",
+                      icon=icon,
+                      date=e.get("date", ""),
+                      category=expense_category(e["category"]),
+                      amount="{:,.0f}".format(e["amount"]))
             if e.get("note"):
                 label += " · " + e["note"]
             col_l, col_d = st.columns([5,1])
@@ -92,7 +97,7 @@ with tab_chart:
             bar_html = (
                 "<div style='margin:3px 0'>"
                 "<span style='font-size:0.8rem;color:#9a9485;width:160px;display:inline-block'>"
-                + icon + " " + cat + "</span>"
+                + icon + " " + expense_category(cat) + "</span>"
                 "<div style='display:inline-block;background:#2a2a2a;width:" + str(bar_w) + "px;height:12px;vertical-align:middle'></div>"
                 " <span style='font-size:0.8rem;color:#d4d0c8'>฿{:,.0f}".format(amt) +
                 " (" + str(pct) + "%)</span>"

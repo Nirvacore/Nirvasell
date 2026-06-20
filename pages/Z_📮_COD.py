@@ -17,6 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import platform_name, payment_type_name
 
 st.set_page_config(page_title="nirva.sell · COD",
                    page_icon="📮", layout="wide")
@@ -37,7 +38,9 @@ k1, k2, k3, k4, k5 = st.columns(5)
 with k1:
     metric_with_hint(
         t("cod.kpi_total"), str(s["total"]),
-        hint="COD: " + str(s["cod_count"]) + " · Prepaid: " + str(s["prepaid_count"]),
+        hint=t("cod.kpi_split_hint",
+               cod=str(s["cod_count"]),
+               prepaid=str(s["prepaid_count"])),
         hint_tone="info",
     )
 with k2:
@@ -83,18 +86,14 @@ with st.form("add_cod"):
             t("cod.f_platform"),
             ["shopee", "lazada", "tiktok", "shopify", "other"],
             format_func=lambda p: {
-                "shopee": "🛒 Shopee", "lazada": "🟧 Lazada",
-                "tiktok": "🎵 TikTok", "shopify": "🛍 Shopify",
-                "other": "📝 Other",
-            }.get(p, p),
+                "shopee": "🛒", "lazada": "🟧", "tiktok": "🎵",
+                "shopify": "🛍", "other": "📝",
+            }.get(p, "📦") + " " + platform_name(p),
         )
         n_type = st.selectbox(
             t("cod.f_payment_type"),
             ["cod", "prepaid"],
-            format_func=lambda p: {
-                "cod": "📮 COD",
-                "prepaid": "💳 Prepaid",
-            }.get(p, p),
+            format_func=lambda p: payment_type_name(p, icon=True),
         )
     with c3:
         n_amount = st.number_input(t("cod.f_amount"), min_value=0.0, step=10.0, format="%.0f")
@@ -182,8 +181,13 @@ if bp:
         st.markdown(
             "<div style='display:flex;justify-content:space-between;"
             "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-            "<div>" + icon + " " + plat.title() + " " + type_icon + " " +
-            ptype.upper() + " · " + t("common.n_orders", n=str(r["count"])) + ret_badge + "</div>"
+            "<div>" + t("cod.platform_row",
+                         icon=icon,
+                         platform=platform_name(plat),
+                         type_icon=type_icon,
+                         payment=payment_type_name(ptype, icon=False),
+                         orders=t("common.n_orders", n=str(r["count"])),
+                         returns=ret_badge) + "</div>"
             "<div style='font-variant-numeric:tabular-nums'>฿" +
             "{:,.0f}".format(r.get("revenue", 0)) + "</div>"
             "</div>",
@@ -213,7 +217,7 @@ if orders:
                 "<div style='display:flex;justify-content:space-between'>"
                 "<div>" + s_icon + " " + (o.get("order_id") or "—") +
                 " " + ptype_icon + " <span style='color:#7a7569;font-size:12px'>" +
-                (o.get("buyer_name") or "") + " · " + plat + "</span></div>"
+                (o.get("buyer_name") or "") + " · " + platform_name(plat) + "</span></div>"
                 "<div style='font-variant-numeric:tabular-nums;font-weight:500'>"
                 "฿" + "{:,.0f}".format(o.get("amount", 0)) + "</div></div>"
                 "<div style='color:#9a9485;font-size:11px'>" +

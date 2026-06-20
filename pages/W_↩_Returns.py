@@ -17,6 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import platform_name
 
 st.set_page_config(page_title="nirva.sell · Returns",
                    page_icon="↩", layout="wide")
@@ -76,10 +77,9 @@ with st.form("add_return"):
             t("ret.f_platform"),
             ["shopee", "lazada", "tiktok", "shopify", "other"],
             format_func=lambda p: {
-                "shopee": "🛒 Shopee", "lazada": "🟧 Lazada",
-                "tiktok": "🎵 TikTok", "shopify": "🛍 Shopify",
-                "other": "📝 " + t("exp.cat_other"),
-            }.get(p, p),
+                "shopee": "🛒", "lazada": "🟧", "tiktok": "🎵",
+                "shopify": "🛍", "other": "📝",
+            }.get(p, "📦") + " " + platform_name(p),
         )
         n_reason = st.selectbox(
             t("ret.f_reason"),
@@ -119,7 +119,7 @@ with cP:
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
                 "padding:8px 0;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-                "<div>" + icon + " " + plat.title() + " · " +
+                "<div>" + icon + " " + platform_name(plat) + " · " +
                 t("common.n_returns", n=str(r["count"])) + "</div>"
                 "<div style='color:#c54c4c'>-฿" + "{:,.0f}".format(loss) + "</div>"
                 "</div>",

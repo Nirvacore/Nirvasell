@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import platform_name
 
 st.set_page_config(page_title="nirva.sell · Ads",
                    page_icon="📣", layout="wide")
@@ -73,7 +74,8 @@ with st.expander(t("ads.add_title"), expanded=s["total"] == 0):
             n_plat = st.selectbox(
                 t("ads.f_platform"),
                 ads.AD_PLATFORMS,
-                format_func=lambda p: ads.PLATFORM_ICONS.get(p, "📣") + " " + p.replace("_", " ").title(),
+                format_func=lambda p: ads.PLATFORM_ICONS.get(p, "📣") + " " +
+                platform_name(p),
             )
         with c2:
             n_budget = st.number_input(t("ads.f_budget"), min_value=0.0, step=100.0, format="%.0f")
@@ -120,14 +122,14 @@ if bp:
         st.markdown(
             "<div style='display:flex;justify-content:space-between;align-items:center;"
             "padding:10px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-            "<div>" + icon + " " + plat.replace("_", " ").title() +
+            "<div>" + icon + " " + platform_name(plat) +
             " <span style='color:#7a7569;font-size:12px'>" +
             str(r.get("campaigns", 0)) + t("ads.campaigns_unit") + "</span></div>"
             "<div style='display:flex;gap:18px;align-items:center;font-size:13px'>"
             "<span>" + t("ads.kpi_spent") + " ฿" + "{:,.0f}".format(float(r.get("spent", 0))) + "</span>"
             "<span>" + t("ads.kpi_revenue") + " ฿" + "{:,.0f}".format(float(r.get("revenue", 0))) + "</span>"
             "<span style='color:" + roas_color + ";font-weight:600'>" +
-            roas_icon + " ROAS " + "{:.1f}x".format(roas) + "</span>"
+            roas_icon + " " + t("ads.roas_line", roas="{:.1f}".format(roas)) + "</span>"
             "</div></div>",
             unsafe_allow_html=True,
         )
@@ -183,16 +185,17 @@ def _show_campaigns(campaign_list):
                 "<div style='display:flex;gap:14px;font-size:13px;align-items:center'>"
                 "<span>" + t("ads.kpi_spent") + " ฿" + spent_str + "</span>"
                 "<span>→ ฿" + rev_str + "</span>"
-                "<span style='color:" + roas_color + ";font-weight:600'>"
-                "ROAS " + "{:.1f}x".format(roas) + "</span>"
+                "<span style='color:" + roas_color + ";font-weight:600'>" +
+                t("ads.roas_line", roas="{:.1f}".format(roas)) + "</span>"
                 "<span style='color:" + profit_color + "'>" +
                 ("+" if profit >= 0 else "") + "{:,.0f}".format(profit) + "</span>"
                 "</div></div>"
-                "<div style='color:#9a9485;font-size:11px;margin-top:4px'>"
-                "CPC ฿" + "{:.0f}".format(c.get("cpc", 0)) +
-                " · CTR " + "{:.1f}%".format(c.get("ctr", 0)) +
-                " · Conv " + "{:.1f}%".format(c.get("conv_rate", 0)) +
-                " · CPA ฿" + "{:.0f}".format(c.get("cpa", 0)) +
+                "<div style='color:#9a9485;font-size:11px;margin-top:4px'>" +
+                t("ads.campaign_stats_line",
+                  cpc="{:.0f}".format(c.get("cpc", 0)),
+                  ctr="{:.1f}".format(c.get("ctr", 0)),
+                  conv="{:.1f}".format(c.get("conv_rate", 0)),
+                  cpa="{:.0f}".format(c.get("cpa", 0))) +
                 "</div></div>",
                 unsafe_allow_html=True,
             )

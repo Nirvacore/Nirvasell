@@ -16,7 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
-from i18n_inline import day_names_mon_first
+from i18n_inline import day_names_mon_first, platform_name
 
 st.set_page_config(page_title="nirva.sell · Calendar",
                    page_icon="📅", layout="wide")
@@ -144,7 +144,8 @@ with st.form("add_post"):
         n_plat = st.selectbox(
             t("cal.f_platform"),
             cal.POST_PLATFORMS,
-            format_func=lambda p: cal.PLATFORM_ICONS.get(p, "📣") + " " + p.replace("_", " ").title(),
+            format_func=lambda p: cal.PLATFORM_ICONS.get(p, "📣") + " " +
+            platform_name(p),
         )
     with c2:
         n_type = st.selectbox(

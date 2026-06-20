@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, empty_state, toast
 from i18n import t
+from i18n_inline import platform_name
 
 st.set_page_config(page_title="nirva.sell · Fulfillment", page_icon="📦", layout="wide")
 apply_theme()
@@ -66,7 +67,8 @@ with tab_pending:
         plat_filter = st.selectbox(
             t("fulfill.platform_filter"),
             ["all"] + platforms,
-            format_func=lambda p: t("fulfill.all_platforms") if p == "all" else p.title(),
+            format_func=lambda p: t("fulfill.all_platforms") if p == "all" else
+            platform_name(p),
         )
         if plat_filter != "all":
             pending = [o for o in pending if o["platform"] == plat_filter]
@@ -165,7 +167,7 @@ with tab_history:
         cols = st.columns(max(1, min(4, len(by_platform))))
         for i, (plat, rows) in enumerate(by_platform.items()):
             with cols[i % len(cols)]:
-                st.metric(plat.title(), t("common.n_orders", n=str(len(rows))))
+                st.metric(platform_name(plat), t("common.n_orders", n=str(len(rows))))
                 csv_bytes = ff.shipment_csv_for(plat, rows)
                 st.download_button(
                     f"⬇ {plat}_shipments.csv",
