@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import day_names_mon_first
 
 st.set_page_config(page_title="nirva.sell · Calendar",
                    page_icon="📅", layout="wide")
@@ -83,10 +84,7 @@ with nav3:
         st.rerun()
 
 # Day columns
-DAY_NAMES_SHORT = [
-    t("analytics.mon"), t("analytics.tue"), t("analytics.wed"),
-    t("analytics.thu"), t("analytics.fri"), t("analytics.sat"), t("analytics.sun"),
-]
+DAY_NAMES_SHORT = day_names_mon_first()
 
 week = cal.weekly_view(start)
 day_cols = st.columns(7)

@@ -13,6 +13,13 @@ from _auth_gate import require_auth
 from i18n import t
 from _components import page_header
 
+_NOTIF_KINDS = {
+    "email": "notif.kind_email",
+    "telegram": "notif.kind_telegram",
+    "line": "notif.kind_line",
+    "webhook": "notif.kind_webhook",
+}
+
 st.set_page_config(page_title="nirva.sell · Notifications", page_icon="🔔", layout="wide")
 apply_theme()
 require_auth()
@@ -56,10 +63,11 @@ if not channels:
     st.info(t("notif.no_channels"))
 else:
     for ch in channels:
+        disabled = t("notif.disabled_suffix") if not ch.get("enabled") else ""
         with st.expander(
             f"{['📧','💬','💚','🔗'][['email','telegram','line','webhook'].index(ch['kind'])]}"
             f"  {ch.get('name') or ch['kind']}"
-            f"  {' (ปิด)' if not ch.get('enabled') else ''}",
+            f"{disabled}",
             expanded=False,
         ):
             c1, c2, c3 = st.columns([1, 1, 1])
@@ -82,7 +90,8 @@ else:
                     notifier.delete_channel(ch["id"])
                     st.rerun()
 
-            st.caption(f"ID #{ch['id']} · last used: {ch.get('last_used') or 'never'}")
+            when = ch.get("last_used") or t("notif.never_used")
+            st.caption(t("notif.last_used_line", id=ch["id"], when=when))
             with st.expander(t("notif.show_config")):
                 # Mask secrets
                 cfg = dict(ch.get("config", {}))
@@ -100,49 +109,44 @@ st.markdown(f"### {t('notif.add_title')}")
 kind = st.radio(
     t("notif.kind_label"),
     ["email", "telegram", "line", "webhook"],
-    format_func=lambda k: {
-        "email":    "📧 Email (SMTP)",
-        "telegram": "💬 Telegram",
-        "line":     "💚 LINE Notify",
-        "webhook":  "🔗 Webhook (Slack / Discord / Zapier)",
-    }[k],
+    format_func=lambda k: t(_NOTIF_KINDS[k]),
     horizontal=True,
 )
 
 with st.form(f"add_{kind}"):
-    name = st.text_input(t("notif.channel_name"), placeholder=f"My {kind}")
+    name = st.text_input(t("notif.channel_name"), placeholder=t("notif.channel_name_ph", kind=kind))
     config: dict = {}
 
     if kind == "email":
         st.caption(t("notif.email_help"))
         c1, c2 = st.columns(2)
         with c1:
-            config["host"] = st.text_input("SMTP host", "smtp.gmail.com")
+            config["host"] = st.text_input(t("notif.smtp_host"), "smtp.gmail.com")
             config["user"] = st.text_input(t("notif.smtp_user"))
             config["to"] = st.text_input(t("notif.email_to"), help=t("notif.email_to_help"))
         with c2:
-            config["port"] = st.number_input("SMTP port", value=587, step=1)
+            config["port"] = st.number_input(t("notif.smtp_port"), value=587, step=1)
             config["password"] = st.text_input(t("notif.smtp_password"), type="password",
                                                  help=t("notif.smtp_password_help"))
             config["from"] = st.text_input(t("notif.email_from"), help=t("notif.email_from_help"))
 
     elif kind == "telegram":
         st.caption(t("notif.telegram_help"))
-        config["bot_token"] = st.text_input("Bot token", type="password",
-                                              help="ขอจาก @BotFather")
-        config["chat_id"] = st.text_input("Chat ID",
-                                            help="ส่งข้อความให้บอท → https://api.telegram.org/bot<TOKEN>/getUpdates")
+        config["bot_token"] = st.text_input(t("notif.bot_token"), type="password",
+                                              help=t("notif.telegram_token_help"))
+        config["chat_id"] = st.text_input(t("notif.chat_id"),
+                                            help=t("notif.chat_id_help"))
 
     elif kind == "line":
         st.caption(t("notif.line_help"))
-        config["token"] = st.text_input("LINE Notify token", type="password",
-                                          help="https://notify-bot.line.me/my/")
+        config["token"] = st.text_input(t("notif.line_token"), type="password",
+                                          help=t("notif.line_token_help"))
 
     elif kind == "webhook":
         st.caption(t("notif.webhook_help"))
-        config["url"] = st.text_input("Webhook URL",
-                                        placeholder="https://hooks.slack.com/services/...")
-        config["method"] = st.selectbox("HTTP method", ["POST", "PUT"])
+        config["url"] = st.text_input(t("notif.webhook_url"),
+                                        placeholder=t("notif.webhook_url_ph"))
+        config["method"] = st.selectbox(t("notif.http_method"), ["POST", "PUT"])
 
     submitted = st.form_submit_button(t("notif.add_btn"), type="primary")
     if submitted:
@@ -164,8 +168,8 @@ c1, c2 = st.columns([1, 4])
 with c1:
     if st.button(t("notif.send_test_all"), type="primary", width='stretch'):
         results = notifier.notify(
-            "🧪 nirva.sell broadcast test",
-            "Hi from nirva.sell. ถ้าเห็นข้อความนี้ → ทุก channel ของคุณทำงานปกติ.",
+            t("notif.test_subject"),
+            t("notif.test_body"),
         )
         for r in results:
             icon = "✅" if r["ok"] else "❌"

@@ -72,7 +72,7 @@ with st.expander(t("var.add_title"), expanded=s["groups"] == 0):
                 axis2_name = st.text_input(
                     t("var.f_axis2"), placeholder=t("var.axis2_ph"), key="_va2n")
                 axis2_vals = st.text_input(
-                    t("var.f_axis2_vals"), placeholder="S,M,L,XL",
+                    t("var.f_axis2_vals"), placeholder=t("var.axis2_vals_ph"),
                     key="_va2v")
             with ac3:
                 axis3_name = st.text_input(
@@ -146,8 +146,9 @@ for grp in groups:
     with st.expander(
         "📦 " + grp["parent_sku"] + " — " +
         (grp.get("product_name") or "")[:25] +
-        " (" + str(details["active_count"]) + " variants · " +
-        str(details["total_stock"]) + " stock)"
+        " (" + t("var.group_expander_suffix",
+                  variants=str(details["active_count"]),
+                  stock=str(details["total_stock"])) + ")"
     ):
         for var in details["variants"]:
             vc1, vc2, vc3, vc4 = st.columns([3, 1, 1, 1])
@@ -163,7 +164,7 @@ for grp in groups:
                 )
             with vc2:
                 new_stock = st.number_input(
-                    "stock",
+                    t("var.f_stock"),
                     value=var["stock"],
                     min_value=0,
                     step=1,

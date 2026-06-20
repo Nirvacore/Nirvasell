@@ -20,6 +20,12 @@ from _auth_gate import require_auth
 from _components import page_header, toast, friendly_error
 from i18n import t
 
+_STUDIO_BGS = {
+    "white": "studio.bg_white",
+    "cream": "studio.bg_cream",
+    "black": "studio.bg_black",
+}
+
 st.set_page_config(page_title="nirva.sell · Photo Studio",
                    page_icon="📷", layout="wide")
 apply_theme()
@@ -50,8 +56,7 @@ with cS:
     bg = st.selectbox(
         t("studio.bg_color"),
         ["white", "cream", "black"],
-        format_func=lambda k: {"white": "⚪ ขาว (แนะนำ)",
-                                "cream": "🤎 ครีม", "black": "⚫ ดำ"}.get(k, k),
+        format_func=lambda k: t(_STUDIO_BGS[k]),
     )
     padding_pct = st.slider(
         t("studio.padding"),

@@ -52,9 +52,9 @@ st.markdown(
 # (i18n_key, nirva, bigseller, ginee, page365)
 # Cells use "✅" (yes/clear win), "🟡" (partial), "❌" (no/missing), or a price
 ROWS = [
-    ("compare.row_price",   "ฟรี + จ่ายเท่าที่ไหว",  "RM129–1299/mo",     "$15–149/mo",       "฿799–5999/mo"),
-    ("compare.row_orders",  "ไม่จำกัด",              "1,500 free / month", "Limited free",     "800 bills/mo"),
-    ("compare.row_stores",  "ไม่จำกัด",              "3 free / 16 paid",   "Limited",          "Per-tier limit"),
+    ("compare.row_price",   "compare.cell_nirva_price",  "RM129–1299/mo",     "$15–149/mo",       "฿799–5999/mo"),
+    ("compare.row_orders",  "compare.cell_unlimited",    "1,500 free / month", "Limited free",     "800 bills/mo"),
+    ("compare.row_stores",  "compare.cell_unlimited",    "3 free / 16 paid",   "Limited",          "Per-tier limit"),
 
     ("compare.row_ai_listing",  "✅",  "❌",  "❌",  "❌"),
     ("compare.row_ai_live",     "✅",  "❌",  "❌",  "🟡 (manual CF)"),
@@ -69,7 +69,7 @@ ROWS = [
     ("compare.row_pdpa",        "✅ Open ToS",  "🟡",  "🟡",  "🟡"),
     ("compare.row_open_source", "✅ MIT",       "❌",  "❌",  "❌"),
     ("compare.row_self_host",   "✅ Docker",    "❌",  "❌",  "❌"),
-    ("compare.row_byok",        "✅ ใช้ API key เอง",  "❌",  "❌",  "❌"),
+    ("compare.row_byok",        "compare.cell_nirva_byok",  "❌",  "❌",  "❌"),
     ("compare.row_languages",   "19 langs",     "EN / ZH",  "EN / ZH",  "TH only"),
 ]
 
@@ -77,10 +77,16 @@ st.markdown(f"### {t('compare.matrix_title')}")
 st.caption(t("compare.matrix_legend"))
 
 import pandas as pd
+
+def _matrix_cell(val):
+    if isinstance(val, str) and val.startswith("compare.cell_"):
+        return t(val)
+    return val
+
 df = pd.DataFrame([
     {
         t("compare.col_feature"):    t(key),
-        "🌙 nirva.sell":              nv,
+        "🌙 nirva.sell":              _matrix_cell(nv),
         "BigSeller":                  bs,
         "Ginee":                      gn,
         "Page365":                    pg,

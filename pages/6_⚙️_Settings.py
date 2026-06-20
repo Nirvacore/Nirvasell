@@ -179,7 +179,7 @@ edited_df = st.data_editor(
 
 c1, c2 = st.columns([1, 4])
 with c1:
-    if st.button(t("common.save") + " presets", type="primary", width='stretch'):
+    if st.button(t("settings.save_presets_btn"), type="primary", width='stretch'):
         PRESETS_PATH.write_text(json.dumps(edited_df.to_dict("records"), indent=2, ensure_ascii=False))
         st.success(t("common.saved"))
 

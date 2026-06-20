@@ -96,8 +96,10 @@ if not all_custs:
     st.stop()
 
 cust_options = [
-    (c["ckey"], c["buyer_name"] + " · " + str(c["orders"]) + "x · ฿" +
-     "{:,.0f}".format(c["total"] or 0))
+    (c["ckey"], t("crm.cust_option",
+                   name=c["buyer_name"],
+                   orders=str(c["orders"]),
+                   total="{:,.0f}".format(c["total"] or 0)))
     for c in all_custs
 ]
 

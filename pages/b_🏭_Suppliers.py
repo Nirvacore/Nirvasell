@@ -58,16 +58,16 @@ with st.expander(t("sup.add_title"), expanded=not suppliers):
     with st.form("add_supplier"):
         c1, c2 = st.columns(2)
         with c1:
-            n_name = st.text_input(t("sup.f_name") + " *", placeholder="Synnex, VSTECS, etc.")
+            n_name = st.text_input(t("sup.f_name") + " *", placeholder=t("sup.name_ph"))
             n_contact = st.text_input(t("sup.f_contact"), placeholder=t("sup.contact_placeholder"))
             n_phone = st.text_input(t("sup.f_phone"))
         with c2:
-            n_email = st.text_input("Email")
-            n_line = st.text_input("LINE ID")
+            n_email = st.text_input(t("sup.f_email"))
+            n_line = st.text_input(t("sup.f_line"))
             n_lead = st.number_input(
                 t("sup.f_lead_days"), min_value=1, max_value=90, value=3,
             )
-        n_terms = st.text_input(t("sup.f_terms"), placeholder="Net 30, COD, etc.")
+        n_terms = st.text_input(t("sup.f_terms"), placeholder=t("sup.terms_ph"))
         n_note = st.text_input(t("sup.f_note"))
 
         if st.form_submit_button(t("sup.add_btn"), type="primary"):
@@ -105,9 +105,9 @@ if suppliers:
                 "<span style='color:#7a7569;font-size:12px;margin-left:8px'>" +
                 (s.get("payment_terms") or "") + "</span></div>"
                 "<div style='display:flex;gap:14px;font-size:12px;color:#7a7569'>"
-                "<span>📦 " + sku_str + " SKUs</span>"
-                "<span>📋 " + ord_str + " POs</span>"
-                "<span>📅 " + lead_str + "d lead</span>"
+                "<span>📦 " + t("common.n_skus", n=sku_str) + "</span>"
+                "<span>📋 " + t("common.n_pos", n=ord_str) + "</span>"
+                "<span>📅 " + t("sup.lead_days_short", n=lead_str) + "</span>"
                 "</div></div>"
                 "<div style='color:#9a9485;font-size:12px;margin-top:4px'>" +
                 " · ".join(filter(None, [
@@ -173,7 +173,7 @@ if price_sup_id:
         with st.form("add_price_" + str(price_sup_id)):
             pc1, pc2, pc3 = st.columns(3)
             with pc1:
-                np_sku = st.text_input("SKU *")
+                np_sku = st.text_input(t("po.col_sku") + " *")
                 np_name = st.text_input(t("sup.f_product_name"))
             with pc2:
                 np_cost = st.number_input(t("sup.f_unit_cost"), min_value=0.0, step=10.0, format="%.0f")
@@ -212,7 +212,7 @@ if po_sup_id:
                     "<div style='display:flex;justify-content:space-between;"
                     "padding:6px 0;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
                     "<div>📋 " + (po.get("order_date") or "—") +
-                    " · " + str(po.get("items_count", 0)) + " items"
+                    " · " + t("common.n_items", n=str(po.get("items_count", 0))) +
                     " <span style='color:#9a9485;font-size:11px'>" +
                     (po.get("note") or "") + "</span></div>"
                     "<div style='font-weight:600'>฿" +

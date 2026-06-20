@@ -183,7 +183,7 @@ if bp:
             "<div style='display:flex;justify-content:space-between;"
             "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<div>" + icon + " " + plat.title() + " " + type_icon + " " +
-            ptype.upper() + " · " + str(r["count"]) + " orders" + ret_badge + "</div>"
+            ptype.upper() + " · " + t("common.n_orders", n=str(r["count"])) + ret_badge + "</div>"
             "<div style='font-variant-numeric:tabular-nums'>฿" +
             "{:,.0f}".format(r.get("revenue", 0)) + "</div>"
             "</div>",

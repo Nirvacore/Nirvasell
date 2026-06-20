@@ -165,8 +165,8 @@ if at_risk:
             "<div style='padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05);"
             "border-left:3px solid #c54c4c'>"
             "🚨 <strong>" + name + "</strong>"
-            " · CLV ฿" + clv_str + "/yr"
-            " · " + t("clv.last_order") + " " + days_str + " " + t("dashboard.days") +
-            " ago</div>",
+            " · " + t("clv.clv_per_year", amount=clv_str) +
+            " · " + t("clv.last_order") + " " +
+            t("common.days_ago", n=days_str) + "</div>",
             unsafe_allow_html=True,
         )

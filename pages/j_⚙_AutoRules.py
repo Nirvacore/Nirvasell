@@ -96,7 +96,7 @@ with st.expander(t("rule.add_title"), expanded=rs["total"] == 0):
         if n_action == "line_notify":
             msg = st.text_input(
                 t("rule.f_message"),
-                placeholder="🔔 Low stock alert!",
+                placeholder=t("rule.message_ph"),
             )
             action_config = {"message": msg}
 
@@ -189,7 +189,7 @@ if rules:
                 "<div style='display:flex;justify-content:space-between'>"
                 "<div>" + e_badge + " <strong>" + (rule.get("name") or "—") + "</strong></div>"
                 "<div style='color:#9a9485;font-size:12px'>"
-                "🔥 " + str(fire_count) + "x · last: " + last + "</div></div>"
+                + t("rule.fires_line", n=str(fire_count), when=last) + "</div></div>"
                 "<div style='font-size:12px;color:#7a7569;margin-top:4px'>"
                 + trig.get("icon", "") + " " + trig.get("label", rule["trigger_type"]) +
                 " → " + act.get("icon", "") + " " + act.get("label", rule["action_type"]) +

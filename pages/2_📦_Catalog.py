@@ -253,7 +253,7 @@ else:
             )
             url = target[1]
             if target[0] == "custom":
-                url = st.text_input("URL", "")
+                url = st.text_input(t("common.url"), "")
         with c2:
             if url:
                 png = qr.make_png(url, box_size=8)

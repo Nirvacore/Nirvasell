@@ -13,18 +13,12 @@ import custom_tasks as ct
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from _components import friendly_error
+from _components import friendly_error, page_header
 from i18n import t
 
 
-_DEFAULT_PROMPT = """คุณคือ {{role-here}} สำหรับ marketplace ไทย
-
-ข้อมูลสินค้า:
-{ctx}
-
-(เขียนคำสั่งเฉพาะของคุณตรงนี้ — เช่น "สร้าง email สำหรับ B2B customers" หรือ "เขียน Twitter thread 5 tweets")
-
-ส่งกลับ JSON object เท่านั้น ห้ามใส่ ``` หรือคำอธิบาย"""
+def _default_prompt() -> str:
+    return t("custom_task.default_prompt")
 
 
 st.set_page_config(page_title="nirva.sell · Custom Tasks", page_icon="✏", layout="wide")
@@ -46,7 +40,7 @@ if custom:
         with st.expander(f"{row.get('icon','✨')} {row['label']} · `{row['key']}`"):
             st.caption(row.get("blurb") or "—")
             st.code(row.get("prompt") or "", language="text")
-            st.caption(f"Output fields: {row.get('output_fields') or '—'}")
+            st.caption(t("custom_task.output_fields_label") + ": " + (row.get("output_fields") or "—"))
             if st.button(t("common.delete"), key=f"del_{row['key']}"):
                 ct.delete(row["key"])
                 st.rerun()
@@ -90,7 +84,7 @@ with st.form("custom_task_form"):
 
     prompt = st.text_area(
         t("custom_task.prompt"),
-        value=preset.get("prompt", "") if preset else _DEFAULT_PROMPT,
+        value=preset.get("prompt", "") if preset else _default_prompt(),
         height=240,
         help=t("custom_task.prompt_help"),
     )
@@ -141,7 +135,7 @@ else:
         )
         sample = st.text_area(
             t("custom_task.test_product_info"),
-            value="ชื่อ: Logitech MX Master 3S\nแบรนด์: Logitech\nหมวด: Mouse\nราคา: 3200\nสเปค: 8K DPI, wireless, 70-day battery",
+            value=t("custom_task.test_sample"),
             height=120,
         )
         if st.button(t("custom_task.run_test"), type="primary"):

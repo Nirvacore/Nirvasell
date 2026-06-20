@@ -128,7 +128,10 @@ with tab_rates:
             rate_html = "<table style='font-size:0.82rem;border-collapse:collapse'>"
             rate_html += "<tr style='color:#9a9485'><th style='padding:2px 8px'>" + t("ship.weight") + "</th><th style='padding:2px 8px'>" + t("ship.rate_price") + "</th></tr>"
             for w, p in info["rates"]:
-                rate_html += "<tr><td style='padding:2px 8px;color:#9a9485'>≤ " + str(w) + " kg</td>"
+                rate_html += (
+                    "<tr><td style='padding:2px 8px;color:#9a9485'>"
+                    + t("ship.weight_lte", w=str(w)) + "</td>"
+                )
                 rate_html += "<td style='padding:2px 8px'>฿" + str(p) + "</td></tr>"
             rate_html += "</table>"
             st.html(rate_html)

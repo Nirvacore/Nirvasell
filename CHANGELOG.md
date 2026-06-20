@@ -10,6 +10,33 @@ Built iteratively. Current stats:
 - README — developer links (ECOSYSTEM_MAP, NIRVACORE_V1_PLAN), file tree updated
 - No runtime / dependency changes
 
+---
+
+---
+
+## v88 — i18n auto-translate v82–v87 keys (19 langs)
+- New `scripts/expand_i18n_langs.py` — Google Translate batch expander (resumable, UTF-8 safe)
+- 221 keys from B/C pack → v87 now have all 19 `LANGS` in `i18n.py`
+- Multiline `custom_task.*` prompts remain th+en only (long AI templates)
+
+## v87 — Residual inline pass (U/b/D6/Y/z/H/2/E7/A9/6)
+- `U_` customer card subline + edit form email/LINE labels
+- `b_` supplier form labels, card SKUs/POs/lead, placeholders, price SKU field
+- `D6` About tab HTML → `set.about_*` keys
+- `Y_` batch scope target uses `common.n_skus` / `batch.scope_all`
+- `z_` CRM customer option format, `H_`/`G_` Account role/user/delete word
+- `2_` Catalog URL, `E7` weight ≤ kg, `A9` variant placeholders/stock, `6_` save presets btn
+
+## v86 — Final i18n pass (I/J/A0/l_/S_/j_/s_/e_)
+- `A0` motivational quotes, `l_` ABC inline labels, `I_` Notifications full form labels
+- `S_` PhotoStudio backgrounds, `J_` custom task prompt/sample, `j_` rule fires line, `s_` Messages
+- `e_` Calendar uses `i18n_inline.day_names_mon_first()`
+
+## v85 — World-class i18n (format strings + shared helpers)
+- Add `i18n_inline.py` — `day_name()` helper shared across pages
+- Add `{n}` / `{amount}` format keys (`common.n_orders`, `rst.line_*`, `srch.*`, …)
+- Wire remaining A/U/K/Z/M/7_/T_/i_ pages; refactor E1 to use `i18n_inline`
+
 ## v84 — G/H/W pack i18n (Thai source of truth)
 - Replace hardcoded Thai/English inline strings in G/H/W pages and lowercase companions with `t()` keys
 - Add `common.customers`, `turn.item_stock_doh`, `pay.bank_ph`, `comp.cheaper_by`, `var.cost_line`, etc.
