@@ -13,6 +13,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import return_reason
 
 st.set_page_config(page_title="nirva.sell · Returns",
                    page_icon="↩", layout="wide")
@@ -57,7 +58,8 @@ with st.expander(t("ret.log_title"), expanded=False):
             r_reason = st.selectbox(
                 t("ret.f_reason"),
                 list(rt.RETURN_REASONS),
-                format_func=lambda k: rt.REASON_ICONS.get(k, "?") + " " + k,
+                format_func=lambda k: rt.REASON_ICONS.get(k, "?") + " " +
+                return_reason(k),
             )
         with rc3:
             r_amount = st.number_input(t("ret.f_amount"),
@@ -93,13 +95,14 @@ if reason_data:
             "<div style='display:flex;align-items:center;gap:10px;"
             "margin-bottom:5px'>"
             "<span style='width:180px;font-size:13px'>" + icon +
-            " " + r["reason"] + "</span>"
+            " " + return_reason(r["reason"]) + "</span>"
             "<div style='flex:1;background:rgba(40,30,20,0.06);"
             "border-radius:3px;height:18px'>"
             "<div style='width:" + str(pct) + "%;height:100%;"
             "background:#9a7dc5;border-radius:3px'></div></div>"
             "<span style='width:60px;font-size:12px;text-align:right'>"
-            + str(r["count"]) + " (" + str(int(pct)) + "%)</span>"
+            + t("common.count_pct", count=str(r["count"]), pct=str(int(pct))) +
+            "</span>"
             "<span style='width:80px;font-size:12px;text-align:right;"
             "color:#c54c4c'>-฿{:,.0f}".format(r["refund"] or 0) + "</span></div>",
             unsafe_allow_html=True,

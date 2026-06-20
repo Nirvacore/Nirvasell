@@ -66,17 +66,19 @@ with tab_growth:
         for plat in plats:
             g_rows = [r for r in growth if r.get("platform") == plat]
             if g_rows:
-                st.write("**" + plat + "**")
+                st.write("**" + (plat or t("common.platform_direct")) + "**")
                 for r in g_rows:
                     grow_pct = r.get("growth_pct", 0)
                     color = "#4d6c5c" if grow_pct >= 0 else "#c54c4c"
                     g_html = (
                         "<div style='margin:2px 0;font-size:0.83rem'>"
                         "<span style='color:#9a9485;width:80px;display:inline-block'>" +
-                        (r.get("month","") or "—") + "</span>"
-                        "฿{:,.0f}".format(r.get("revenue",0)) +
+                        (r.get("month", "") or "—") + "</span>"
+                        "฿{:,.0f}".format(r.get("revenue", 0)) +
                         " <span style='color:" + color + ";margin-left:8px'>" +
-                        ("+" if grow_pct >= 0 else "") + str(grow_pct) + "%</span>"
-                        "</div>"
+                        t("ch.growth_pct",
+                          sign="+" if grow_pct >= 0 else "",
+                          pct=str(grow_pct)) +
+                        "</span></div>"
                     )
                     st.html(g_html)

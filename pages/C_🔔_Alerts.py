@@ -162,7 +162,9 @@ if POLICY_ALERTS.exists():
             else:
                 badge = "•"
                 detail = ""
-            st.markdown(f"{badge} **{platform}** · `{at}`{detail}")
+            st.markdown(t("alerts.policy_feed_line",
+                           badge=badge, platform=platform,
+                           fetched_at=at, detail=detail))
             if r.get("effective_date"):
                 st.caption("  " + t("alerts.effective_date", date=r["effective_date"]))
             if r.get("notes"):

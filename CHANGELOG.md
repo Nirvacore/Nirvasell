@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v93 — Report/returns/reason inline pass (X/G0/E4/C3/C)
+- X Reports: best-day card, combo row, repeat ratio; `day_name()` helper
+- G0 growth %, E4/C3 return reason labels via `return_reason()`
+- C Alerts policy feed line; fix vi/ru translation corruption from v92
+- 9 new keys → 19 langs
+
 ## v92 — Analytics/platform/format inline pass (F/E1/o/G0/C3/D2/E4/X/B0)
 - Dashboard orders/units KPI, E1 platform/combo/peak/best-day lines
 - `common.platform_direct`, promo budget %, tax expense line, ret SKU line

@@ -17,6 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
+from i18n_inline import day_name
 
 st.set_page_config(page_title="nirva.sell · Reports",
                    page_icon="📊", layout="wide")
@@ -197,11 +198,7 @@ with col_h:
     else:
         st.caption(t("report.no_data"))
 
-DAY_NAMES = {
-    0: t("analytics.sun"), 1: t("analytics.mon"), 2: t("analytics.tue"),
-    3: t("analytics.wed"), 4: t("analytics.thu"), 5: t("analytics.fri"),
-    6: t("analytics.sat"),
-}
+DAY_NAMES = {i: day_name(i) for i in range(7)}
 
 with col_d:
     st.markdown("#### " + t("analytics.best_day"))
@@ -215,13 +212,15 @@ with col_d:
 
         best = oa.best_day()
         if best:
-            day_name = DAY_NAMES.get(best["dow"], "?")
+            day_name_val = day_name(best["dow"])
             st.markdown(
                 "<div style='text-align:center;padding:8px;background:rgba(77,108,92,0.06);"
                 "border-radius:10px;margin-top:8px'>"
-                "👑 " + t("analytics.best_is") + " <strong>" + day_name +
-                "</strong> — ฿" + "{:,.0f}".format(best.get("revenue", 0)) +
-                "</div>",
+                + t("analytics.best_day_card",
+                    best_is=t("analytics.best_is"),
+                    day=day_name_val,
+                    amount="{:,.0f}".format(best.get("revenue", 0)))
+                + "</div>",
                 unsafe_allow_html=True,
             )
     else:
@@ -252,8 +251,11 @@ with col_r:
         "<div style='font-size:2.5rem;font-weight:600;color:#4d6c5c'>"
         + str(rr["repeat_rate"]) + "%</div>"
         "<div style='color:#7a7569;font-size:13px'>"
-        + str(rr["repeat_buyers"]) + " / " + str(rr["total_buyers"]) + " " +
-        t("analytics.buyers_repeat") + "</div></div>",
+        + t("analytics.repeat_ratio",
+            repeat=str(rr["repeat_buyers"]),
+            total=str(rr["total_buyers"]),
+            buyers_repeat=t("analytics.buyers_repeat"))
+        + "</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -266,7 +268,8 @@ if combos:
         st.markdown(
             "<div style='display:flex;justify-content:space-between;"
             "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-            "<div>🔗 " + c["sku_a"] + " + " + c["sku_b"] + "</div>"
+            "<div>🔗 " + t("analytics.combo_row",
+                           sku_a=c["sku_a"], sku_b=c["sku_b"]) + "</div>"
             "<div style='color:#4d6c5c;font-weight:600'>" +
             str(c["freq"]) + " " + t("analytics.times") + "</div>"
             "</div>",

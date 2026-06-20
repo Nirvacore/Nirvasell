@@ -6,6 +6,7 @@ import returns as rt
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import return_reason
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -41,12 +42,14 @@ with tab_list:
         st.info(t("ret.empty"))
     for r in returns:
         icon = rt.REASON_ICONS.get(r["reason"], "📝")
-        label = icon + " " + (r.get("return_date","") or "—") + \
-                " · " + (r.get("order_id") or "—") + \
-                " · " + r["reason"] + \
-                " · ฿{:,.0f}".format(r["refund_amount"])
+        label = t("ret.list_line",
+                  icon=icon,
+                  date=r.get("return_date", "") or "—",
+                  order_id=r.get("order_id") or "—",
+                  reason=return_reason(r.get("reason", "other")),
+                  amount="{:,.0f}".format(r["refund_amount"]))
         if r.get("sku"):
-            label += " · " + r["sku"]
+            label += t("ret.list_line_sku", sku=r["sku"])
         col_l, col_d = st.columns([5,1])
         col_l.write(label)
         if col_d.button("🗑", key="rdel_" + str(r["id"])):
@@ -63,7 +66,8 @@ with tab_log:
         col3, col4 = st.columns(2)
         reason    = col3.selectbox(t("ret.f_reason"),
                                     rt.RETURN_REASONS,
-                                    format_func=lambda r: rt.REASON_ICONS.get(r,"") + " " + r.replace("_"," ").title())
+                                    format_func=lambda r: rt.REASON_ICONS.get(r, "") + " " +
+                                    return_reason(r))
         sku       = col4.text_input(t("ret.f_sku"))
         col5, col6 = st.columns(2)
         refund    = col5.number_input(t("ret.f_refund"), min_value=0.0, step=10.0)
@@ -91,11 +95,13 @@ with tab_analysis:
                 row_html = (
                     "<div style='margin:3px 0;font-size:0.84rem'>"
                     "<span style='color:#9a9485;width:170px;display:inline-block'>"
-                    + icon + " " + r["reason"] + "</span>"
+                    + icon + " " + return_reason(r["reason"]) + "</span>"
                     "<div style='display:inline-block;background:#7a3a3a;width:" +
                     str(bar_w) + "px;height:10px;vertical-align:middle'></div>"
-                    " <span style='color:#d4d0c8'>" + str(r["count"]) +
-                    " · ฿{:,.0f}".format(r["refund"] or 0) + "</span>"
+                    " <span style='color:#d4d0c8'>" +
+                    t("ret.reason_bar_tail",
+                      count=str(r["count"]),
+                      amount="{:,.0f}".format(r["refund"] or 0)) + "</span>"
                     "</div>"
                 )
                 st.html(row_html)
@@ -112,7 +118,7 @@ with tab_analysis:
             prow_html = (
                 "<div style='margin:3px 0;font-size:0.84rem'>"
                 "<span style='color:#9a9485;width:120px;display:inline-block'>"
-                + (p["platform"] or "—") + "</span>"
+                + (p["platform"] or t("common.platform_direct")) + "</span>"
                 "<span style='color:#d4d0c8'>" + str(p["count"]) + t("ret.returns_unit") +
                 t("ret.total_loss_line", amount="{:,.0f}".format(loss)) + "</span>"
                 "</div>"
