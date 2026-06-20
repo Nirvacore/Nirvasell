@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v92 — Analytics/platform/format inline pass (F/E1/o/G0/C3/D2/E4/X/B0)
+- Dashboard orders/units KPI, E1 platform/combo/peak/best-day lines
+- `common.platform_direct`, promo budget %, tax expense line, ret SKU line
+- Report peak-hour badge, content-cal status label
+- 11 new keys → 19 langs
+
 ## v91 — Policy/rule/card templates (C/j/G/B4/7/G0/z/q/p/v/n/o)
 - Alerts policy feed, auto-rule templates, turnover DOI/RP lines, CLV tiers
 - Supplier score grades, biz health grade, promo ROI, CRM last order, etc.

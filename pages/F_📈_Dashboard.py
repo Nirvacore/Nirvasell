@@ -213,7 +213,8 @@ with m6:
     )
 with m7:
     metric_with_hint(
-        t("dashboard.kpi_orders"), f"{order_count} / {unit_count}u",
+        t("dashboard.kpi_orders"),
+        t("dashboard.orders_units", orders=str(order_count), units=str(unit_count)),
         hint=t("dashboard.hint_no_orders") if order_count == 0 else "",
         hint_target="pages/5_🔌_Import.py" if order_count == 0 else None,
         hint_tone="info",

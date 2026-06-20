@@ -122,6 +122,8 @@ with tab_analysis:
         st.subheader(t("ret.by_sku_title"))
         by_sku = rt.by_sku(limit=10)
         for s in by_sku:
-            st.write("- **" + (s["sku"] or "—") + "** — " +
-                     str(s["count"]) + t("ret.returns_unit") +
-                     " · ฿{:,.0f}".format(s["refund"] or 0))
+            st.write(t("ret.sku_line",
+                       sku=s["sku"] or "—",
+                       count=str(s["count"]),
+                       returns_unit=t("ret.returns_unit"),
+                       amount="{:,.0f}".format(s["refund"] or 0)))

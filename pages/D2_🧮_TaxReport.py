@@ -67,7 +67,7 @@ with tab_q:
             st.subheader(t("tax.expenses_title"))
             for cat, amt in sorted(data["expenses"].items(),
                                    key=lambda x: x[1], reverse=True):
-                st.write("- " + cat + ": ฿{:,.0f}".format(amt))
+                st.write(t("tax.expense_line", cat=cat, amount="{:,.0f}".format(amt)))
     except Exception as e:
         st.error(t("tax.error") + ": " + str(e))
 

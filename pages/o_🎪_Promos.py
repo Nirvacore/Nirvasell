@@ -160,7 +160,7 @@ if promos:
 
         budget_str = ""
         if p.get("budget") and p["budget"] > 0:
-            budget_str = " · Budget " + str(int(p["budget_used_pct"])) + "%"
+            budget_str = t("promo.budget_used", n=str(int(p["budget_used_pct"])))
 
         cA, cB = st.columns([5, 2])
         with cA:

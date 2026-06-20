@@ -44,7 +44,7 @@ with tab_compare:
             p_html = (
                 "<div style='margin:6px 0'>"
                 "<div style='font-size:0.85rem;color:#d4d0c8'><b>" +
-                (p.get("platform") or "direct") + "</b>"
+                (p.get("platform") or t("common.platform_direct")) + "</b>"
                 " · " + str(orders) + t("ch.orders") +
                 " · " + t("chan.line_aov", amount="{:,.0f}".format(aov)) +
                 " · " + t("ch.return_rate", n=str(rr)) + "</div>"

@@ -187,9 +187,10 @@ with col_h:
             st.markdown(
                 "<span style='background:rgba(77,108,92,0.1);padding:3px 10px;"
                 "border-radius:8px;font-size:13px;margin-right:6px'>"
-                "🔥 {:02d}:00 — ฿{:,.0f}</span>".format(
-                    p["hour"], p.get("revenue", 0)
-                ),
+                + t("report.peak_hour_badge",
+                    hour="{:02d}".format(p["hour"]),
+                    amount="{:,.0f}".format(p.get("revenue", 0)))
+                + "</span>",
                 unsafe_allow_html=True,
             )
         st.caption(t("analytics.peak_hint"))
