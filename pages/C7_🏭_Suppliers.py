@@ -95,8 +95,8 @@ for sup in suppliers:
         + sup.get("terms_label", "") + "</span></div>"
         "<div style='display:flex;gap:12px;font-size:12px'>"
         "<span>" + (sup.get("phone") or "") + "</span>"
-        "<span style='color:#9a9485'>" + str(sup.get("sku_count", 0)) + " SKU</span>"
-        "<span style='color:#9a9485'>" + str(sup.get("po_count", 0)) + " PO</span>"
+        "<span style='color:#9a9485'>" + t("common.n_skus", n=str(sup.get("sku_count", 0))) + "</span>"
+        "<span style='color:#9a9485'>" + t("common.n_pos", n=str(sup.get("po_count", 0))) + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )
@@ -107,17 +107,17 @@ for sup in suppliers:
             di1, di2, di3 = st.columns(3)
             with di1:
                 st.markdown("📞 " + (details.get("phone") or "—"))
-                st.markdown("💬 Line: " + (details.get("line_id") or "—"))
+                st.markdown(t("sup.line_display") + " " + (details.get("line_id") or "—"))
             with di2:
                 st.markdown("📧 " + (details.get("email") or "—"))
                 st.markdown("💳 " + details["terms_label"])
             with di3:
-                st.markdown("📦 สั่งซื้อขั้นต่ำ: ฿{:,.0f}".format(
+                st.markdown(t("sup.min_order_line", amount="{:,.0f}".format(
                     details.get("min_order_amount") or 0
-                ))
-                st.markdown("🛒 รวมสั่งซื้อ: ฿{:,.0f}".format(
+                )))
+                st.markdown(t("sup.total_spent_line", amount="{:,.0f}".format(
                     details.get("total_spent") or 0
-                ))
+                )))
 
             # Link SKU
             st.markdown("#### " + t("sup.link_sku_title"))
@@ -148,7 +148,7 @@ for sup in suppliers:
                         st.rerun()
 
             if details.get("skus"):
-                st.markdown("**SKU ที่เชื่อมแล้ว:**")
+                st.markdown("**" + t("sup.linked_skus_title") + ":**")
                 for sku_r in details["skus"]:
                     st.markdown(
                         "<div style='font-size:12px;padding:2px 0'>"
@@ -157,7 +157,7 @@ for sup in suppliers:
                            if sku_r.get("product_name") else "") +
                         " · ฿{:,.0f}".format(sku_r.get("cost_price") or 0) +
                         t("common.per_piece") +
-                        " · Lead " + str(sku_r.get("lead_days", 7)) + "d"
+                        " · " + t("sup.lead_days_short", n=str(sku_r.get("lead_days", 7))) +
                         "</div>",
                         unsafe_allow_html=True,
                     )

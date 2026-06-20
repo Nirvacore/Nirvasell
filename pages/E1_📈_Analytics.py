@@ -37,7 +37,7 @@ with tab_aov:
                 + (r["month"] or "—") + "</span>"
                 "<div style='display:inline-block;background:" + color +
                 ";width:" + str(bar_w) + "px;height:14px;vertical-align:middle'></div>"
-                " <span style='color:#d4d0c8'>AOV ฿{:,.0f}".format(aov) +
+                " <span style='color:#d4d0c8'>" + t("chan.line_aov", amount="{:,.0f}".format(aov)) +
                 " · " + str(r["orders"]) + t("ana.orders_unit") + "</span>"
                 "</div>"
             )

@@ -15,6 +15,12 @@ Built iteratively. Current stats:
 
 ---
 
+---
+
+## v90 — Residual card/detail inline pass (A6/C7/k/U/C8/B3/B2/C4/K/p/n/C5/A8/A4/w/6/G0/E1)
+- 23 new keys: supplier detail, CLV lines, tax preview, scorecard dims, recon variance, etc.
+- Quick-win reuse: `rst.reorder_pieces`, `common.n_*`, `cust.email`, `chan.line_aov`
+
 ## v89 — Full 19-lang expansion (all i18n keys)
 - `scripts/expand_i18n_langs.py` — translate → `scripts/i18n_lang_cache/{lang}.json` + `merge`
 - All **3,782 keys** now have **19 languages** (parallel Google Translate + en fallback)

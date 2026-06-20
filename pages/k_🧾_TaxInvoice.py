@@ -137,12 +137,9 @@ with st.expander(t("tax.create_title"), expanded=len(invoices) == 0):
             st.markdown(
                 "<div style='text-align:right;padding:8px 14px;"
                 "background:rgba(77,108,92,0.04);border-radius:8px;margin-top:8px'>"
-                "<span style='color:#7a7569'>Subtotal: ฿" +
-                "{:,.2f}".format(subtotal) + "</span>"
-                " · <span style='color:#7a7569'>VAT 7%: ฿" +
-                "{:,.2f}".format(vat) + "</span>"
-                " · <strong style='color:#4d6c5c'>Total: ฿" +
-                "{:,.2f}".format(total) + "</strong></div>",
+                "<span style='color:#7a7569'>" + t("tax.preview_subtotal", amount="{:,.2f}".format(subtotal)) + "</span>"
+                " · <span style='color:#7a7569'>" + t("tax.preview_vat", amount="{:,.2f}".format(vat)) + "</span>"
+                " · <strong style='color:#4d6c5c'>" + t("tax.preview_total", amount="{:,.2f}".format(total)) + "</strong></div>",
                 unsafe_allow_html=True,
             )
 

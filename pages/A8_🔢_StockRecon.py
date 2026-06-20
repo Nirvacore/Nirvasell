@@ -67,9 +67,9 @@ if st.session_state.active_count_id is None:
                 "<span>📋 <strong>" + h["count_date"] + "</strong>"
                 " · " + (h["notes"] or "—")[:30] + "</span>"
                 "<span style='display:flex;gap:12px'>"
-                "<span>" + str(h.get("total_skus") or 0) + " SKU</span>"
+                "<span>" + t("common.n_skus", n=str(h.get("total_skus") or 0)) + "</span>"
                 "<span style='color:" + h_color + ";font-weight:600'>"
-                + ("±" + str(h.get("total_abs_variance") or 0)) + " ต่าง</span>"
+                + ("±" + str(h.get("total_abs_variance") or 0)) + " " + t("recon.variance_label") + "</span>"
                 "<span style='font-size:11px;color:#9a9485'>"
                 + h["status"] + "</span></span></div>",
                 unsafe_allow_html=True,

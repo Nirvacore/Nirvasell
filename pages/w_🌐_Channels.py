@@ -107,7 +107,7 @@ for p in platforms:
         "<div style='display:flex;gap:18px;font-size:12px;color:#7a7569'>"
         "<span>📦 " + t("common.n_orders", n=orders_str) + "</span>"
         "<span>👥 " + t("common.n_customers", n=cust_str) + "</span>"
-        "<span>💰 AOV ฿" + aov_str + "</span>"
+        "<span>💰 " + t("chan.line_aov", amount=aov_str) + "</span>"
         "<span style='color:" + margin_color + ";font-weight:600'>"
         + t("common.margin") + " " + margin_str + "</span>"
         "<span>💵 " + t("common.profit") + " ฿" + profit_str + "</span>"

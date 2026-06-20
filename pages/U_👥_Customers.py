@@ -195,8 +195,8 @@ if detail_id:
         )
         cols_info = st.columns(4)
         cols_info[0].markdown(f"**📱 {t('cust.phone')}:** {c_info.get('phone') or '—'}")
-        cols_info[1].markdown(f"**📧 Email:** {c_info.get('email') or '—'}")
-        cols_info[2].markdown(f"**💚 LINE:** {c_info.get('line_id') or '—'}")
+        cols_info[1].markdown(f"**📧 {t('cust.email')}:** {c_info.get('email') or '—'}")
+        cols_info[2].markdown(f"**💚 {t('cust.line')}:** {c_info.get('line_id') or '—'}")
         cols_info[3].markdown(f"**📝 {t('cust.note')}:** {c_info.get('note') or '—'}")
 
         orders = cust.orders_for(detail_id)

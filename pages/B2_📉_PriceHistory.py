@@ -156,7 +156,8 @@ else:
             arrow = "↑" if (r["new_cost"] > r["old_cost"]) else "↓"
             c_color = "#c54c4c" if arrow == "↑" else "#4d6c5c"
             parts.append(
-                "<span style='color:" + c_color + "'>ทุน " + arrow +
+                "<span style='color:" + c_color + "'>" +
+                t("phist.cost_delta", arrow=arrow) +
                 " ฿{:,.0f}".format(r["old_cost"]) + "→฿{:,.0f}".format(r["new_cost"]) +
                 "</span>"
             )
@@ -164,7 +165,8 @@ else:
             arrow = "↑" if (r["new_sell"] > r["old_sell"]) else "↓"
             s_color = "#4d6c5c" if arrow == "↑" else "#c54c4c"
             parts.append(
-                "<span style='color:" + s_color + "'>ราคาขาย " + arrow +
+                "<span style='color:" + s_color + "'>" +
+                t("phist.sell_delta", arrow=arrow) +
                 " ฿{:,.0f}".format(r["old_sell"]) + "→฿{:,.0f}".format(r["new_sell"]) +
                 "</span>"
             )
