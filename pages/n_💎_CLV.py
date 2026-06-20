@@ -128,11 +128,11 @@ def _render_customers(tier):
             "</div>"
             "<div style='display:flex;gap:14px;align-items:center;font-size:13px'>"
             "<span>📦 " + freq_str + "x</span>"
-            "<span>AOV ฿" + aov_str + "</span>"
-            "<span>Spent ฿" + spent_str + "</span>"
+            "<span>" + t("clv.line_aov", amount=aov_str) + "</span>"
+            "<span>" + t("clv.line_spent", amount=spent_str) + "</span>"
             "<span>" + churn_icon + " " + days_str + "</span>"
             "<span style='font-weight:600;color:" + tier_color + "'>"
-            "CLV ฿" + clv_str + "/yr</span>"
+            + t("clv.clv_per_year", amount=clv_str) + "</span>"
             "</div></div>",
             unsafe_allow_html=True,
         )

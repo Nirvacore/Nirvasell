@@ -33,7 +33,7 @@ k1, k2, k3, k4 = st.columns(4)
 with k1:
     metric_with_hint("📅 " + t("cf.kpi_so_far"),
                      "฿{:,.0f}".format(forecast["this_month_so_far"]),
-                     hint=str(forecast["days_elapsed"]) + " วัน",
+                     hint=str(forecast["days_elapsed"]) + " " + t("common.day_unit"),
                      hint_tone="info")
 with k2:
     metric_with_hint("🔮 " + t("cf.kpi_projected"),

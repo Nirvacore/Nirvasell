@@ -266,8 +266,8 @@ with tab5:
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
                 "padding:6px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-                "<span>" + sc_icon + " ขาย " + str(sc["qty"]) + " ชิ้น</span>"
-                "<span>กำไรรวม ฿" + "{:,.0f}".format(sc["total_profit"]) + "</span>"
+                "<span>" + sc_icon + " " + t("calc.scenario_sell_qty", n=str(sc["qty"])) + "</span>"
+                "<span>" + t("calc.scenario_total_profit", amount="{:,.0f}".format(sc["total_profit"])) + "</span>"
                 "<span style='color:" + sc_color + ";font-weight:600'>"
                 + ("+" if sc["vs_original"] > 0 else "") +
                 "{:,.0f}".format(sc["vs_original"]) + "</span></div>",

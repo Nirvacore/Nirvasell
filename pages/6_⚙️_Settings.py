@@ -197,5 +197,8 @@ with c2:
             ):
                 st.session_state["markup"] = int(row["markup"])
                 st.session_state["round_to"] = int(row["round_to"])
-                st.success(f"{row['label']} → markup {int(row['markup'])}%, round ฿{int(row['round_to'])}")
+                st.success(t("settings.preset_applied",
+                             label=row["label"],
+                             markup=int(row["markup"]),
+                             round_to=int(row["round_to"])))
                 st.rerun()

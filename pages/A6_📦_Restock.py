@@ -56,7 +56,7 @@ if pending:
             st.markdown(
                 "<div style='padding:6px 14px;border-left:3px solid #c5963d'>"
                 "📦 <strong>" + po["sku"] + "</strong>"
-                " · " + str(po["qty"]) + " ชิ้น"
+                " · " + t("rst.reorder_pieces", n=str(po["qty"])) +
                 " · " + (po["supplier"] or "—") +
                 " <span style='color:#9a9485;font-size:11px'>"
                 + (po["ordered_at"] or "")[:10] + "</span></div>",

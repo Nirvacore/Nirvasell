@@ -145,7 +145,7 @@ for bundle in all_bundles:
         + (" · " + bundle["description"][:30] if bundle.get("description") else "") +
         "</div>"
         "<div style='display:flex;gap:12px;font-size:13px;align-items:center'>"
-        "<span>📦 สต็อก <strong>" + str(bundle["available_stock"]) + "</strong></span>"
+        "<span>" + t("bndl.stock_line") + " <strong>" + str(bundle["available_stock"]) + "</strong></span>"
         "<span style='font-weight:600;color:#4d6c5c'>"
         "฿{:,.0f}".format(bundle["bundle_price"]) + "</span>"
         + ("<span style='font-size:11px;color:#4d6c5c'>-" +

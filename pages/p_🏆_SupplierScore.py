@@ -114,10 +114,10 @@ for sup in suppliers:
         "<div style='font-size:1.4rem;font-weight:600;color:" + grade_color + "'>"
         + str(sup["overall"]) + "/100</div></div>"
         "<div style='display:flex;gap:18px;margin-top:8px;font-size:12px;color:#7a7569'>"
-        "<span>💰 Price: " + str(int(sup["price_score"])) + "</span>"
-        "<span>🚚 Delivery: " + str(int(sup["delivery_score"])) + "</span>"
-        "<span>📦 SKUs: " + str(sup["sku_count"]) + "</span>"
-        "<span>💵 Volume: ฿" + vol_str + "</span>"
+        "<span>" + t("sscore.dim_price") + " " + str(int(sup["price_score"])) + "</span>"
+        "<span>" + t("sscore.dim_delivery") + " " + str(int(sup["delivery_score"])) + "</span>"
+        "<span>" + t("sscore.dim_skus") + " " + str(sup["sku_count"]) + "</span>"
+        "<span>" + t("sscore.dim_volume") + " ฿" + vol_str + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )

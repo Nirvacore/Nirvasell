@@ -165,7 +165,7 @@ with tab_history:
         cols = st.columns(max(1, min(4, len(by_platform))))
         for i, (plat, rows) in enumerate(by_platform.items()):
             with cols[i % len(cols)]:
-                st.metric(plat.title(), f"{len(rows)} orders")
+                st.metric(plat.title(), t("common.n_orders", n=str(len(rows))))
                 csv_bytes = ff.shipment_csv_for(plat, rows)
                 st.download_button(
                     f"⬇ {plat}_shipments.csv",

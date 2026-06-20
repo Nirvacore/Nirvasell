@@ -90,7 +90,7 @@ for ch in stats:
 
         top_skus = cp.top_skus_by_channel(ch["platform"], days)
         if top_skus:
-            st.markdown("**Top SKUs:**")
+            st.markdown("**" + t("ch.top_skus") + "**")
             for sku_r in top_skus:
                 st.markdown(
                     "<div style='font-size:12px;padding:2px 0'>"

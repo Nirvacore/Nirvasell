@@ -116,7 +116,7 @@ with st.expander(t("po.create_title"), expanded=False):
         total_val = sum(i["qty"] * i["unit_cost"] for i in items_data)
         st.markdown(
             "<div style='text-align:right;font-size:1.1rem;font-weight:600;"
-            "padding:8px 0'>รวม: ฿{:,.0f}</div>".format(total_val),
+            "padding:8px 0'>" + t("po.create_total_line", amount="{:,.0f}".format(total_val)) + "</div>",
             unsafe_allow_html=True,
         )
 
@@ -157,7 +157,7 @@ for order in active:
         (" → " + order["expected_date"][:10] if order.get("expected_date") else "") +
         "</span></div>"
         "<div style='display:flex;gap:12px;align-items:center'>"
-        "<span style='font-size:12px'>" + str(order["item_count"]) + " รายการ</span>"
+        "<span style='font-size:12px'>" + t("common.n_items", n=str(order["item_count"])) + "</span>"
         "<span style='font-weight:600'>฿{:,.0f}".format(order["total_amount"]) + "</span>"
         "<span style='font-size:12px;color:" + (st_info.get("color") or "#9a9485") + ";font-weight:600'>"
         + st_info.get("label_th", order["status"]) + "</span>"
