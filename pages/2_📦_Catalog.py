@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import split_images, image_grid, render_content_for_task, product_summary_row, empty_state, page_header
 from i18n import t
+from i18n_inline import platform_name
 
 db.init()
 st.set_page_config(page_title="nirva · Catalog", page_icon="📦", layout="wide")
@@ -249,7 +250,8 @@ else:
                     ("lazada", qr.lazada_search_url(sku)),
                     ("custom", ""),
                 ],
-                format_func=lambda x: x[0].title(),
+                format_func=lambda x: t("common.qr_custom") if x[0] == "custom"
+                else platform_name(x[0]),
             )
             url = target[1]
             if target[0] == "custom":

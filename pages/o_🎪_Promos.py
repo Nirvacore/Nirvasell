@@ -116,7 +116,7 @@ with st.expander(t("promo.create_title"), expanded=s["total"] == 0):
 
         p_coupon = st.text_input(
             t("promo.f_coupon"),
-            placeholder="FLASH1212",
+            placeholder=t("promo.coupon_ph"),
         )
         p_note = st.text_input(t("promo.f_note"), placeholder="")
 

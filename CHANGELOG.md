@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v95 — History/catalog/settings + placeholder pass (4/2/D6/C3/W/Z/o)
+- History compliance/export channels via `platform_name()`; download btn + summary keys
+- Catalog QR target, D6 carrier/platform selectboxes
+- Reuse `comm.order_ph`, `promo.coupon_ph`; new `common.sku_ph`, `common.qr_custom`
+- 11 new keys → 19 langs
+
 ## v94 — Platform/carrier/COD/ads label pass (w/W/c/e/K/Z/D8/A4/F9)
 - `platform_name()`, `carrier_name()`, `expense_category()`, `payment_type_name()` helpers
 - 16 platform + 7 carrier + COD/ads/expense keys

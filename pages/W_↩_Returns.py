@@ -70,8 +70,8 @@ st.markdown("### " + t("ret.add_title"))
 with st.form("add_return"):
     c1, c2, c3 = st.columns(3)
     with c1:
-        n_order = st.text_input(t("ret.f_order_id"), placeholder="ORD-12345")
-        n_sku = st.text_input(t("ret.f_sku"), placeholder="SKU-001")
+        n_order = st.text_input(t("ret.f_order_id"), placeholder=t("comm.order_ph"))
+        n_sku = st.text_input(t("ret.f_sku"), placeholder=t("common.sku_ph"))
     with c2:
         n_plat = st.selectbox(
             t("ret.f_platform"),

@@ -79,7 +79,7 @@ st.markdown("### " + t("cod.add_title"))
 with st.form("add_cod"):
     c1, c2, c3 = st.columns(3)
     with c1:
-        n_order = st.text_input(t("cod.f_order_id"), placeholder="ORD-12345")
+        n_order = st.text_input(t("cod.f_order_id"), placeholder=t("comm.order_ph"))
         n_buyer = st.text_input(t("cod.f_buyer"), placeholder=t("cod.buyer_placeholder"))
     with c2:
         n_plat = st.selectbox(
