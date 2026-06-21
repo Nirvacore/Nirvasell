@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v96 — Field labels / loyalty / PO / placeholder pass (4/F5/A5/B3/E5/D8/C2/C7/F9/e)
+- `field_label()`, `loyalty_tier()`, `po_status()` helpers
+- 32 `outfield.*` task output fields, 5 loyalty tiers, 5 PO statuses
+- Common placeholders: month/date/time/tax/supplier/hashtags
+- 52 new keys → 19 langs
+
 ## v95 — History/catalog/settings + placeholder pass (4/2/D6/C3/W/Z/o)
 - History compliance/export channels via `platform_name()`; download btn + summary keys
 - Catalog QR target, D6 carrier/platform selectboxes

@@ -76,3 +76,21 @@ def payment_type_name(ptype: str, *, icon: bool = True) -> str:
     if key in STRINGS:
         return t(key)
     return ptype.upper()
+
+
+def field_label(field: str) -> str:
+    return _lookup("outfield", field)
+
+
+def loyalty_tier(tier: str) -> str:
+    key = f"loy.tier_{tier}"
+    if key in STRINGS:
+        return t(key)
+    return tier.replace("_", " ").title()
+
+
+def po_status(status: str) -> str:
+    key = f"po.status_{status}"
+    if key in STRINGS:
+        return t(key)
+    return status.replace("_", " ").title()

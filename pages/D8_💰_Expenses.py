@@ -47,7 +47,7 @@ with tab_log:
         col3, col4 = st.columns(2)
         exp_date = col3.text_input(t("exp.f_date"),
                                     value=datetime.now().strftime("%Y-%m-%d"))
-        platform = col4.text_input(t("exp.f_platform"), placeholder="shopee / lazada / ...")
+        platform = col4.text_input(t("exp.f_platform"), placeholder=t("exp.platform_ph"))
         note     = st.text_input(t("exp.f_note"))
         if st.form_submit_button(t("exp.log_btn")):
             if amount > 0:
@@ -59,7 +59,7 @@ with tab_log:
 with tab_list:
     month_sel = st.text_input(t("exp.f_month_filter"),
                                value=datetime.now().strftime("%Y-%m"),
-                               placeholder="YYYY-MM")
+                               placeholder=t("common.month_ph"))
     expenses = ex.all_expenses(month=month_sel.strip())
     if not expenses:
         st.info(t("exp.empty"))
@@ -83,7 +83,7 @@ with tab_chart:
     st.subheader(t("exp.chart_title"))
     month_chart = st.text_input(t("exp.f_month_filter"),
                                  value=datetime.now().strftime("%Y-%m"),
-                                 placeholder="YYYY-MM",
+                                 placeholder=t("common.month_ph"),
                                  key="exp_chart_month")
     summary = ex.monthly_summary(month_chart.strip())
     if summary["total"] > 0:

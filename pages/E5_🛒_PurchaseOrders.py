@@ -6,6 +6,7 @@ import purchase_orders as po
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import po_status
 from sidebar import render_sidebar
 
 apply_theme()
@@ -38,8 +39,7 @@ with tab_list:
     status_f = st.segmented_control(
         t("po.status_filter"),
         ["all"] + list(po.STATUSES.keys()),
-        format_func=lambda s: t("po.all") if s=="all" else
-                              po.STATUSES.get(s,{}).get("label_th", s),
+        format_func=lambda s: t("po.all") if s == "all" else po_status(s),
         default="all",
     )
     orders = po.all_pos(status=None if status_f=="all" else status_f)

@@ -43,10 +43,10 @@ with st.expander(t("sup.add_title"), expanded=s["total"] == 0):
         with sc1:
             sup_name = st.text_input(t("sup.f_name"), placeholder=t("sup.name_ph"))
             contact = st.text_input(t("sup.f_contact"), placeholder=t("sup.contact_ph"))
-            phone = st.text_input(t("sup.f_phone"), placeholder="08X-XXX-XXXX")
-            line_id = st.text_input(t("sup.f_line"), placeholder="@LineID")
+            phone = st.text_input(t("sup.f_phone"), placeholder=t("sup.phone_ph"))
+            line_id = st.text_input(t("sup.f_line"), placeholder=t("sup.line_id_ph"))
         with sc2:
-            email = st.text_input(t("sup.f_email"), placeholder="supplier@email.com")
+            email = st.text_input(t("sup.f_email"), placeholder=t("sup.email_ph"))
             category = st.selectbox(t("sup.f_category"), sd.CATEGORIES)
             payment_terms = st.selectbox(
                 t("sup.f_terms"),

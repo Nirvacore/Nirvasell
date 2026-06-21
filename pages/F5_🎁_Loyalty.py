@@ -6,6 +6,7 @@ import loyalty as loy
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import loyalty_tier
 from sidebar import render_sidebar
 
 apply_theme()
@@ -46,7 +47,7 @@ with tab_leaderboard:
                 "<span style='width:32px;display:inline-block;color:#9a9485'>" + medal + "</span>"
                 "<span style='width:180px;display:inline-block'>" + (m.get("customer_key","—")[:20]) + "</span>"
                 "<span style='color:#9a9485;width:80px;display:inline-block'>" +
-                tier_icon + " " + tier_info.get("label_th","") + "</span>"
+                tier_icon + " " + loyalty_tier(m.get("tier", "bronze")) + "</span>"
                 "<span style='color:#c5963d'>" + "{:,}".format(m.get("points",0)) + " " + t("loy.pts") + "</span>"
                 " <span style='color:#7a7569;font-size:0.78rem'>(" +
                 "{:,}".format(m.get("lifetime_points",0)) + " " + t("loy.lifetime") + ")</span>"
@@ -71,7 +72,7 @@ with tab_earn:
                 st.success(
                     "+" + str(pts) + " " + t("loy.pts") +
                     " · " + t("loy.balance") + ": " + str(bal) +
-                    " · " + tier_info.get("icon","") + " " + tier_info.get("label_th","")
+                    " · " + tier_info.get("icon", "") + " " + loyalty_tier(tier)
                 )
                 st.rerun()
 
@@ -85,7 +86,8 @@ with tab_earn:
             l1, l2, l3 = st.columns(3)
             l1.metric(t("loy.pts"), "{:,}".format(info.get("points",0)))
             l2.metric(t("loy.lifetime"), "{:,}".format(info.get("lifetime_points",0)))
-            l3.metric(t("loy.tier"), tier_info.get("icon","") + " " + tier_info.get("label_th",""))
+            l3.metric(t("loy.tier"), tier_info.get("icon", "") + " " +
+                      loyalty_tier(info.get("tier", "bronze")))
         else:
             st.info(t("loy.cust_not_found"))
 
@@ -120,7 +122,7 @@ with tab_tiers:
         tier_html = (
             "<div style='margin:5px 0;padding:8px 12px;border-left:3px solid #2a2a2a'>"
             "<span style='font-size:1.2rem'>" + tier_info["icon"] + "</span>"
-            " <b style='color:#d4d0c8'>" + tier_info["label_th"] + "</b>"
+            " <b style='color:#d4d0c8'>" + loyalty_tier(tier_key) + "</b>"
             " &nbsp;·&nbsp; <span style='color:#9a9485'>" +
             "{:,}".format(tier_info["min_points"]) + t("loy.pts_min") + "</span>"
             + (" &nbsp;·&nbsp; " + t("loy.discount_pct", pct=str(tier_info["discount_pct"])) if tier_info["discount_pct"] > 0 else "") +

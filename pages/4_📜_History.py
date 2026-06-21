@@ -17,7 +17,7 @@ from _auth_gate import require_auth
 from _components import split_images, edit_content, empty_state, toast, friendly_error, page_header, stock_audit_card, bulk_ai_panel
 import onboarding
 from i18n import t
-from i18n_inline import platform_name, carrier_name
+from i18n_inline import field_label, platform_name
 
 db.init()
 st.set_page_config(page_title="nirva · History", page_icon="📜", layout="wide")
@@ -367,7 +367,7 @@ for _, r in df.head(40).iterrows():
                     val = r.get(f, "")
                     if not val:
                         continue
-                    st.markdown(f"**{f.replace('_', ' ').title()}**")
+                    st.markdown("**" + field_label(f) + "**")
                     if f == "body_html":
                         st.code(val, language="html")
                     elif len(str(val)) > 80:
