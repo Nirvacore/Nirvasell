@@ -6,6 +6,7 @@ import ads_tracker as at
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import platform_name
 from sidebar import render_sidebar
 
 apply_theme()
@@ -42,15 +43,18 @@ with tab_list:
     for c in campaigns:
         roas_c = round(c["revenue"] / c["spent"], 2) if c.get("spent",0) > 0 else 0
         plat_icon = at.PLATFORM_ICONS.get(c.get("platform",""), "📣")
-        label = plat_icon + " **" + c["name"] + "**" + \
-                " · ฿{:,.0f}".format(c.get("spent",0)) + t("ads.spent") + \
-                " · ROAS " + str(roas_c) + "x"
+        label = t("ads.expander_line",
+                  icon=plat_icon,
+                  name=c["name"],
+                  spent="{:,.0f}".format(c.get("spent", 0)),
+                  spent_label=t("ads.spent"),
+                  roas=str(roas_c))
         with st.expander(label):
             col1, col2, col3 = st.columns(3)
             col1.metric(t("ads.spent"), "฿{:,.0f}".format(c.get("spent",0)))
             col2.metric(t("ads.revenue"), "฿{:,.0f}".format(c.get("revenue",0)))
             r_color = _roas_color(roas_c)
-            col3.metric("ROAS", str(roas_c) + "x")
+            col3.metric(t("ads.roas_label"), str(roas_c) + "x")
             col4, col5, col6 = st.columns(3)
             col4.write(t("ads.impressions") + ": " + "{:,}".format(c.get("impressions",0)))
             col5.write(t("ads.clicks") + ": " + "{:,}".format(c.get("clicks",0)))
@@ -74,7 +78,8 @@ with tab_add:
         col1, col2 = st.columns(2)
         name      = col1.text_input(t("ads.f_name"), placeholder="11.11 Shopee Ads")
         platform  = col2.selectbox(t("ads.f_platform"), at.AD_PLATFORMS,
-                                    format_func=lambda p: at.PLATFORM_ICONS.get(p,"") + " " + p)
+                                    format_func=lambda p: at.PLATFORM_ICONS.get(p, "") +
+                                    " " + platform_name(p))
         col3, col4 = st.columns(2)
         budget    = col3.number_input(t("ads.f_budget"), min_value=0.0, step=100.0)
         spent     = col4.number_input(t("ads.f_spent"), min_value=0.0, step=100.0)

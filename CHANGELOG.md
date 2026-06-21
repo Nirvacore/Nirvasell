@@ -20,6 +20,11 @@ Built iteratively. Current stats:
 
 ---
 
+## v94 — Platform/carrier/COD/ads label pass (w/W/c/e/K/Z/D8/A4/F9)
+- `platform_name()`, `carrier_name()`, `expense_category()`, `payment_type_name()` helpers
+- 16 platform + 7 carrier + COD/ads/expense keys
+- Replaces `.title()` / hardcoded platform & carrier labels across 10 pages
+
 ## v93 — Report/returns/reason inline pass (X/G0/E4/C3/C)
 - X Reports: best-day card, combo row, repeat ratio; `day_name()` helper
 - G0 growth %, E4/C3 return reason labels via `return_reason()`

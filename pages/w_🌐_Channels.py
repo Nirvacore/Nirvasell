@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
+from i18n_inline import platform_name
 
 st.set_page_config(page_title="nirva.sell · Channels",
                    page_icon="🌐", layout="wide")
@@ -96,7 +97,7 @@ for p in platforms:
         "<div style='display:flex;justify-content:space-between;align-items:baseline;"
         "margin-bottom:8px'>"
         "<span style='font-size:1.2rem;font-weight:600'>"
-        + icon + " " + p["platform"].title() + "</span>"
+        + icon + " " + platform_name(p["platform"]) + "</span>"
         "<span style='font-size:1.3rem;font-weight:600;color:#4d6c5c'>"
         "฿" + rev_str + " <span style='font-size:12px;color:#9a9485'>"
         "(" + share_str + ")</span></span></div>"
@@ -134,7 +135,8 @@ if growth:
         st.markdown(
             "<div style='display:flex;justify-content:space-between;align-items:center;"
             "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-            "<span>" + icon + " <strong>" + g["platform"].title() + "</strong></span>"
+            "<span>" + icon + " <strong>" + platform_name(g["platform"]) +
+            "</strong></span>"
             "<span style='font-weight:600;color:" + chg_color + "'>"
             + chg_icon + " " + chg_str + t("common.mom") + "</span></div>",
             unsafe_allow_html=True,

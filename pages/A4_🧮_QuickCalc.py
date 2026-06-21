@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header
 from i18n import t
+from i18n_inline import carrier_name
 
 st.set_page_config(page_title="nirva.sell · Calculator",
                    page_icon="🧮", layout="wide")
@@ -107,7 +108,7 @@ with tab2:
 
     rates = qc.shipping_calc(weight)
     for r in rates:
-        carrier_name = r["carrier"].replace("_", " ").title()
+        carrier_label = carrier_name(r["carrier"])
         is_cheapest = r == rates[0]
         border_color = "#4d6c5c" if is_cheapest else "rgba(40,30,20,0.07)"
         badge = " 🏆 " + t("calc.cheapest") if is_cheapest else ""
@@ -117,7 +118,7 @@ with tab2:
             "padding:10px 14px;border:0.5px solid " + border_color + ";"
             "border-left:3px solid " + border_color + ";border-radius:8px;"
             "margin-bottom:4px;background:white'>"
-            "<span><strong>" + carrier_name + "</strong>" + badge + "</span>"
+            "<span><strong>" + carrier_label + "</strong>" + badge + "</span>"
             "<span style='font-size:1.2rem;font-weight:600'>฿"
             + "{:,.0f}".format(r["cost"]) + "</span></div>",
             unsafe_allow_html=True,
