@@ -75,10 +75,10 @@ with tab_add:
     with st.form("add_inf_form"):
         col1, col2 = st.columns(2)
         name      = col1.text_input(t("inf.f_name"))
-        handle    = col2.text_input(t("inf.f_handle"), placeholder="@username")
+        handle    = col2.text_input(t("inf.f_handle"), placeholder=t("inf.handle_ph"))
         platform  = col1.selectbox(t("inf.f_platform"), it.PLATFORMS)
         followers = col2.number_input(t("inf.f_followers"), min_value=0, step=100)
-        niche     = col1.text_input(t("inf.f_niche"), placeholder="beauty, tech, food...")
+        niche     = col1.text_input(t("inf.f_niche"), placeholder=t("inf.niche_ph"))
         contact   = col2.text_input(t("inf.f_contact"), placeholder=t("inf.contact_ph"))
         comm_type = col1.selectbox(t("inf.f_comm_type"),
                                     list(it.COMMISSION_TYPES.keys()),
@@ -110,7 +110,7 @@ with tab_sales:
             sale_amount = col1.number_input(t("inf.f_sale_amount"), min_value=0.0, step=10.0)
             order_id    = col2.text_input(t("inf.f_order_id"))
             sku         = col1.text_input(t("inf.f_sku"))
-            sale_date   = col2.text_input(t("inf.f_sale_date"), placeholder="YYYY-MM-DD")
+            sale_date   = col2.text_input(t("inf.f_sale_date"), placeholder=t("common.date_ph"))
             if st.form_submit_button(t("inf.record_btn")):
                 if sale_amount > 0:
                     it.record_sale(sel_inf, sale_amount, order_id, sku, sale_date)

@@ -101,7 +101,7 @@ with tab_log:
         sku         = col3.selectbox(t("rev.f_sku"), sku_options)
         product_name = col4.text_input(t("rev.f_product_name"))
         reviewer    = col1.text_input(t("rev.f_reviewer"))
-        rev_date    = col2.text_input(t("rev.f_date"), placeholder="YYYY-MM-DD")
+        rev_date    = col2.text_input(t("rev.f_date"), placeholder=t("common.date_ph"))
         review_text = st.text_area(t("rev.f_text"), height=100)
         if st.form_submit_button(t("rev.log_btn")):
             rm.add(platform, sku, rating, review_text, reviewer, product_name, rev_date)

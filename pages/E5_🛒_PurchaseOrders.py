@@ -89,7 +89,7 @@ with tab_list:
 with tab_create:
     st.subheader(t("po.create_title"))
     supplier = st.text_input(t("po.f_supplier"))
-    expected = st.text_input(t("po.f_expected"), placeholder="YYYY-MM-DD")
+    expected = st.text_input(t("po.f_expected"), placeholder=t("common.date_ph"))
     notes    = st.text_input(t("po.f_notes"))
     st.write(t("po.items_title"))
     if "po_items" not in st.session_state:

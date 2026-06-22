@@ -94,7 +94,7 @@ with tab_add:
             format_func=lambda i: t("task.unassigned") if i == 0 else
                                   next((m["name"] for m in members if m["id"] == i), ""),
         )
-        due_date = col4.text_input(t("task.f_due"), placeholder="YYYY-MM-DD")
+        due_date = col4.text_input(t("task.f_due"), placeholder=t("common.date_ph"))
         if st.form_submit_button(t("task.add_btn")):
             if title:
                 tt.add_task(title, desc, category, priority,

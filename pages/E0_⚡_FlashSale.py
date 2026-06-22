@@ -100,8 +100,8 @@ with tab_create:
                                      format_func=lambda k: fs.DISCOUNT_TYPES[k])
         disc_val   = col2.number_input(t("flash.f_discount_value"), min_value=0.0, step=5.0)
         col3, col4 = st.columns(2)
-        start_dt   = col3.text_input(t("flash.f_start"), placeholder="2026-12-12 10:00")
-        end_dt     = col4.text_input(t("flash.f_end"), placeholder="2026-12-12 23:59")
+        start_dt   = col3.text_input(t("flash.f_start"), placeholder=t("common.datetime_ph"))
+        end_dt     = col4.text_input(t("flash.f_end"), placeholder=t("common.datetime_ph"))
         col5, col6 = st.columns(2)
         platform   = col5.selectbox(t("flash.f_platform"),
                                      ["all","shopee","lazada","tiktok_shop","facebook","line"])

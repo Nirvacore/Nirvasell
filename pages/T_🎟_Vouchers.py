@@ -101,7 +101,7 @@ with st.form("create_voucher"):
     with c1:
         n_code = st.text_input(t("vouch.f_code"),
                                 value=defaults["code"],
-                                placeholder="SONGKRAN15A")
+                                placeholder=t("vou.festival_code_ph"))
         st.caption(t("vouch.code_hint"))
     with c2:
         n_label = st.text_input(t("vouch.f_label"),

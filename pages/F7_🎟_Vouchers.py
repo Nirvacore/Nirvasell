@@ -62,8 +62,8 @@ with tab_create:
     st.subheader(t("vou.create_title"))
     with st.form("voucher_form"):
         col1, col2 = st.columns(2)
-        code      = col1.text_input(t("vou.f_code"), placeholder="SALE20")
-        label_v   = col2.text_input(t("vou.f_label"), placeholder="Songkran Sale")
+        code      = col1.text_input(t("vou.f_code"), placeholder=t("vou.code_ph"))
+        label_v   = col2.text_input(t("vou.f_label"), placeholder=t("vou.label_ph"))
         col3, col4 = st.columns(2)
         dtype     = col3.selectbox(t("vou.f_type"),
                                     ["percent","fixed","shipping"],
@@ -73,8 +73,8 @@ with tab_create:
         min_spend = col5.number_input(t("vou.f_min_spend"), min_value=0.0, step=50.0)
         max_uses  = col6.number_input(t("vou.f_max_uses"), min_value=0, step=10)
         col7, col8 = st.columns(2)
-        starts    = col7.text_input(t("vou.f_start"), placeholder="YYYY-MM-DD")
-        expires   = col8.text_input(t("vou.f_expires"), placeholder="YYYY-MM-DD")
+        starts    = col7.text_input(t("vou.f_start"), placeholder=t("common.date_ph"))
+        expires   = col8.text_input(t("vou.f_expires"), placeholder=t("common.date_ph"))
         platforms = st.multiselect(t("vou.f_platforms"),
                                     ["shopee","lazada","tiktok_shop","facebook","line"])
         if st.form_submit_button(t("vou.create_btn")):

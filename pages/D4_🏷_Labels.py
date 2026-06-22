@@ -40,7 +40,7 @@ with tab_manual:
         notes       = st.text_input(t("lbl.f_notes"))
 
         items_raw = st.text_area(t("lbl.f_items"),
-                                  placeholder="SKU001:2, SKU002:1",
+                                  placeholder=t("lbl.sku_qty_ph"),
                                   height=60)
         if st.form_submit_button(t("lbl.generate_btn")):
             items = []
@@ -68,7 +68,7 @@ with tab_manual:
 
 with tab_order:
     st.subheader(t("lbl.order_title"))
-    order_key = st.text_input(t("lbl.order_id_input"), placeholder="123 or ORD-001")
+    order_key = st.text_input(t("lbl.order_id_input"), placeholder=t("lbl.order_id_ph"))
     style2 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES.keys()),
                            format_func=lambda k: lg.LABEL_STYLES[k], key="style2")
     if st.button(t("lbl.fetch_btn")) and order_key:

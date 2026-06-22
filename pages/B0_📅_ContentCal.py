@@ -47,7 +47,7 @@ with st.expander(t("ccal.add_title"), expanded=False):
         ad1, ad2, ad3 = st.columns(3)
         with ad1:
             sched_date = st.date_input(t("ccal.f_date"), value=date.today())
-            sched_time = st.text_input(t("ccal.f_time"), placeholder="19:00",
+            sched_time = st.text_input(t("ccal.f_time"), placeholder=t("common.time_ph"),
                                        key="_cc_time")
         with ad2:
             ct = st.selectbox(

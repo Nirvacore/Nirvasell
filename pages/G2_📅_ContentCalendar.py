@@ -88,8 +88,8 @@ with tab_add:
         col3, col4 = st.columns(2)
         post_date = col3.text_input(t("cal.f_date"),
                                      value=datetime.now().strftime("%Y-%m-%d"),
-                                     placeholder="YYYY-MM-DD")
-        post_time = col4.text_input(t("cal.f_time"), placeholder="HH:MM", value="10:00")
+                                     placeholder=t("common.date_ph"))
+        post_time = col4.text_input(t("cal.f_time"), placeholder=t("common.time_hhmm_ph"),
         body     = st.text_area(t("cal.f_body"), height=80)
         caption  = st.text_input(t("cal.f_caption"))
         if st.form_submit_button(t("cal.add_btn")):

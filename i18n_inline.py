@@ -94,3 +94,17 @@ def po_status(status: str) -> str:
     if key in STRINGS:
         return t(key)
     return status.replace("_", " ").title()
+
+
+def notif_kind_name(kind: str) -> str:
+    key = f"notif.kind_{kind}"
+    if key in STRINGS:
+        return t(key)
+    return kind.replace("_", " ").title()
+
+
+def budget_category(cat: str) -> str:
+    key = f"bgt.cat_{cat}"
+    if key in STRINGS:
+        return t(key)
+    return cat.replace("_", " ").title()

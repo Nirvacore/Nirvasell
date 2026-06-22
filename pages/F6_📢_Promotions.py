@@ -81,11 +81,11 @@ with tab_create:
         min_order = col3.number_input(t("promo.f_min_order"), min_value=0.0, step=50.0)
         max_uses  = col4.number_input(t("promo.f_max_uses"), min_value=0, step=10)
         col5, col6 = st.columns(2)
-        coupon    = col5.text_input(t("promo.f_coupon"), placeholder="SALE20")
-        sku_filter= col6.text_input(t("promo.f_sku_filter"), placeholder="SKU-001,SKU-002")
+        coupon    = col5.text_input(t("promo.f_coupon"), placeholder=t("promo.coupon_ph"))
+        sku_filter= col6.text_input(t("promo.f_sku_filter"), placeholder=t("promo.sku_filter_ph"))
         col7, col8 = st.columns(2)
-        start_dt  = col7.text_input(t("promo.f_start"), placeholder="YYYY-MM-DD")
-        end_dt    = col8.text_input(t("promo.f_end"), placeholder="YYYY-MM-DD")
+        start_dt  = col7.text_input(t("promo.f_start"), placeholder=t("common.date_ph"))
+        end_dt    = col8.text_input(t("promo.f_end"), placeholder=t("common.date_ph"))
         notes     = st.text_input(t("promo.f_notes"))
         if st.form_submit_button(t("promo.create_btn")):
             if title.strip():

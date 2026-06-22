@@ -51,11 +51,11 @@ with tab_create:
     st.subheader(t("inv.create_title"))
     with st.form("inv_form"):
         col1, col2 = st.columns(2)
-        order_id   = col1.text_input(t("inv.f_order"), placeholder="#1234")
+        order_id   = col1.text_input(t("inv.f_order"), placeholder=t("common.order_ref_ph"))
         cust_name  = col2.text_input(t("inv.f_customer"), placeholder=t("inv.f_customer_hint"))
         cust_addr  = st.text_area(t("inv.f_address"), height=60)
         col3, col4 = st.columns(2)
-        cust_tax   = col3.text_input(t("inv.f_tax_id"), placeholder="0-0000-00000-00-0")
+        cust_tax   = col3.text_input(t("inv.f_tax_id"), placeholder=t("common.tax_id_ph"))
         include_vat= col4.checkbox(t("inv.f_vat"), value=False)
 
         st.subheader(t("inv.items_title"))

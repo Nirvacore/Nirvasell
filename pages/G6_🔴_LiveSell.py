@@ -33,7 +33,7 @@ if active:
     col_a, col_e = st.columns([2,1])
     with col_a.form("live_order_form"):
         c1f, c2f, c3f = st.columns(3)
-        sku    = c1f.text_input(t("live.f_sku"), placeholder="SKU-001")
+        sku    = c1f.text_input(t("live.f_sku"), placeholder=t("common.sku_ph"))
         qty    = c2f.number_input(t("live.f_qty"), min_value=1, value=1)
         note_l = c3f.text_input(t("live.f_note"))
         if st.form_submit_button("➕ " + t("live.add_order")):
@@ -73,7 +73,7 @@ else:
     if st.session_state.get("show_start"):
         with st.form("start_live_form"):
             col1, col2 = st.columns(2)
-            sess_title = col1.text_input(t("live.f_title"), placeholder="Flash Sale 11.11")
+            sess_title = col1.text_input(t("live.f_title"), placeholder=t("live.title_ph"))
             platform   = col2.selectbox(t("live.f_platform"),
                 ["facebook","tiktok_shop","shopee_live","line","instagram"])
             if st.form_submit_button("🔴 " + t("live.go_live")):

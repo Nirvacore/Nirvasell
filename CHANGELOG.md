@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v97 — G/F/H/E/D placeholder + budget/notif pass (24 pages)
+- `notif_kind_name()`, `budget_category()` helpers
+- Placeholders: date/time/datetime, tax ID, voucher, fulfillment, labels, etc.
+- G1 budget categories via `bgt.cat_*`; I Notifications channel kind labels
+- 24 new keys → 19 langs
+
 ## v96 — Field labels / loyalty / PO / placeholder pass (4/F5/A5/B3/E5/D8/C2/C7/F9/e)
 - `field_label()`, `loyalty_tier()`, `po_status()` helpers
 - 32 `outfield.*` task output fields, 5 loyalty tiers, 5 PO statuses
