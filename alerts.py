@@ -1,30 +1,32 @@
 """Smart business alerts — aggregates signals from all modules."""
 from __future__ import annotations
 import db
+from i18n import t
+from i18n_inline import alert_kind_name
 
 ALERT_TYPES = {
     "low_stock": {
-        "label": "สต็อกต่ำ", "icon": "📦",
+        "icon": "📦",
         "color": "#c54c4c", "default_threshold": 5,
     },
     "overdue_po": {
-        "label": "PO เกินกำหนด", "icon": "📋",
+        "icon": "📋",
         "color": "#c54c4c", "default_threshold": 0,
     },
     "unread_reviews": {
-        "label": "รีวิวยังไม่ตอบ", "icon": "⭐",
+        "icon": "⭐",
         "color": "#c5963d", "default_threshold": 3,
     },
     "pending_commissions": {
-        "label": "ค่าคอมค้างจ่าย", "icon": "💰",
+        "icon": "💰",
         "color": "#c5963d", "default_threshold": 500,
     },
     "restock_urgent": {
-        "label": "ต้องสั่งซื้อด่วน", "icon": "⚠️",
+        "icon": "⚠️",
         "color": "#c54c4c", "default_threshold": 0,
     },
     "content_overdue": {
-        "label": "คอนเทนต์เกินกำหนด", "icon": "📅",
+        "icon": "📅",
         "color": "#9a7dc5", "default_threshold": 0,
     },
 }
@@ -104,7 +106,7 @@ def check_all() -> list[dict]:
             "type": alert_type,
             "key": key,
             "icon": info.get("icon", "⚠️"),
-            "label": info.get("label", alert_type),
+            "label": alert_kind_name(alert_type),
             "color": info.get("color", "#c5963d"),
             "message": message,
             "count": count,
@@ -122,7 +124,8 @@ def check_all() -> list[dict]:
             count = rows["cnt"] if rows else 0
             if count > 0:
                 push("low_stock", "low_stock_daily",
-                     str(count) + " SKU สต็อกเหลือน้อย (≤" + str(int(threshold)) + ")",
+                     t("alrt.msg_low_stock", count=count,
+                       threshold=int(threshold)),
                      count, "B7_🏅_ProductScore")
 
         # overdue_po
@@ -136,7 +139,7 @@ def check_all() -> list[dict]:
                 count = rows["cnt"] if rows else 0
                 if count > 0:
                     push("overdue_po", "overdue_po_daily",
-                         str(count) + " PO เกินวันที่คาดรับสินค้า",
+                         t("alrt.msg_overdue_po", count=count),
                          count, "B3_🛒_PurchaseOrders")
             except Exception:
                 pass
@@ -151,7 +154,7 @@ def check_all() -> list[dict]:
                 count = rows["cnt"] if rows else 0
                 if count >= threshold:
                     push("unread_reviews", "unread_reviews_daily",
-                         str(count) + " รีวิวยังไม่ได้ตอบกลับ",
+                         t("alrt.msg_unread_reviews", count=count),
                          count, "B1_⭐_Reviews")
             except Exception:
                 pass
@@ -167,7 +170,8 @@ def check_all() -> list[dict]:
                 total = rows["total"] if rows else 0
                 if total >= threshold:
                     push("pending_commissions", "pending_comm_daily",
-                         "ค่าคอมค้างจ่าย ฿{:,.0f}".format(total),
+                         t("alrt.msg_pending_commissions",
+                           total="{:,.0f}".format(total)),
                          0, "B5_👤_Commissions")
             except Exception:
                 pass
@@ -184,7 +188,7 @@ def check_all() -> list[dict]:
                 count = rows["cnt"] if rows else 0
                 if count > 0:
                     push("restock_urgent", "restock_urgent_daily",
-                         str(count) + " SKU สต็อกหมด รอสั่งซื้อ",
+                         t("alrt.msg_restock_urgent", count=count),
                          count, "A6_📦_Restock")
             except Exception:
                 pass
@@ -199,7 +203,7 @@ def check_all() -> list[dict]:
                 count = rows["cnt"] if rows else 0
                 if count > 0:
                     push("content_overdue", "content_overdue_daily",
-                         str(count) + " คอนเทนต์เลยกำหนดยังไม่โพสต์",
+                         t("alrt.msg_content_overdue", count=count),
                          count, "B0_📅_ContentCal")
             except Exception:
                 pass

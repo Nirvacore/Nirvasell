@@ -120,3 +120,7 @@ def content_status_label(status: str) -> str:
 
 def live_promo_label(slug: str) -> str:
     return _lookup("live.promo", slug)
+
+
+def alert_kind_name(kind: str) -> str:
+    return _lookup("alrt.kind", kind)

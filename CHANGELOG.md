@@ -19,6 +19,11 @@ Built iteratively. Current stats:
 
 ---
 
+## v99 — alerts module i18n pass (C0/F4/alerts.py)
+- `alert_kind_name()` helper; `alrt.kind_*` + `alrt.msg_*` keys (6 alert types)
+- Removed hardcoded Thai from `ALERT_TYPES` labels and `check_all()` messages
+- 12 new keys → 19 langs
+
 ## v98 — content_cal module + live promo i18n + placeholder pass (B0/B/D4/R/d)
 - New `content_cal.py` — fixes B0 runtime mismatch with `content_calendar.py`; `content_calendar` table for alerts
 - `content_type_label()`, `content_status_label()`, `live_promo_label()` helpers
