@@ -80,7 +80,7 @@ with tab_bulk:
     st.caption(t("lbl.bulk_caption"))
     bulk_input = st.text_area(
         t("lbl.bulk_orders"),
-        placeholder="order_id,buyer_name,phone,address,total,cod\n1001,สมชาย,0812345678,กรุงเทพ,350,350",
+        placeholder=t("lbl.orders_csv_ph"),
         height=150,
     )
     style3 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES.keys()),

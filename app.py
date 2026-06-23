@@ -283,7 +283,8 @@ if df is not None and not df.empty:
         )
         st.session_state["auto_campaign"] = auto_camp
         if auto_camp and nxt_big:
-            label = nxt_big.get("label_th") if current_lang() == "th" else nxt_big.get("label_en")
+            from i18n_inline import live_promo_label
+            label = live_promo_label(nxt_big.get("slug", ""))
             st.caption(f"⏰ {label} — {t('live.in_n_days', n=nxt_big['days_until'])}")
 
     with cc3:

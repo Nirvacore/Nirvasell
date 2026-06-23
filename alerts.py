@@ -194,7 +194,7 @@ def check_all() -> list[dict]:
             try:
                 rows = c.execute(
                     "SELECT COUNT(*) cnt FROM content_calendar "
-                    "WHERE status='planned' AND date(scheduled_at)<date('now','localtime')"
+                    "WHERE status='planned' AND scheduled_date < date('now','localtime')"
                 ).fetchone()
                 count = rows["cnt"] if rows else 0
                 if count > 0:

@@ -48,7 +48,8 @@ def _with_context(prompt: str,
     """Inject real-time market context into a prompt. Both args are optional."""
     extras: list[str] = []
     if campaign:
-        label = campaign.get("label_th") or campaign.get("label_en") or "upcoming sale"
+        from i18n_inline import live_promo_label
+        label = live_promo_label(campaign.get("slug", "")) or "upcoming sale"
         days = campaign.get("days_until")
         date_str = campaign.get("date")
         extras.append(

@@ -108,3 +108,15 @@ def budget_category(cat: str) -> str:
     if key in STRINGS:
         return t(key)
     return cat.replace("_", " ").title()
+
+
+def content_type_label(content_type: str) -> str:
+    return _lookup("ccal.type", content_type)
+
+
+def content_status_label(status: str) -> str:
+    return _lookup("ccal.status", status)
+
+
+def live_promo_label(slug: str) -> str:
+    return _lookup("live.promo", slug)

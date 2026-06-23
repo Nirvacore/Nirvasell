@@ -210,8 +210,8 @@ def render():
             import live_data
             nxt = live_data.next_big_sale()
             if nxt and nxt["days_until"] <= 60:
-                from i18n import current_lang
-                label = nxt["label_th"] if current_lang() == "th" else nxt["label_en"]
+                from i18n_inline import live_promo_label
+                label = live_promo_label(nxt.get("slug", ""))
                 st.markdown(
                     "<div style='margin-top:14px;padding:10px 12px;"
                     "background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.25);"

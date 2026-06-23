@@ -19,6 +19,13 @@ Built iteratively. Current stats:
 
 ---
 
+## v98 — content_cal module + live promo i18n + placeholder pass (B0/B/D4/R/d)
+- New `content_cal.py` — fixes B0 runtime mismatch with `content_calendar.py`; `content_calendar` table for alerts
+- `content_type_label()`, `content_status_label()`, `live_promo_label()` helpers
+- Promo calendar: slug-based `live.promo_*` keys (19 langs); updated B_Live, sidebar, app, generate
+- Placeholders: D4 CSV, R live chat, d Bundles name
+- 33 new keys → 19 langs
+
 ## v97 — G/F/H/E/D placeholder + budget/notif pass (24 pages)
 - `notif_kind_name()`, `budget_category()` helpers
 - Placeholders: date/time/datetime, tax ID, voucher, fulfillment, labels, etc.

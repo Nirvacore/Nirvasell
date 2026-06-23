@@ -7,12 +7,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import streamlit as st
 from datetime import date, datetime
 import db
-import content_calendar as cc
+import content_cal as cc
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import content_type_label, content_status_label, platform_name
 
 st.set_page_config(page_title="nirva.sell · Content Calendar",
                    page_icon="📅", layout="wide")
@@ -53,12 +54,17 @@ with st.expander(t("ccal.add_title"), expanded=False):
             ct = st.selectbox(
                 t("ccal.f_type"),
                 list(cc.CONTENT_TYPES.keys()),
-                format_func=lambda k: cc.CONTENT_TYPES[k]["icon"] + " " +
-                cc.CONTENT_TYPES[k]["label_th"],
+                format_func=lambda k: (
+                    cc.CONTENT_TYPES[k]["icon"] + " " + content_type_label(k)
+                ),
                 key="_cc_type",
             )
-            platform = st.selectbox(t("ccal.f_platform"), cc.PLATFORMS,
-                                    key="_cc_plat")
+            platform = st.selectbox(
+                t("ccal.f_platform"),
+                cc.PLATFORMS,
+                format_func=platform_name,
+                key="_cc_plat",
+            )
         with ad3:
             target_rev = st.number_input(t("ccal.f_target"), min_value=0.0,
                                          value=0.0, step=500.0)
@@ -91,7 +97,7 @@ if upcoming:
     for item in upcoming:
         ct_info = cc.CONTENT_TYPES.get(item["content_type"], {})
         icon = ct_info.get("icon", "📌")
-        label = ct_info.get("label_th", item["content_type"])
+        label = content_type_label(item["content_type"])
 
         st.markdown(
             "<div style='display:flex;justify-content:space-between;"
@@ -99,7 +105,7 @@ if upcoming:
             "border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             "<span>" + icon + " <strong>" + item["title"] + "</strong>"
             " <span style='color:#9a9485;font-size:11px'>"
-            + label + " · " + (item.get("platform") or "") + "</span></span>"
+            + label + " · " + platform_name(item.get("platform") or "") + "</span></span>"
             "<span style='font-size:12px;color:#7a7569'>"
             + item["scheduled_date"] +
             (" " + item["scheduled_time"] if item.get("scheduled_time") else "") +
@@ -161,7 +167,9 @@ for i, (day_str, items) in enumerate(week.items()):
                         ),
                         key="_ccs_" + str(item["id"]),
                         label_visibility="collapsed",
-                        format_func=lambda k: cc.STATUSES[k]["icon"],
+                        format_func=lambda k: (
+                            cc.STATUSES[k]["icon"] + " " + content_status_label(k)
+                        ),
                     )
                     if new_status != item["status"]:
                         cc.update_status(item["id"], new_status)
