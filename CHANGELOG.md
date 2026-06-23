@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v101 — promotions module type + inline pass (C1/F6/promotions.py)
+- `promo_type_label()`, `promo_status_label()` helpers (status reuses `promo.status_*`)
+- Removed hardcoded Thai labels from `PROMO_TYPES` / `STATUSES`
+- C1: use count + coupon code line via `t()`
+- 8 new keys → 19 langs
+
 ## v100 — daily briefing task + alert pass (A0/G7/daily_briefing.py)
 - `brief_task_text()`, `brief_alert_text()` helpers
 - Task keys: `brief.task_*` (6) + alert keys: `brief.alert_*` (2)

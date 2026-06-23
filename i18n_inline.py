@@ -140,3 +140,17 @@ def brief_alert_text(alert: dict) -> str:
         return alert.get("msg", "")
     fmt = {k: alert[k] for k in ("count", "rate") if k in alert}
     return t(f"brief.alert_{key}", **fmt)
+
+
+def promo_type_label(promo_type: str) -> str:
+    key = f"promo.type_{promo_type}"
+    if key in STRINGS:
+        return t(key)
+    return promo_type.replace("_", " ").title()
+
+
+def promo_status_label(status: str) -> str:
+    key = f"promo.status_{status}"
+    if key in STRINGS:
+        return t(key)
+    return status.replace("_", " ").title()
