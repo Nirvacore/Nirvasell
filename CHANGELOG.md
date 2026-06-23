@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v102 — loyalty/promo_engine/residual pages pass
+- `loyalty_reward_name()`, `peng_type_label()`, `peng_discount_label()`, `cal_post_*()` helpers
+- `loyalty.py`: rewards/errors via i18n; `promo_engine.py`: labels removed
+- Pages: F5, o_Promos, H_Account, K_Fulfillment, 0_Start, 6_Settings, G2
+- 32 new keys → 19 langs
+
 ## v101 — promotions module type + inline pass (C1/F6/promotions.py)
 - `promo_type_label()`, `promo_status_label()` helpers (status reuses `promo.status_*`)
 - Removed hardcoded Thai labels from `PROMO_TYPES` / `STATUSES`

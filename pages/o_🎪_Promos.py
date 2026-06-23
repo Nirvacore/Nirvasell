@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import peng_type_label, peng_discount_label, platform_name
 
 st.set_page_config(page_title="nirva.sell · Promotions",
                    page_icon="🎪", layout="wide")
@@ -71,11 +72,19 @@ with st.expander(t("promo.create_title"), expanded=s["total"] == 0):
             p_type = st.selectbox(
                 t("promo.f_type"),
                 type_keys,
-                format_func=lambda k: pe.PROMO_TYPES[k]["icon"] + " " + pe.PROMO_TYPES[k]["label"],
+                format_func=lambda k: (
+                    pe.PROMO_TYPES[k]["icon"] + " " + peng_type_label(k)
+                ),
             )
         with pc2:
             platforms = ["all", "shopee", "lazada", "tiktok", "facebook", "line", "website"]
-            p_platform = st.selectbox(t("promo.f_platform"), platforms)
+            p_platform = st.selectbox(
+                t("promo.f_platform"),
+                platforms,
+                format_func=lambda p: (
+                    t("promo.platform_all") if p == "all" else platform_name(p)
+                ),
+            )
 
         dc1, dc2 = st.columns(2)
         with dc1:
@@ -85,11 +94,11 @@ with st.expander(t("promo.create_title"), expanded=s["total"] == 0):
 
         dc3, dc4, dc5 = st.columns(3)
         with dc3:
-            dtype_keys = list(pe.DISCOUNT_TYPES.keys())
+            dtype_keys = pe.DISCOUNT_TYPES
             p_dtype = st.selectbox(
                 t("promo.f_discount_type"),
                 dtype_keys,
-                format_func=lambda k: pe.DISCOUNT_TYPES[k],
+                format_func=peng_discount_label,
             )
         with dc4:
             p_dvalue = st.number_input(

@@ -6,7 +6,7 @@ import loyalty as loy
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import loyalty_tier
+from i18n_inline import loyalty_tier, loyalty_reward_name
 from sidebar import render_sidebar
 
 apply_theme()
@@ -95,7 +95,7 @@ with tab_rewards:
     st.subheader(t("loy.rewards_title"))
     for r in loy.REWARDS:
         col1, col2 = st.columns([4,1])
-        col1.write(r["icon"] + " **" + r["name"] + "** — " +
+        col1.write(r["icon"] + " **" + loyalty_reward_name(r["id"]) + "** — " +
                    str(r["points"]) + " " + t("loy.pts"))
         if col2.button(t("loy.redeem_btn") + " " + r["id"],
                        key="redeem_" + r["id"]):
@@ -113,7 +113,7 @@ with tab_rewards:
                     st.success(t("loy.redeemed"))
                     st.session_state["redeem_target"] = None
                 else:
-                    st.error(result.get("error", t("loy.redeem_fail")))
+                    st.error(t(result.get("error_key", "loy.redeem_fail")))
                 st.rerun()
 
 with tab_tiers:

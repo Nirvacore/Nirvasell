@@ -109,8 +109,7 @@ with st.form("line_setup"):
     with c2:
         if st.form_submit_button(t("line.test_btn")):
             if n_token.strip():
-                result = line_notify.send(n_token.strip(),
-                    "\n🧪 nirva.sell test\nระบบแจ้งเตือนทำงานปกติ!")
+                result = line_notify.send(n_token.strip(), t("line.test_message"))
                 if result["ok"]:
                     st.success(t("line.test_ok"))
                 else:

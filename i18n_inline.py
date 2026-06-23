@@ -154,3 +154,30 @@ def promo_status_label(status: str) -> str:
     if key in STRINGS:
         return t(key)
     return status.replace("_", " ").title()
+
+
+def loyalty_reward_name(reward_id: str) -> str:
+    return _lookup("loy.reward", reward_id)
+
+
+def peng_type_label(promo_type: str) -> str:
+    return _lookup("peng.type", promo_type)
+
+
+def peng_discount_label(discount_type: str) -> str:
+    return _lookup("peng.disc", discount_type)
+
+
+def cal_post_type_label(post_type: str) -> str:
+    key = f"cal.type_{post_type}"
+    if key in STRINGS:
+        return t(key)
+    return post_type.replace("_", " ").title()
+
+
+def cal_post_status_label(status: str) -> str:
+    slug = {"published": "posted"}.get(status, status)
+    key = f"cal.status_{slug}"
+    if key in STRINGS:
+        return t(key)
+    return status.replace("_", " ").title()

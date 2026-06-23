@@ -6,6 +6,7 @@ import content_calendar as cc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import cal_post_type_label, cal_post_status_label, platform_name
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -40,9 +41,9 @@ def _post_row(p):
              + " · " + (p.get("post_date") or "—"))
     with st.expander(label):
         col1, col2 = st.columns(2)
-        col1.write(t("cal.platform") + ": " + (p.get("platform") or "—"))
-        col2.write(t("cal.type") + ": " + (p.get("post_type") or "—"))
-        col1.write(t("cal.status") + ": " + (p.get("status") or "—"))
+        col1.write(t("cal.platform") + ": " + platform_name(p.get("platform") or ""))
+        col2.write(t("cal.type") + ": " + cal_post_type_label(p.get("post_type") or ""))
+        col1.write(t("cal.status") + ": " + cal_post_status_label(p.get("status") or "draft"))
         col2.write(t("cal.date") + ": " + (p.get("post_date") or "—"))
         if p.get("body"):
             st.markdown("> " + p["body"][:200])
@@ -52,6 +53,7 @@ def _post_row(p):
         new_status = col_s.selectbox(t("cal.update_status"),
             ["draft","scheduled","published","overdue"],
             index=["draft","scheduled","published","overdue"].index(p.get("status","draft")),
+            format_func=cal_post_status_label,
             key="cst_" + str(p["id"]))
         if col_s.button(t("cal.save"), key="csv_" + str(p["id"])):
             cc.update(p["id"], status=new_status); st.rerun()
@@ -67,7 +69,7 @@ with tab_upcoming:
 with tab_all:
     status_f = st.segmented_control(t("cal.status_filter"),
         ["all","draft","scheduled","published","overdue"],
-        format_func=lambda s: t("cal.all") if s=="all" else s,
+        format_func=lambda s: t("cal.all") if s == "all" else cal_post_status_label(s),
         default="all")
     posts = cc.all_posts(status=None if status_f=="all" else status_f)
     if not posts:
@@ -81,15 +83,19 @@ with tab_add:
         title    = st.text_input(t("cal.f_title"))
         col1, col2 = st.columns(2)
         platform = col1.selectbox(t("cal.f_platform"),
-            ["shopee","lazada","tiktok_shop","facebook","instagram","line","youtube"])
+            ["shopee","lazada","tiktok_shop","facebook","instagram","line","youtube"],
+            format_func=platform_name)
         post_type = col2.selectbox(t("cal.f_type"),
             ["product_post","story","live_announcement","promotion","review_response",
-             "general","educational"])
+             "general","educational"],
+            format_func=cal_post_type_label)
         col3, col4 = st.columns(2)
         post_date = col3.text_input(t("cal.f_date"),
                                      value=datetime.now().strftime("%Y-%m-%d"),
                                      placeholder=t("common.date_ph"))
-        post_time = col4.text_input(t("cal.f_time"), placeholder=t("common.time_hhmm_ph"),
+        post_time = col4.text_input(
+            t("cal.f_time"), placeholder=t("common.time_hhmm_ph"),
+        )
         body     = st.text_area(t("cal.f_body"), height=80)
         caption  = st.text_input(t("cal.f_caption"))
         if st.form_submit_button(t("cal.add_btn")):
