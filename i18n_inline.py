@@ -124,3 +124,19 @@ def live_promo_label(slug: str) -> str:
 
 def alert_kind_name(kind: str) -> str:
     return _lookup("alrt.kind", kind)
+
+
+def brief_task_text(task: dict) -> str:
+    key = task.get("task_key", "")
+    if not key:
+        return task.get("task", "")
+    fmt = {k: task[k] for k in ("count",) if k in task}
+    return t(f"brief.task_{key}", **fmt)
+
+
+def brief_alert_text(alert: dict) -> str:
+    key = alert.get("alert_key", "")
+    if not key:
+        return alert.get("msg", "")
+    fmt = {k: alert[k] for k in ("count", "rate") if k in alert}
+    return t(f"brief.alert_{key}", **fmt)

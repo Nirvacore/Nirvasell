@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v100 — daily briefing task + alert pass (A0/G7/daily_briefing.py)
+- `brief_task_text()`, `brief_alert_text()` helpers
+- Task keys: `brief.task_*` (6) + alert keys: `brief.alert_*` (2)
+- Removed `task_th`/`msg_th` from `daily_briefing.generate()`
+- 8 new keys → 19 langs
+
 ## v99 — alerts module i18n pass (C0/F4/alerts.py)
 - `alert_kind_name()` helper; `alrt.kind_*` + `alrt.msg_*` keys (6 alert types)
 - Removed hardcoded Thai from `ALERT_TYPES` labels and `check_all()` messages
