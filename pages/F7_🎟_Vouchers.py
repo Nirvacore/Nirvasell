@@ -6,6 +6,7 @@ import vouchers as vc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import voucher_tpl_label
 from sidebar import render_sidebar
 
 _VOUCHER_TYPES = {
@@ -94,7 +95,7 @@ with tab_create:
     st.subheader(t("vou.suggest_title"))
     sel_tmpl = st.selectbox(t("vou.sel_template"),
                               list(vc.TEMPLATES.keys()),
-                              format_func=lambda k: vc.TEMPLATES[k]["icon"] + " " + vc.TEMPLATES[k]["label"])
+                              format_func=lambda k: vc.TEMPLATES[k]["icon"] + " " + voucher_tpl_label(k))
     if sel_tmpl:
         suggested_code = vc.suggest_code(sel_tmpl)
         tmpl = vc.TEMPLATES[sel_tmpl]
@@ -108,7 +109,7 @@ with tab_create:
             from datetime import datetime, timedelta
             start_s = datetime.now().strftime("%Y-%m-%d")
             end_s   = (datetime.now() + timedelta(days=s["duration_days"])).strftime("%Y-%m-%d")
-            vc.add(code=suggested_code, label=tmpl["label"],
+            vc.add(code=suggested_code, label=voucher_tpl_label(sel_tmpl),
                     discount_type=s["discount_type"], discount_value=s["discount_value"],
                     min_spend=s["min_spend"], starts_at=start_s, expires_at=end_s)
             st.success(t("vou.created"))
@@ -122,7 +123,7 @@ with tab_templates:
         row_html = (
             "<div style='margin:4px 0;font-size:0.84rem'>"
             "<span style='width:28px;display:inline-block'>" + tmpl["icon"] + "</span>"
-            "<b style='color:#d4d0c8;width:220px;display:inline-block'>" + tmpl["label"] + "</b>"
+            "<b style='color:#d4d0c8;width:220px;display:inline-block'>" + voucher_tpl_label(key) + "</b>"
             "<span style='color:#9a9485'>" + disc_str +
             (t("vou.min_spend_line", amount=str(s["min_spend"])) if s["min_spend"] > 0 else "") +
             " · " + str(s["duration_days"]) + t("vou.days") + "</span>"

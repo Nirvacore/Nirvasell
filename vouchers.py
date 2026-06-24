@@ -42,7 +42,6 @@ CREATE INDEX IF NOT EXISTS idx_vouchers_status ON vouchers(status);
 
 TEMPLATES = {
     "songkran": {
-        "label": "Songkran (สงกรานต์)",
         "icon":  "💦",
         "code_prefix": "SONGKRAN",
         "month": 4, "day": 13,
@@ -50,7 +49,6 @@ TEMPLATES = {
                       "min_spend": 200, "duration_days": 7},
     },
     "double_11": {
-        "label": "11.11 Mega Sale",
         "icon":  "🛒",
         "code_prefix": "ELEVEN11",
         "month": 11, "day": 11,
@@ -58,7 +56,6 @@ TEMPLATES = {
                       "min_spend": 0, "duration_days": 3},
     },
     "double_12": {
-        "label": "12.12 Year-End",
         "icon":  "🎄",
         "code_prefix": "TWELVE12",
         "month": 12, "day": 12,
@@ -66,7 +63,6 @@ TEMPLATES = {
                       "min_spend": 0, "duration_days": 3},
     },
     "black_friday": {
-        "label": "Black Friday",
         "icon":  "🛍",
         "code_prefix": "BLACKFRI",
         "month": 11, "day": 28,   # last Fri of Nov — approximate
@@ -74,7 +70,6 @@ TEMPLATES = {
                       "min_spend": 500, "duration_days": 4},
     },
     "lunar_new_year": {
-        "label": "ตรุษจีน · Lunar New Year",
         "icon":  "🧧",
         "code_prefix": "CNYHAPPY",
         "month": 2, "day": 1,     # approximation
@@ -82,7 +77,6 @@ TEMPLATES = {
                       "min_spend": 388, "duration_days": 5},
     },
     "welcome": {
-        "label": "New customer welcome",
         "icon":  "👋",
         "code_prefix": "WELCOME",
         "month": None, "day": None,
@@ -90,7 +84,6 @@ TEMPLATES = {
                       "min_spend": 300, "duration_days": 30},
     },
     "free_ship": {
-        "label": "Free shipping promo",
         "icon":  "🚚",
         "code_prefix": "FREESHIP",
         "month": None, "day": None,
@@ -98,7 +91,6 @@ TEMPLATES = {
                       "min_spend": 500, "duration_days": 7},
     },
     "flash_24h": {
-        "label": "Flash 24-hour deal",
         "icon":  "⚡",
         "code_prefix": "FLASH24",
         "month": None, "day": None,

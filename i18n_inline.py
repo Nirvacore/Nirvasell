@@ -269,3 +269,40 @@ PLATFORM_FEE_KEYS = {
     "lazada": "ch.fee_lazada",
     "tiktok_shop": "ch.fee_tiktok_shop",
 }
+
+
+def msg_cat_label(cat: str) -> str:
+    return _lookup("msg.cat", cat)
+
+
+def tmpl_cat_label(cat: str) -> str:
+    return _lookup("tmpl.cat", cat)
+
+
+def voucher_tpl_label(key: str) -> str:
+    return _lookup("vouch.tpl", key)
+
+
+def review_sentiment_label(rating: int) -> str:
+    key = f"rt.sent_{rating}"
+    if key in STRINGS:
+        return t(key)
+    return str(rating)
+
+
+def seg_rfm_label(segment: str) -> str:
+    return _lookup("seg.rfm", segment)
+
+
+def seg_rfm_desc(segment: str) -> str:
+    key = f"seg.rfm_desc_{segment}"
+    if key in STRINGS:
+        return t(key)
+    return ""
+
+
+def seg_tag_label(tag: str) -> str:
+    key = f"seg.tag_{tag.lower()}"
+    if key in STRINGS:
+        return t(key)
+    return tag

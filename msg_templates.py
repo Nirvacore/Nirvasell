@@ -28,14 +28,14 @@ def init():
 
 
 CATEGORIES = {
-    "order":     {"label": "สั่งซื้อ",    "icon": "🛒"},
-    "shipping":  {"label": "จัดส่ง",      "icon": "🚚"},
-    "review":    {"label": "รีวิว",       "icon": "⭐"},
-    "followup":  {"label": "ติดตาม",      "icon": "💬"},
-    "promo":     {"label": "โปรโมชั่น",    "icon": "🎪"},
-    "vip":       {"label": "VIP",         "icon": "💎"},
-    "complaint": {"label": "ร้องเรียน",    "icon": "🙏"},
-    "custom":    {"label": "กำหนดเอง",    "icon": "📝"},
+    "order":     {"icon": "🛒"},
+    "shipping":  {"icon": "🚚"},
+    "review":    {"icon": "⭐"},
+    "followup":  {"icon": "💬"},
+    "promo":     {"icon": "🎪"},
+    "vip":       {"icon": "💎"},
+    "complaint": {"icon": "🙏"},
+    "custom":    {"icon": "📝"},
 }
 
 PLATFORMS = ["all", "line", "facebook", "instagram", "shopee_chat", "lazada_chat", "tiktok"]

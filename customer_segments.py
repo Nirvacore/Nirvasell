@@ -8,18 +8,12 @@ DEFAULT_TAGS = [
 ]
 
 RFM_SEGMENTS = {
-    "champion":     {"label": "Champion 🏆", "color": "#4d6c5c",
-                     "desc": "ซื้อล่าสุด ซื้อบ่อย ยอดสูง"},
-    "loyal":        {"label": "Loyal 💎",    "color": "#4a7ab5",
-                     "desc": "ซื้อบ่อยสม่ำเสมอ"},
-    "at_risk":      {"label": "At Risk ⚠️", "color": "#c5963d",
-                     "desc": "เคยดี แต่นานไม่ซื้อ"},
-    "new":          {"label": "New 🌱",      "color": "#7ac58a",
-                     "desc": "ซื้อครั้งแรกเร็วๆ นี้"},
-    "promising":    {"label": "Promising ✨", "color": "#9a7dc5",
-                     "desc": "ซื้อล่าสุด แต่น้อยครั้ง"},
-    "dormant":      {"label": "Dormant 💤",  "color": "#9a9485",
-                     "desc": "ไม่ซื้อมานาน"},
+    "champion":  {"icon": "🏆", "color": "#4d6c5c"},
+    "loyal":     {"icon": "💎", "color": "#4a7ab5"},
+    "at_risk":   {"icon": "⚠️", "color": "#c5963d"},
+    "new":       {"icon": "🌱", "color": "#7ac58a"},
+    "promising": {"icon": "✨", "color": "#9a7dc5"},
+    "dormant":   {"icon": "💤", "color": "#9a9485"},
 }
 
 

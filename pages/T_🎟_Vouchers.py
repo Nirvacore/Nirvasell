@@ -17,6 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, toast, friendly_error
 from i18n import t
+from i18n_inline import voucher_tpl_label
 
 _VOUCHER_TYPES = {
     "percent": "vouch.type_percent",
@@ -59,7 +60,7 @@ for i, tk in enumerate(template_keys):
     tpl = v.TEMPLATES[tk]
     with template_cols[i % len(template_cols)]:
         if st.button(
-            f"{tpl['icon']}  {tpl['label']}",
+            f"{tpl['icon']}  {voucher_tpl_label(tk)}",
             key=f"_tpl_{tk}",
             width="stretch",
         ):
@@ -89,7 +90,7 @@ if tpl_key and tpl_key in v.TEMPLATES:
     s = tpl["suggested"]
     defaults.update({
         "code":           v.suggest_code(tpl_key),
-        "label":          tpl["label"],
+        "label":          voucher_tpl_label(tpl_key),
         "discount_type":  s["discount_type"],
         "discount_value": s["discount_value"],
         "min_spend":      s["min_spend"],
