@@ -5,13 +5,13 @@ Used by resellers selling to sub-resellers or corporate buyers."""
 from __future__ import annotations
 import json
 import db
-
+from i18n_inline import ws_tier_label
 
 DEFAULT_TIERS = [
-    {"min_qty": 1,   "label": "ปลีก",    "discount_pct": 0},
-    {"min_qty": 10,  "label": "ส่งเล็ก", "discount_pct": 10},
-    {"min_qty": 50,  "label": "ส่งกลาง", "discount_pct": 20},
-    {"min_qty": 100, "label": "ส่งใหญ่", "discount_pct": 30},
+    {"min_qty": 1,   "tier_key": "retail",  "discount_pct": 0},
+    {"min_qty": 10,  "tier_key": "small",   "discount_pct": 10},
+    {"min_qty": 50,  "tier_key": "medium",  "discount_pct": 20},
+    {"min_qty": 100, "tier_key": "large",   "discount_pct": 30},
 ]
 
 
@@ -87,7 +87,7 @@ def price_for_qty(sku: str, qty: int) -> dict:
             return {
                 "sku": sku, "qty": qty,
                 "price": row["sell_price"],
-                "tier_label": "ปลีก",
+                "tier_label": ws_tier_label("retail"),
                 "discount_pct": 0,
             }
         return {"sku": sku, "qty": qty, "price": None}

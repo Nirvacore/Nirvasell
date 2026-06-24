@@ -6,6 +6,7 @@ import influencer_tracker as it
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import inf_status_label, inf_commission_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -34,7 +35,7 @@ with tab_list:
     status_filter = st.selectbox(
         t("inf.status_filter"),
         [""] + list(it.STATUSES.keys()),
-        format_func=lambda s: t("inf.all") if s=="" else it.STATUSES[s]["label"],
+        format_func=lambda s: t("inf.all") if s == "" else inf_status_label(s),
     )
     influencers = it.all_influencers(status=status_filter or None)
     if not influencers:
@@ -53,7 +54,7 @@ with tab_list:
             col2.write(t("inf.commission") + ": " +
                        str(inf["commission_rate"]) + (
                            "%" if inf["commission_type"] == "percentage" else " ฿"
-                       ) + " / " + it.COMMISSION_TYPES.get(inf["commission_type"],""))
+                       ) + " / " + inf_commission_label(inf["commission_type"]))
             col2.metric(t("inf.unpaid"), "฿{:,.0f}".format(inf["unpaid_commission"]))
             if inf.get("notes"):
                 st.caption(inf["notes"])
@@ -82,7 +83,7 @@ with tab_add:
         contact   = col2.text_input(t("inf.f_contact"), placeholder=t("inf.contact_ph"))
         comm_type = col1.selectbox(t("inf.f_comm_type"),
                                     list(it.COMMISSION_TYPES.keys()),
-                                    format_func=lambda k: it.COMMISSION_TYPES[k])
+                                    format_func=inf_commission_label)
         comm_rate = col2.number_input(t("inf.f_comm_rate"), min_value=0.0, step=1.0, value=10.0)
         promo_code = col1.text_input(t("inf.f_promo_code"))
         notes      = col2.text_input(t("inf.f_notes"))

@@ -6,6 +6,7 @@ import team_tasks as tt
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import task_priority_label, task_status_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -33,8 +34,9 @@ with tab_board:
     status_sel = st.selectbox(
         t("task.status_filter"),
         ["open"] + list(tt.STATUSES.keys()),
-        format_func=lambda s: t("task.all_open") if s == "open" else
-                              tt.STATUSES[s]["label"],
+        format_func=lambda s: (
+            t("task.all_open") if s == "open" else task_status_label(s)
+        ),
     )
     member_sel = st.selectbox(
         t("task.member_filter"),
@@ -86,7 +88,7 @@ with tab_add:
         category = col1.selectbox(t("task.f_category"), tt.CATEGORIES)
         priority = col2.selectbox(t("task.f_priority"),
                                    list(tt.PRIORITIES.keys()),
-                                   format_func=lambda k: tt.PRIORITIES[k]["label"])
+                                   format_func=task_priority_label)
         col3, col4 = st.columns(2)
         member_ids = [0] + [m["id"] for m in members]
         assignee = col3.selectbox(

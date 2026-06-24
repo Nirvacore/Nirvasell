@@ -19,6 +19,12 @@ Built iteratively. Current stats:
 
 ---
 
+## v103 — PO/wholesale/tasks/flash/goals/influencer module pass
+- Helpers: `ws_tier_label`, `task_*_label`, `flash_*_label`, `goal_*_label`, `inf_*_label`
+- Modules: purchase_orders, wholesale_pricing, team_tasks, flash_sale, goal_tracker, influencer_tracker
+- Pages: B4, D3, E0, C9, D9 (+ po_status already on E5/B3)
+- 41 new keys → 19 langs
+
 ## v102 — loyalty/promo_engine/residual pages pass
 - `loyalty_reward_name()`, `peng_type_label()`, `peng_discount_label()`, `cal_post_*()` helpers
 - `loyalty.py`: rewards/errors via i18n; `promo_engine.py`: labels removed

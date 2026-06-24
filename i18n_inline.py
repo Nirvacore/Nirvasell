@@ -181,3 +181,46 @@ def cal_post_status_label(status: str) -> str:
     if key in STRINGS:
         return t(key)
     return status.replace("_", " ").title()
+
+
+def ws_tier_label(tier_key: str) -> str:
+    return _lookup("ws.tier", tier_key)
+
+
+def task_priority_label(priority: str) -> str:
+    return _lookup("task.priority", priority)
+
+
+def task_status_label(status: str) -> str:
+    return _lookup("task.status", status)
+
+
+def flash_status_label(status: str) -> str:
+    return _lookup("flash.status", status)
+
+
+def flash_discount_label(discount_type: str) -> str:
+    return _lookup("flash.disc", discount_type)
+
+
+def goal_type_label(goal_type: str) -> str:
+    return _lookup("goal.type", goal_type)
+
+
+def goal_type_unit(goal_type: str) -> str:
+    key = f"goal.unit_{goal_type}"
+    if key in STRINGS:
+        return t(key)
+    return ""
+
+
+def goal_period_label(period: str) -> str:
+    return _lookup("goal.period", period)
+
+
+def inf_status_label(status: str) -> str:
+    return _lookup("inf.status", status)
+
+
+def inf_commission_label(commission_type: str) -> str:
+    return _lookup("inf.comm", commission_type)

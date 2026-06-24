@@ -8,11 +8,11 @@ import db
 
 
 STATUSES = {
-    "draft":    {"icon": "📋", "label_th": "ร่าง",       "color": "#9a9485"},
-    "sent":     {"icon": "📤", "label_th": "ส่งแล้ว",    "color": "#4a7ab5"},
-    "partial":  {"icon": "📦", "label_th": "รับบางส่วน", "color": "#c5963d"},
-    "received": {"icon": "✅", "label_th": "รับครบ",     "color": "#4d6c5c"},
-    "cancelled":{"icon": "❌", "label_th": "ยกเลิก",     "color": "#c54c4c"},
+    "draft":    {"icon": "📋", "color": "#9a9485"},
+    "sent":     {"icon": "📤", "color": "#4a7ab5"},
+    "partial":  {"icon": "📦", "color": "#c5963d"},
+    "received": {"icon": "✅", "color": "#4d6c5c"},
+    "cancelled":{"icon": "❌", "color": "#c54c4c"},
 }
 
 

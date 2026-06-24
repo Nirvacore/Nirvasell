@@ -1,21 +1,17 @@
 """Goal Tracker — daily/monthly/quarterly sales and profit targets."""
 from __future__ import annotations
 import db
+from i18n_inline import goal_period_label, goal_type_label, goal_type_unit
 
 GOAL_TYPES = {
-    "revenue":     {"label": "ยอดขาย", "icon": "💰", "unit": "฿"},
-    "orders":      {"label": "จำนวนออเดอร์", "icon": "📦", "unit": "ออเดอร์"},
-    "profit":      {"label": "กำไรสุทธิ", "icon": "📈", "unit": "฿"},
-    "new_customers":{"label": "ลูกค้าใหม่", "icon": "👥", "unit": "คน"},
-    "reviews":     {"label": "รีวิวใหม่", "icon": "⭐", "unit": "รีวิว"},
+    "revenue":      {"icon": "💰"},
+    "orders":       {"icon": "📦"},
+    "profit":       {"icon": "📈"},
+    "new_customers":{"icon": "👥"},
+    "reviews":      {"icon": "⭐"},
 }
 
-PERIODS = {
-    "daily":     "รายวัน",
-    "weekly":    "รายสัปดาห์",
-    "monthly":   "รายเดือน",
-    "quarterly": "รายไตรมาส",
-}
+PERIODS = ["daily", "weekly", "monthly", "quarterly"]
 
 
 def init() -> None:
@@ -134,10 +130,10 @@ def current_goals() -> list[dict]:
                 d = dict(r)
                 goal_info = GOAL_TYPES.get(r["goal_type"],
                                            GOAL_TYPES["revenue"])
-                d["goal_label"] = goal_info["label"]
+                d["goal_label"] = goal_type_label(r["goal_type"])
                 d["goal_icon"] = goal_info["icon"]
-                d["unit"] = goal_info["unit"]
-                d["period_label"] = PERIODS.get(period, period)
+                d["unit"] = goal_type_unit(r["goal_type"])
+                d["period_label"] = goal_period_label(period)
                 # compute actual
                 if r["goal_type"] == "revenue":
                     d["actual"] = _actual_revenue(key, period)
