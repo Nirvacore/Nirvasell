@@ -3,10 +3,10 @@ from __future__ import annotations
 import db
 
 STATUSES = {
-    "new":       {"label": "ใหม่", "icon": "🔵", "color": "#4a7ab5"},
-    "replied":   {"label": "ตอบแล้ว", "icon": "✅", "color": "#4d6c5c"},
-    "escalated": {"label": "รุนแรง", "icon": "🔴", "color": "#c54c4c"},
-    "noted":     {"label": "จดไว้แล้ว", "icon": "📌", "color": "#9a9485"},
+    "new":       {"icon": "🔵", "color": "#4a7ab5"},
+    "replied":   {"icon": "✅", "color": "#4d6c5c"},
+    "escalated": {"icon": "🔴", "color": "#c54c4c"},
+    "noted":     {"icon": "📌", "color": "#9a9485"},
 }
 
 RATINGS = [1, 2, 3, 4, 5]

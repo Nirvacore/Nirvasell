@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import rule_trigger_label, rule_action_label
 
 st.set_page_config(page_title="nirva.sell · Auto Rules",
                    page_icon="⚙", layout="wide")
@@ -63,14 +64,14 @@ with st.expander(t("rule.add_title"), expanded=rs["total"] == 0):
             n_trigger = st.selectbox(
                 t("rule.f_trigger"),
                 trigger_keys,
-                format_func=lambda k: ar.TRIGGERS[k]["icon"] + " " + ar.TRIGGERS[k]["label"],
+                format_func=lambda k: ar.TRIGGERS[k]["icon"] + " " + rule_trigger_label(k),
             )
         with c2:
             action_keys = list(ar.ACTIONS.keys())
             n_action = st.selectbox(
                 t("rule.f_action"),
                 action_keys,
-                format_func=lambda k: ar.ACTIONS[k]["icon"] + " " + ar.ACTIONS[k]["label"],
+                format_func=lambda k: ar.ACTIONS[k]["icon"] + " " + rule_action_label(k),
             )
 
         # Condition config based on trigger type
@@ -191,8 +192,8 @@ if rules:
                 "<div style='color:#9a9485;font-size:12px'>"
                 + t("rule.fires_line", n=str(fire_count), when=last) + "</div></div>"
                 "<div style='font-size:12px;color:#7a7569;margin-top:4px'>"
-                + trig.get("icon", "") + " " + trig.get("label", rule["trigger_type"]) +
-                " → " + act.get("icon", "") + " " + act.get("label", rule["action_type"]) +
+                + trig.get("icon", "") + " " + rule_trigger_label(rule["trigger_type"]) +
+                " → " + act.get("icon", "") + " " + rule_action_label(rule["action_type"]) +
                 "</div></div>",
                 unsafe_allow_html=True,
             )

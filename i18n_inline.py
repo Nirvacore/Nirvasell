@@ -224,3 +224,48 @@ def inf_status_label(status: str) -> str:
 
 def inf_commission_label(commission_type: str) -> str:
     return _lookup("inf.comm", commission_type)
+
+
+def note_type_label(note_type: str) -> str:
+    return _lookup("nt.type", note_type)
+
+
+def note_priority_label(priority: str) -> str:
+    return _lookup("nt.priority", priority)
+
+
+def crm_note_type_label(note_type: str) -> str:
+    return _lookup("crm.type", note_type)
+
+
+def crm_tag_label(tag: str) -> str:
+    key = f"crm.tag_{tag}"
+    if key in STRINGS:
+        return t(key)
+    return tag
+
+
+def rev_status_label(status: str) -> str:
+    return _lookup("rev.status", status)
+
+
+def rule_trigger_label(trigger: str) -> str:
+    return _lookup("rule.trig", trigger)
+
+
+def rule_action_label(action: str) -> str:
+    return _lookup("rule.act", action)
+
+
+def channel_fee_label(platform: str) -> str:
+    fee = PLATFORM_FEE_KEYS.get(platform)
+    if fee:
+        return t(fee)
+    return t("ch.fee_no_gp")
+
+
+PLATFORM_FEE_KEYS = {
+    "shopee": "ch.fee_shopee",
+    "lazada": "ch.fee_lazada",
+    "tiktok_shop": "ch.fee_tiktok_shop",
+}

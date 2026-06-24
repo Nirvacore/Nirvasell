@@ -6,6 +6,7 @@ import review_manager as rm
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import rev_status_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -42,7 +43,7 @@ with tab_reviews:
                                format_func=lambda r: t("rev.all_ratings") if r==0 else "⭐"*r)
     stat_f = col_f3.selectbox(t("rev.f_status_filter"),
                                [""] + list(rm.STATUSES.keys()),
-                               format_func=lambda s: t("rev.all_statuses") if s=="" else rm.STATUSES[s]["label"])
+                               format_func=lambda s: t("rev.all_statuses") if s=="" else rev_status_label(s))
     reviews = rm.all_reviews(
         platform=plat_f or None,
         rating=rat_f or None,
@@ -54,7 +55,7 @@ with tab_reviews:
         si = rv["status_info"]
         label = rv["stars"] + " · " + (rv.get("platform") or "—") + \
                 " · " + (rv.get("product_name") or rv.get("sku") or "—") + \
-                " · " + si["icon"] + " " + si["label"]
+                " · " + si["icon"] + " " + rev_status_label(rv["status"])
         with st.expander(label):
             if rv.get("reviewer"):
                 st.caption(t("rev.reviewer") + ": " + rv["reviewer"])
@@ -67,7 +68,7 @@ with tab_reviews:
                 list(rm.STATUSES.keys()),
                 index=list(rm.STATUSES.keys()).index(rv["status"])
                       if rv["status"] in rm.STATUSES else 0,
-                format_func=lambda s: rm.STATUSES[s]["label"],
+                format_func=rev_status_label,
                 key="rs_" + str(rv["id"]),
             )
             reply_txt = st.text_area(t("rev.reply_label"), value=rv.get("reply_text",""),
