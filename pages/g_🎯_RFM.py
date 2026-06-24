@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
+from i18n_inline import rfm_segment_label, rfm_action_label
 
 st.set_page_config(page_title="nirva.sell · RFM",
                    page_icon="🎯", layout="wide")
@@ -55,7 +56,7 @@ for row_start in range(0, len(segments), cols_per_row):
                 "padding:14px 16px;margin-bottom:8px;min-height:100px'>"
                 "<div style='display:flex;justify-content:space-between;align-items:baseline'>"
                 "<span style='font-size:14px;font-weight:600'>" +
-                seg["icon"] + " " + seg["label"] + "</span>"
+                seg["icon"] + " " + rfm_segment_label(seg["segment"]) + "</span>"
                 "<span style='font-size:1.3rem;font-weight:600;color:" + seg["color"] + "'>" +
                 str(seg["count"]) + "</span></div>"
                 "<div style='color:#9a9485;font-size:12px;margin-top:6px'>"
@@ -64,7 +65,7 @@ for row_start in range(0, len(segments), cols_per_row):
                 "<div style='margin-top:6px'>"
                 "<span style='background:rgba(77,108,92,0.08);padding:2px 8px;"
                 "border-radius:6px;font-size:11px;color:#4d6c5c'>"
-                "→ " + t("rfm.action_" + seg["action"]) + "</span>"
+                "→ " + rfm_action_label(seg["action"]) + "</span>"
                 "</div></div>",
                 unsafe_allow_html=True,
             )
@@ -75,7 +76,7 @@ for row_start in range(0, len(segments), cols_per_row):
 st.divider()
 st.markdown("### " + t("rfm.drill_title"))
 
-seg_options = [(s["segment"], s["icon"] + " " + s["label"] + " (" + str(s["count"]) + ")")
+seg_options = [(s["segment"], s["icon"] + " " + rfm_segment_label(s["segment"]) + " (" + str(s["count"]) + ")")
                for s in segments if s["count"] > 0]
 
 if seg_options:
@@ -88,7 +89,7 @@ if seg_options:
     customers_in = rfm.customers_in_segment(selected_seg)
     seg_info = rfm.SEGMENTS.get(selected_seg, {})
 
-    st.caption(t("rfm.action_hint") + ": " + t("rfm.action_" + seg_info.get("action", "engage")))
+    st.caption(t("rfm.action_hint") + ": " + rfm_action_label(seg_info.get("action", "engage")))
 
     for c in customers_in:
         rfm_str = str(c["r_score"]) + "-" + str(c["f_score"]) + "-" + str(c["m_score"])

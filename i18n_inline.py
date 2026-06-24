@@ -306,3 +306,26 @@ def seg_tag_label(tag: str) -> str:
     if key in STRINGS:
         return t(key)
     return tag
+
+
+def rfm_segment_label(segment: str) -> str:
+    return _lookup("rfm.seg", segment)
+
+
+def rfm_action_label(action: str) -> str:
+    return _lookup("rfm.action", action.replace("-", "_"))
+
+
+def cod_status_label(status: str) -> str:
+    key = f"cod.status_{status}"
+    if key in STRINGS:
+        return t(key)
+    return status.replace("_", " ").title()
+
+
+def sup_cat_label(cat: str) -> str:
+    return _lookup("sup.cat", cat)
+
+
+def sup_term_label(term: str) -> str:
+    return _lookup("sup.term", term)
