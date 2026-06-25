@@ -5,14 +5,21 @@ Used by resellers selling to sub-resellers or corporate buyers."""
 from __future__ import annotations
 import json
 import db
-
+from i18n_inline import ws_tier_label
 
 DEFAULT_TIERS = [
-    {"min_qty": 1,   "label": "ปลีก",    "discount_pct": 0},
-    {"min_qty": 10,  "label": "ส่งเล็ก", "discount_pct": 10},
-    {"min_qty": 50,  "label": "ส่งกลาง", "discount_pct": 20},
-    {"min_qty": 100, "label": "ส่งใหญ่", "discount_pct": 30},
+    {"min_qty": 1,   "tier_key": "retail",  "discount_pct": 0},
+    {"min_qty": 10,  "tier_key": "small",   "discount_pct": 10},
+    {"min_qty": 50,  "tier_key": "medium",  "discount_pct": 20},
+    {"min_qty": 100, "tier_key": "large",   "discount_pct": 30},
 ]
+
+
+def _tier_key(min_qty: int) -> str:
+    for tier in DEFAULT_TIERS:
+        if tier["min_qty"] == min_qty:
+            return tier["tier_key"]
+    return ""
 
 
 def init():
@@ -39,7 +46,8 @@ def set_tiers(sku: str, tiers: list) -> None:
                 INSERT INTO wholesale_tiers
                     (sku, min_qty, tier_label, price, discount_pct)
                 VALUES (?, ?, ?, ?, ?)
-            """, (sku, tier["min_qty"], tier.get("label", ""),
+            """, (sku, tier["min_qty"],
+                  ws_tier_label(tier["tier_key"]) if tier.get("tier_key") else tier.get("label", ""),
                   tier.get("price"), tier.get("discount_pct", 0)))
 
 
@@ -63,9 +71,11 @@ def get_tiers(sku: str) -> list:
         if price and r["cost_price"]:
             margin = round((price - r["cost_price"]) / price * 100, 1)
 
+        tier_key = _tier_key(r["min_qty"])
         result.append({
             "min_qty": r["min_qty"],
-            "label": r["tier_label"],
+            "tier_key": tier_key,
+            "label": ws_tier_label(tier_key) if tier_key else (r["tier_label"] or ""),
             "price": price,
             "discount_pct": r["discount_pct"],
             "retail_price": r["sell_price"],
@@ -87,7 +97,7 @@ def price_for_qty(sku: str, qty: int) -> dict:
             return {
                 "sku": sku, "qty": qty,
                 "price": row["sell_price"],
-                "tier_label": "ปลีก",
+                "tier_label": ws_tier_label("retail"),
                 "discount_pct": 0,
             }
         return {"sku": sku, "qty": qty, "price": None}
@@ -101,7 +111,7 @@ def price_for_qty(sku: str, qty: int) -> dict:
         "sku": sku,
         "qty": qty,
         "price": applicable["price"],
-        "tier_label": applicable["label"],
+        "tier_label": ws_tier_label(_tier_key(applicable["min_qty"])) or applicable.get("label", ""),
         "discount_pct": applicable["discount_pct"],
         "total": round((applicable["price"] or 0) * qty, 0),
     }

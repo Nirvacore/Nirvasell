@@ -6,6 +6,7 @@ import budget_tracker as bt
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import budget_category
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -17,7 +18,8 @@ render_sidebar()
 st.title(t("bgt.title"))
 st.caption(t("bgt.caption"))
 
-month = st.text_input(t("bgt.month"), value=datetime.now().strftime("%Y-%m"), placeholder="YYYY-MM")
+month = st.text_input(t("bgt.month"), value=datetime.now().strftime("%Y-%m"),
+                      placeholder=t("common.month_ph"))
 summary = bt.summary(month=month.strip())
 
 c1, c2, c3 = st.columns(3)
@@ -40,7 +42,7 @@ with tab_overview:
         for d in details:
             cat_info = bt.CATEGORIES.get(d["category"], {})
             icon  = cat_info.get("icon","📋")
-            label_th = cat_info.get("label", d["category"])
+            label_cat = budget_category(d["category"])
             limit = d.get("monthly_limit",0)
             actual = d.get("actual",0)
             pct = round(actual / limit * 100, 0) if limit > 0 else 0
@@ -50,7 +52,7 @@ with tab_overview:
             row_html = (
                 "<div style='margin:5px 0'>"
                 "<div style='font-size:0.85rem'>"
-                "<span style='width:180px;display:inline-block'>" + icon + " " + label_th + "</span>"
+                "<span style='width:180px;display:inline-block'>" + icon + " " + label_cat + "</span>"
                 "<span style='color:#9a9485'>฿{:,.0f}".format(actual) +
                 " / ฿{:,.0f}".format(limit) + "</span>"
                 "</div>"
@@ -69,7 +71,7 @@ with tab_set:
         for cat, info in bt.CATEGORIES.items():
             curr = existing.get(cat, {})
             col1, col2, col3 = st.columns([2,2,1])
-            col1.write(info["icon"] + " " + info["label"])
+            col1.write(info["icon"] + " " + budget_category(cat))
             limit = col2.number_input(t("bgt.f_limit"),
                                        value=float(curr.get("monthly_limit",0)),
                                        min_value=0.0, step=100.0,

@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import ws_tier_label
 
 st.set_page_config(page_title="nirva.sell · Wholesale",
                    page_icon="🏷", layout="wide")
@@ -69,7 +70,7 @@ with st.expander(t("ws.set_title"), expanded=s["skus_with_wholesale"] == 0):
             with tc2:
                 label = st.text_input(
                     t("ws.f_label"),
-                    value=default["label"],
+                    value=ws_tier_label(default["tier_key"]),
                     key="_wt_lb_" + str(i),
                 )
             with tc3:

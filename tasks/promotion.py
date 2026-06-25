@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "promotion",
-    "label": "🔥 Promo / Flash Sale",
     "icon": "🔥",
-    "blurb": "คำขายโปรโมชั่น + urgency + ราคาหลังลดอัตโนมัติ",
     "output_fields": ["headline", "body", "discount_pct", "promo_price", "cta", "countdown_line"],
 }
 

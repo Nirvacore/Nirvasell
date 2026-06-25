@@ -16,7 +16,8 @@ import fees as fees_mod
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from i18n import t, current_lang
+from i18n import t
+from i18n_inline import currency_label, live_promo_label
 from _components import page_header
 
 db.init()
@@ -67,7 +68,7 @@ else:
             delta = (live - static) / static * 100 if static else 0
             table.append({
                 t("live.currency"): cc,
-                t("live.label"): fees_mod.CURRENCY_LABELS.get(cc, ""),
+                t("live.label"): currency_label(cc),
                 f"฿1 {t('live.equals')}": live,
                 f"{t('live.vs_static')} %": delta,
             })
@@ -94,7 +95,7 @@ if not events:
 else:
     # Big countdown card for the next one
     nxt = events[0]
-    label = nxt["label_th"] if current_lang() == "th" else nxt["label_en"]
+    label = live_promo_label(nxt["slug"])
     days = nxt["days_until"]
     st.markdown(
         f"<div style='background:rgba(77,108,92,0.08);border:1.5px solid #4d6c5c;"
@@ -111,7 +112,7 @@ else:
 
     # Full table
     rows = [{
-        t("live.event"): e["label_th"] if current_lang() == "th" else e["label_en"],
+        t("live.event"): live_promo_label(e["slug"]),
         t("live.date"): e["date"],
         t("live.days_until"): e["days_until"],
         t("live.region"): e["region"],
@@ -166,7 +167,7 @@ if fetch_btn:
 st.markdown(f"## {t('live.action_title')}")
 nxt_big = live_data.next_big_sale()
 if nxt_big and nxt_big["days_until"] <= 60:
-    label = nxt_big["label_th"] if current_lang() == "th" else nxt_big["label_en"]
+    label = live_promo_label(nxt_big["slug"])
     st.success(
         t("live.action_suggest",
           n=nxt_big["days_until"],

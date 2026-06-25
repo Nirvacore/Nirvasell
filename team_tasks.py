@@ -3,17 +3,17 @@ from __future__ import annotations
 import db
 
 PRIORITIES = {
-    "low":    {"label": "ต่ำ", "color": "#9a9485", "icon": "⬇"},
-    "normal": {"label": "ปกติ", "color": "#7a7569", "icon": "➡"},
-    "high":   {"label": "สูง", "color": "#c5963d", "icon": "⬆"},
-    "urgent": {"label": "ด่วน!", "color": "#c54c4c", "icon": "🔥"},
+    "low":    {"color": "#9a9485", "icon": "⬇"},
+    "normal": {"color": "#7a7569", "icon": "➡"},
+    "high":   {"color": "#c5963d", "icon": "⬆"},
+    "urgent": {"color": "#c54c4c", "icon": "🔥"},
 }
 
 STATUSES = {
-    "todo":        {"label": "รอทำ", "icon": "⬜", "color": "#9a9485"},
-    "in_progress": {"label": "กำลังทำ", "icon": "🔄", "color": "#4a7ab5"},
-    "done":        {"label": "เสร็จ", "icon": "✅", "color": "#4d6c5c"},
-    "cancelled":   {"label": "ยกเลิก", "icon": "❌", "color": "#c54c4c"},
+    "todo":        {"icon": "⬜", "color": "#9a9485"},
+    "in_progress": {"icon": "🔄", "color": "#4a7ab5"},
+    "done":        {"icon": "✅", "color": "#4d6c5c"},
+    "cancelled":   {"icon": "❌", "color": "#c54c4c"},
 }
 
 CATEGORIES = ["packing", "shipping", "customer_reply", "inventory",

@@ -3,17 +3,17 @@ from __future__ import annotations
 import db
 
 NOTE_TYPES = {
-    "sku":      {"label": "SKU", "icon": "📦"},
-    "order":    {"label": "ออเดอร์", "icon": "🛒"},
-    "customer": {"label": "ลูกค้า", "icon": "👤"},
-    "supplier": {"label": "ซัพพลายเออร์", "icon": "🏭"},
-    "general":  {"label": "ทั่วไป", "icon": "📝"},
+    "sku":      {"icon": "📦"},
+    "order":    {"icon": "🛒"},
+    "customer": {"icon": "👤"},
+    "supplier": {"icon": "🏭"},
+    "general":  {"icon": "📝"},
 }
 
 PRIORITIES = {
-    "normal": {"label": "ปกติ", "color": "#9a9485"},
-    "important": {"label": "สำคัญ", "color": "#c5963d"},
-    "urgent": {"label": "ด่วน!", "color": "#c54c4c"},
+    "normal": {"color": "#9a9485"},
+    "important": {"color": "#c5963d"},
+    "urgent": {"color": "#c54c4c"},
 }
 
 

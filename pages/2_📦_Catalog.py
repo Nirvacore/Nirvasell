@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import split_images, image_grid, render_content_for_task, product_summary_row, empty_state, page_header
 from i18n import t
+from i18n_inline import img_preset_label, platform_name
 
 db.init()
 st.set_page_config(page_title="nirva · Catalog", page_icon="📦", layout="wide")
@@ -249,7 +250,8 @@ else:
                     ("lazada", qr.lazada_search_url(sku)),
                     ("custom", ""),
                 ],
-                format_func=lambda x: x[0].title(),
+                format_func=lambda x: t("common.qr_custom") if x[0] == "custom"
+                else platform_name(x[0]),
             )
             url = target[1]
             if target[0] == "custom":
@@ -291,7 +293,7 @@ else:
                     t("common.pick_platforms"),
                     presets,
                     default=["shopee_main", "lazada_main", "tiktok_main", "tiktok_video"],
-                    format_func=lambda p: imu.PLATFORM_SIZES[p]["label"],
+                    format_func=img_preset_label,
                 )
                 remove_bg = st.checkbox(t("common.remove_bg"), value=False, help=t("common.remove_bg_help"))
 
@@ -303,9 +305,10 @@ else:
                             try:
                                 out = imu.resize_for(base, p)
                                 cfg = imu.PLATFORM_SIZES[p]
-                                st.image(out, caption=cfg["label"], width='stretch')
+                                preset_label = img_preset_label(p)
+                                st.image(out, caption=preset_label, width='stretch')
                                 st.download_button(
-                                    f"⬇ {cfg['label']}",
+                                    f"⬇ {preset_label}",
                                     data=out,
                                     file_name=f"{sku}_{p}.jpg",
                                     mime="image/jpeg",

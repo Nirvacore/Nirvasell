@@ -23,15 +23,15 @@ import db
 
 
 SEGMENTS = {
-    "champions":      {"label": "Champions",       "icon": "👑", "color": "#4d6c5c", "action": "reward"},
-    "loyal":          {"label": "Loyal",            "icon": "💎", "color": "#3a7ca5", "action": "upsell"},
-    "potential":      {"label": "Potential Loyalist","icon": "🌱", "color": "#6b8e5a", "action": "nurture"},
-    "new":            {"label": "New Customer",     "icon": "👋", "color": "#7ab648", "action": "welcome"},
-    "promising":      {"label": "Promising",        "icon": "⭐", "color": "#c5963d", "action": "engage"},
-    "need_attention": {"label": "Need Attention",   "icon": "⚠️", "color": "#d4832f", "action": "re-engage"},
-    "about_to_sleep": {"label": "About to Sleep",   "icon": "😴", "color": "#b85c38", "action": "activate"},
-    "at_risk":        {"label": "At Risk",          "icon": "🔴", "color": "#c54c4c", "action": "win-back"},
-    "hibernating":    {"label": "Hibernating",      "icon": "❄️", "color": "#7a7569", "action": "last-chance"},
+    "champions":      {"icon": "👑", "color": "#4d6c5c", "action": "reward"},
+    "loyal":          {"icon": "💎", "color": "#3a7ca5", "action": "upsell"},
+    "potential":      {"icon": "🌱", "color": "#6b8e5a", "action": "nurture"},
+    "new":            {"icon": "👋", "color": "#7ab648", "action": "welcome"},
+    "promising":      {"icon": "⭐", "color": "#c5963d", "action": "engage"},
+    "need_attention": {"icon": "⚠️", "color": "#d4832f", "action": "re_engage"},
+    "about_to_sleep": {"icon": "😴", "color": "#b85c38", "action": "activate"},
+    "at_risk":        {"icon": "🔴", "color": "#c54c4c", "action": "win_back"},
+    "hibernating":    {"icon": "❄️", "color": "#7a7569", "action": "last_chance"},
 }
 
 
@@ -98,7 +98,6 @@ def calculate_rfm() -> list[dict]:
         d["rfm_score"] = d["r_score"] * 100 + d["f_score"] * 10 + d["m_score"]
         d["segment"] = _classify(d["r_score"], d["f_score"], d["m_score"])
         seg_info = SEGMENTS.get(d["segment"], SEGMENTS["promising"])
-        d["segment_label"] = seg_info["label"]
         d["segment_icon"] = seg_info["icon"]
         d["segment_color"] = seg_info["color"]
         d["action"] = seg_info["action"]
@@ -141,7 +140,6 @@ def segment_summary() -> list[dict]:
     for seg_key, seg_info in SEGMENTS.items():
         results.append({
             "segment": seg_key,
-            "label": seg_info["label"],
             "icon": seg_info["icon"],
             "color": seg_info["color"],
             "action": seg_info["action"],

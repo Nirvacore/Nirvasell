@@ -109,7 +109,7 @@ else:
 st.divider()
 with st.expander(t("bundle.manual_title"), expanded=False):
     with st.form("create_bundle"):
-        mb_name = st.text_input(t("bundle.f_name"), placeholder="Solar Panel + Inverter Set")
+        mb_name = st.text_input(t("bundle.f_name"), placeholder=t("bundle.name_ph"))
 
         with db.conn() as c:
             all_skus = [r["sku"] for r in c.execute(

@@ -216,7 +216,7 @@ with cL:
         value=st.session_state["_live_chat_text"],
         height=180,
         label_visibility="collapsed",
-        placeholder="CF1\nCF1\n+1\nCF2 ของแถมไหม\nCF1 หนูเอาด้วยค่ะ\nCF3",
+        placeholder=t("livesell.chat_ph"),
     )
     st.session_state["_live_chat_text"] = chat_text
 

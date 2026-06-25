@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import platform_list_display
 
 st.set_page_config(page_title="nirva.sell · Customers",
                    page_icon="👥", layout="wide")
@@ -81,8 +82,7 @@ def _render_customer_card(c_data: dict):
     t_key = cust.tier(c_data.get("order_count", 0))
     t_icon = cust.TIER_ICONS[t_key]
     t_color = cust.TIER_COLORS[t_key]
-    plats = (c_data.get("platforms") or "").replace(",", " · ") or "—"
-    plat_icons = plats.replace("shopee", "🛒 Shopee").replace("lazada", "🟧 Lazada").replace("tiktok", "🎵 TikTok")
+    plat_icons = platform_list_display(c_data.get("platforms") or "")
     subline = (
         t("common.n_orders", n=str(c_data.get("order_count", 0)))
         + " · " + plat_icons

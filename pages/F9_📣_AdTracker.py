@@ -76,7 +76,7 @@ with tab_add:
     st.subheader(t("ads.add_title"))
     with st.form("add_ad_form"):
         col1, col2 = st.columns(2)
-        name      = col1.text_input(t("ads.f_name"), placeholder="11.11 Shopee Ads")
+        name      = col1.text_input(t("ads.f_name"), placeholder=t("ads.name_placeholder"))
         platform  = col2.selectbox(t("ads.f_platform"), at.AD_PLATFORMS,
                                     format_func=lambda p: at.PLATFORM_ICONS.get(p, "") +
                                     " " + platform_name(p))

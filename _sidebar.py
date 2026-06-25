@@ -7,6 +7,7 @@ import db
 import fees as fees_mod
 import auth
 from i18n import LANGS, DEFAULT_LANG, t
+from i18n_inline import currency_label
 
 
 def render():
@@ -191,7 +192,7 @@ def render():
             t("sidebar.currency"),
             currencies,
             index=currencies.index(st.session_state.get("currency", "THB")),
-            format_func=lambda c: f"{c} · {fees_mod.CURRENCY_LABELS.get(c, c)}",
+            format_func=lambda c: f"{c} · {currency_label(c)}",
             key="_currency_input",
         )
         st.session_state["currency"] = currency
@@ -210,8 +211,8 @@ def render():
             import live_data
             nxt = live_data.next_big_sale()
             if nxt and nxt["days_until"] <= 60:
-                from i18n import current_lang
-                label = nxt["label_th"] if current_lang() == "th" else nxt["label_en"]
+                from i18n_inline import live_promo_label
+                label = live_promo_label(nxt.get("slug", ""))
                 st.markdown(
                     "<div style='margin-top:14px;padding:10px 12px;"
                     "background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.25);"

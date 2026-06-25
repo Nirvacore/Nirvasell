@@ -6,6 +6,7 @@ import alerts as al
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import alert_kind_name
 from sidebar import render_sidebar
 
 apply_theme()
@@ -61,7 +62,7 @@ with tab_configure:
         for atype, info in al.ALERT_TYPES.items():
             current = cfg.get(atype, {})
             col1, col2, col3 = st.columns([2,2,1])
-            col1.write(info["icon"] + " **" + info["label"] + "**")
+            col1.write(info["icon"] + " **" + alert_kind_name(atype) + "**")
             threshold = col2.number_input(
                 t("alert.threshold"),
                 value=float(current.get("threshold", info["default_threshold"])),

@@ -6,6 +6,7 @@ import shipping_calc as sc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import carrier_name, ship_est_days
 from sidebar import render_sidebar
 
 apply_theme()
@@ -69,12 +70,10 @@ with tab_margin:
 
     if sell_price > 0:
         carrier_options = list(sc.CARRIERS.keys())
-        carrier_labels  = {k: sc.CARRIERS[k]["icon"] + " " + sc.CARRIERS[k]["name"]
-                           for k in carrier_options}
         sel_carrier = st.selectbox(
             t("ship.carrier"),
             carrier_options,
-            format_func=lambda k: carrier_labels[k],
+            format_func=lambda k: sc.CARRIERS[k]["icon"] + " " + carrier_name(k),
         )
         m = sc.margin_after_shipping(sell_price, cost_price, weight_m,
                                       sel_carrier, is_cod_m)
@@ -120,10 +119,10 @@ with tab_margin:
 with tab_rates:
     st.subheader(t("ship.rates_title"))
     for key, info in sc.CARRIERS.items():
-        with st.expander(info["icon"] + " " + info["name"] +
+        with st.expander(info["icon"] + " " + carrier_name(key) +
                           " · COD " + str(info["cod_pct"]) + "%"):
             col1, col2 = st.columns(2)
-            col1.write(t("ship.est_days") + ": " + info["est_days"])
+            col1.write(t("ship.est_days") + ": " + ship_est_days(info["est_key"]))
             col2.write(t("ship.cod_flat") + ": ฿" + str(info["cod_fee"]))
             rate_html = "<table style='font-size:0.82rem;border-collapse:collapse'>"
             rate_html += "<tr style='color:#9a9485'><th style='padding:2px 8px'>" + t("ship.weight") + "</th><th style='padding:2px 8px'>" + t("ship.rate_price") + "</th></tr>"

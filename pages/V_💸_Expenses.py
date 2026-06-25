@@ -18,6 +18,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import expense_category, platform_display
 
 st.set_page_config(page_title="nirva.sell · Expenses",
                    page_icon="💸", layout="wide")
@@ -92,12 +93,7 @@ with cForm:
             n_plat = st.selectbox(
                 t("exp.f_platform"),
                 ["", "shopee", "lazada", "tiktok", "facebook", "line"],
-                format_func=lambda p: {
-                    "": "—",
-                    "shopee": "🛒 Shopee", "lazada": "🟧 Lazada",
-                    "tiktok": "🎵 TikTok", "facebook": "📘 Facebook",
-                    "line": "💚 LINE",
-                }.get(p, p),
+                format_func=lambda p: platform_display(p, empty="—"),
             )
         if st.form_submit_button(t("exp.add_btn"), type="primary"):
             if n_amount > 0:

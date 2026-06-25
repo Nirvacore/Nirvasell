@@ -169,7 +169,7 @@ with st.form("add_post"):
         n_sku = st.selectbox(t("cal.f_sku"), sku_opts)
 
     n_caption = st.text_area(t("cal.f_caption"), height=80, placeholder=t("cal.caption_placeholder"))
-    n_hashtags = st.text_input(t("cal.f_hashtags"), placeholder="#ขายดี #สินค้าแนะนำ")
+    n_hashtags = st.text_input(t("cal.f_hashtags"), placeholder=t("cal.hashtags_ph"))
 
     if st.form_submit_button(t("cal.add_btn"), type="primary"):
         if n_title.strip():

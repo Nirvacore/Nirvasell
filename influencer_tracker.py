@@ -4,16 +4,12 @@ import db
 
 PLATFORMS = ["tiktok", "facebook", "instagram", "youtube", "twitter", "other"]
 STATUSES = {
-    "active":   {"label": "กำลังร่วมงาน", "icon": "✅", "color": "#4d6c5c"},
-    "pending":  {"label": "รอตอบรับ", "icon": "⏳", "color": "#c5963d"},
-    "paused":   {"label": "หยุดชั่วคราว", "icon": "⏸", "color": "#9a9485"},
-    "ended":    {"label": "สิ้นสุด", "icon": "⬛", "color": "#4a4a4a"},
+    "active":   {"icon": "✅", "color": "#4d6c5c"},
+    "pending":  {"icon": "⏳", "color": "#c5963d"},
+    "paused":   {"icon": "⏸", "color": "#9a9485"},
+    "ended":    {"icon": "⬛", "color": "#4a4a4a"},
 }
-COMMISSION_TYPES = {
-    "percentage": "เปอร์เซ็นต์ต่อยอดขาย",
-    "flat_per_sale": "บาทคงที่ต่อออเดอร์",
-    "flat_monthly": "ค่าตอบแทนรายเดือน",
-}
+COMMISSION_TYPES = ["percentage", "flat_per_sale", "flat_monthly"]
 
 
 def init() -> None:

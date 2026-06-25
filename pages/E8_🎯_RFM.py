@@ -6,6 +6,7 @@ import rfm as rfm_mod
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import rfm_segment_label, rfm_action_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -30,11 +31,12 @@ with tab_overview:
         for seg in summary:
             si = rfm_mod.SEGMENTS.get(seg["segment"], {})
             icon  = si.get("icon","")
-            label = si.get("label", seg["segment"])
+            label = rfm_segment_label(seg["segment"])
             color = si.get("color","#9a9485")
             action = si.get("action","")
             pct   = round(seg["count"] / total_custs * 100, 1) if total_custs else 0
             bar_w = int(pct * 3)
+            avg_spent = seg["revenue"] / seg["count"] if seg["count"] else 0
 
             seg_html = (
                 "<div style='margin:4px 0'>"
@@ -44,7 +46,7 @@ with tab_overview:
                 ";width:" + str(bar_w) + "px;height:12px;vertical-align:middle;opacity:0.6'></div>"
                 " <span style='font-size:0.83rem;color:#9a9485'>" +
                 str(seg["count"]) + t("rfm.custs_unit") + " (" + str(pct) + "%)"
-                " · ฿{:,.0f}".format(seg["avg_spent"]) + " avg · " + action + "</span>"
+                " · ฿{:,.0f}".format(seg["avg_spent"]) + " avg · " + rfm_action_label(action) + "</span>"
                 "</div>"
             )
             st.html(seg_html)
@@ -67,12 +69,12 @@ with tab_segment:
         t("rfm.sel_segment"),
         segments_list,
         format_func=lambda s: rfm_mod.SEGMENTS[s]["icon"] + " " +
-                               rfm_mod.SEGMENTS[s]["label"],
+                               rfm_segment_label(s),
     )
     custs_in_seg = rfm_mod.customers_in_segment(sel_seg)
     si = rfm_mod.SEGMENTS[sel_seg]
-    st.write(si["icon"] + " **" + si["label"] + "** — " +
-             t("rfm.action") + ": *" + si["action"] + "*")
+    st.write(si["icon"] + " **" + rfm_segment_label(sel_seg) + "** — " +
+             t("rfm.action") + ": *" + rfm_action_label(si["action"]) + "*")
     if not custs_in_seg:
         st.info(t("rfm.seg_empty"))
     else:
@@ -107,7 +109,7 @@ with tab_all:
             t("rfm.seg_filter"),
             ["all"] + list(rfm_mod.SEGMENTS.keys()),
             format_func=lambda s: t("rfm.all_segs") if s=="all" else
-                                   rfm_mod.SEGMENTS[s]["icon"] + " " + rfm_mod.SEGMENTS[s]["label"],
+                                   rfm_mod.SEGMENTS[s]["icon"] + " " + rfm_segment_label(s),
         )
         rows = all_rfm if seg_filter == "all" else \
                [r for r in all_rfm if r.get("segment") == seg_filter]
@@ -123,7 +125,7 @@ with tab_all:
                 "<span style='width:160px;display:inline-block'>" +
                 (c["name"] or "—") + "</span>"
                 "<span style='color:" + color + ";width:140px;display:inline-block'>" +
-                icon + " " + seg_info.get("label","") + "</span>"
+                icon + " " + rfm_segment_label(seg_key) + "</span>"
                 "<span style='color:#9a9485'>R/F/M " + rfm_str +
                 " · ฿{:,.0f}".format(c.get("total_spent",0)) +
                 " · " + (c.get("last_order","")[:10] or "—") + "</span>"

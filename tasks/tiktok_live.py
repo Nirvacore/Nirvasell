@@ -21,9 +21,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "tiktok_live",
-    "label": "TikTok Live Captions",
     "icon": "🔴",
-    "blurb": "10 captions สั้นสำหรับ Live + hook เปิด + closing pitch — CF trigger ทุกชิ้น",
     "output_fields": ["go_live_hook", "captions", "closer"],
 }
 

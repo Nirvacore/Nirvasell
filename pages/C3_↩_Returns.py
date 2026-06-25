@@ -51,8 +51,8 @@ with st.expander(t("ret.log_title"), expanded=False):
         rc1, rc2, rc3 = st.columns(3)
         with rc1:
             r_order = st.text_input(t("ret.f_order"),
-                                    placeholder="ORD-001")
-            r_sku = st.text_input(t("ret.f_sku"), placeholder="SKU-001")
+                                    placeholder=t("comm.order_ph"))
+            r_sku = st.text_input(t("ret.f_sku"), placeholder=t("common.sku_ph"))
         with rc2:
             r_platform = st.selectbox(t("ret.f_platform"), rt.PLATFORMS)
             r_reason = st.selectbox(

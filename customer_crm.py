@@ -42,16 +42,16 @@ def init():
 
 
 NOTE_TYPES = {
-    "general":    {"label": "ทั่วไป",      "icon": "📝"},
-    "preference": {"label": "ความชอบ",     "icon": "❤️"},
-    "complaint":  {"label": "ร้องเรียน",    "icon": "⚠️"},
-    "feedback":   {"label": "ฟีดแบ็ค",     "icon": "💬"},
-    "vip":        {"label": "VIP",         "icon": "💎"},
+    "general":    {"icon": "📝"},
+    "preference": {"icon": "❤️"},
+    "complaint":  {"icon": "⚠️"},
+    "feedback":   {"icon": "💬"},
+    "vip":        {"icon": "💎"},
 }
 
 DEFAULT_TAGS = [
-    "VIP", "ซื้อประจำ", "ชอบของแถม", "ชอบส่งด่วน", "ขอใบกำกับ",
-    "ระวังเรื่องสี", "ส่งรีวิวดี", "เคยร้องเรียน", "รอติดตาม",
+    "vip", "regular", "loves_freebie", "prefers_express", "needs_invoice",
+    "color_sensitive", "good_reviewer", "had_complaint", "needs_followup",
 ]
 
 

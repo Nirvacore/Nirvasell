@@ -7,6 +7,7 @@ import shop_settings as ss
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import carrier_name, label_style_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -24,15 +25,16 @@ tab_manual, tab_order, tab_bulk = st.tabs([
 with tab_manual:
     st.subheader(t("lbl.manual_title"))
     style = st.selectbox(t("lbl.style"),
-                          list(lg.LABEL_STYLES.keys()),
-                          format_func=lambda k: lg.LABEL_STYLES[k])
+                          list(lg.LABEL_STYLES),
+                          format_func=label_style_label)
     with st.form("label_form"):
         col1, col2 = st.columns(2)
         order_id   = col1.text_input(t("lbl.f_order_id"))
         buyer_name = col2.text_input(t("lbl.f_buyer"))
         phone      = col1.text_input(t("lbl.f_phone"))
         carrier    = col2.selectbox(t("lbl.f_carrier"),
-                                     ["kerry","flash","j&t","thaipost","best","ninja_van"])
+                                     ["kerry","flash","j&t","thaipost","best","ninja_van"],
+                                     format_func=carrier_name)
         address    = st.text_area(t("lbl.f_address"), height=80)
         col3, col4 = st.columns(2)
         total_price = col3.number_input(t("lbl.f_total"), min_value=0.0, step=10.0)
@@ -40,7 +42,7 @@ with tab_manual:
         notes       = st.text_input(t("lbl.f_notes"))
 
         items_raw = st.text_area(t("lbl.f_items"),
-                                  placeholder="SKU001:2, SKU002:1",
+                                  placeholder=t("lbl.sku_qty_ph"),
                                   height=60)
         if st.form_submit_button(t("lbl.generate_btn")):
             items = []
@@ -68,9 +70,9 @@ with tab_manual:
 
 with tab_order:
     st.subheader(t("lbl.order_title"))
-    order_key = st.text_input(t("lbl.order_id_input"), placeholder="123 or ORD-001")
-    style2 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES.keys()),
-                           format_func=lambda k: lg.LABEL_STYLES[k], key="style2")
+    order_key = st.text_input(t("lbl.order_id_input"), placeholder=t("lbl.order_id_ph"))
+    style2 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES),
+                           format_func=label_style_label, key="style2")
     if st.button(t("lbl.fetch_btn")) and order_key:
         result2 = lg.from_order(order_key, style=style2)
         st.code(result2, language=None)
@@ -80,11 +82,11 @@ with tab_bulk:
     st.caption(t("lbl.bulk_caption"))
     bulk_input = st.text_area(
         t("lbl.bulk_orders"),
-        placeholder="order_id,buyer_name,phone,address,total,cod\n1001,สมชาย,0812345678,กรุงเทพ,350,350",
+        placeholder=t("lbl.orders_csv_ph"),
         height=150,
     )
-    style3 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES.keys()),
-                           format_func=lambda k: lg.LABEL_STYLES[k], key="style3")
+    style3 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES),
+                           format_func=label_style_label, key="style3")
     if st.button(t("lbl.bulk_btn")) and bulk_input:
         lines = [l.strip() for l in bulk_input.strip().split("\n") if l.strip()]
         if lines and "," in lines[0] and not lines[0][0].isdigit():

@@ -9,11 +9,11 @@ import db
 
 PLATFORMS = ["shopee", "lazada", "tiktok", "facebook", "google", "other"]
 SENTIMENTS = {
-    5: {"icon": "⭐⭐⭐⭐⭐", "label": "ดีมาก", "color": "#4d6c5c"},
-    4: {"icon": "⭐⭐⭐⭐", "label": "ดี", "color": "#4a7ab5"},
-    3: {"icon": "⭐⭐⭐", "label": "พอใช้", "color": "#c5963d"},
-    2: {"icon": "⭐⭐", "label": "ไม่ดี", "color": "#c54c4c"},
-    1: {"icon": "⭐", "label": "แย่มาก", "color": "#8b1a1a"},
+    5: {"icon": "⭐⭐⭐⭐⭐", "color": "#4d6c5c"},
+    4: {"icon": "⭐⭐⭐⭐", "color": "#4a7ab5"},
+    3: {"icon": "⭐⭐⭐", "color": "#c5963d"},
+    2: {"icon": "⭐⭐", "color": "#c54c4c"},
+    1: {"icon": "⭐", "color": "#8b1a1a"},
 }
 
 

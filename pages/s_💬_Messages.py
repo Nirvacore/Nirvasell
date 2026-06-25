@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import msg_cat_label
 
 st.set_page_config(page_title="nirva.sell · Messages",
                    page_icon="💬", layout="wide")
@@ -65,14 +66,14 @@ selected_cat = st.selectbox(
     t("msg.filter_cat"),
     cat_keys,
     format_func=lambda k: ("📋 " + t("msg.all")) if k == "all"
-    else (mt.CATEGORIES[k]["icon"] + " " + mt.CATEGORIES[k]["label"]),
+    else (mt.CATEGORIES[k]["icon"] + " " + msg_cat_label(k)),
     label_visibility="collapsed",
 )
 
 filtered = templates if selected_cat == "all" else mt.by_category(selected_cat)
 
 for tmpl in filtered:
-    cat_info = mt.CATEGORIES.get(tmpl["category"], {"icon": "📝", "label": ""})
+    cat_info = mt.CATEGORIES.get(tmpl["category"], {"icon": "📝"})
     uses = tmpl.get("use_count", 0)
 
     with st.expander(
@@ -139,7 +140,7 @@ with st.expander(t("msg.create_title"), expanded=False):
             m_cat = st.selectbox(
                 t("msg.f_category"),
                 list(mt.CATEGORIES.keys()),
-                format_func=lambda k: mt.CATEGORIES[k]["icon"] + " " + mt.CATEGORIES[k]["label"],
+                format_func=lambda k: mt.CATEGORIES[k]["icon"] + " " + msg_cat_label(k),
             )
         with mc2:
             m_plat = st.selectbox(t("msg.f_platform"), mt.PLATFORMS)

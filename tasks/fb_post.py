@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "fb_post",
-    "label": "Facebook Page Post",
     "icon": "📘",
-    "blurb": "Post ยาวพอประมาณ มี story + engagement hook สำหรับ FB Page",
     "output_fields": ["post", "hashtags"],
 }
 

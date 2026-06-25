@@ -42,19 +42,15 @@ def init():
 
 
 PROMO_TYPES = {
-    "flash_sale":    {"label": "Flash Sale",      "icon": "⚡"},
-    "coupon":        {"label": "Coupon Code",      "icon": "🎟️"},
-    "free_shipping": {"label": "Free Shipping",    "icon": "🚚"},
-    "bundle":        {"label": "Bundle Deal",      "icon": "🎁"},
-    "threshold":     {"label": "Spend Threshold",  "icon": "💰"},
-    "bogo":          {"label": "Buy 1 Get 1",      "icon": "🤝"},
+    "flash_sale":    {"icon": "⚡"},
+    "coupon":        {"icon": "🎟️"},
+    "free_shipping": {"icon": "🚚"},
+    "bundle":        {"icon": "🎁"},
+    "threshold":     {"icon": "💰"},
+    "bogo":          {"icon": "🤝"},
 }
 
-DISCOUNT_TYPES = {
-    "percent": "ลด %",
-    "fixed":   "ลดบาท",
-    "free_ship": "ฟรีค่าส่ง",
-}
+DISCOUNT_TYPES = ["percent", "fixed", "free_ship"]
 
 STATUSES = ["draft", "active", "ended", "cancelled"]
 

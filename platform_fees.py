@@ -1,9 +1,10 @@
 """Platform Fee Calculator — Shopee / Lazada / TikTok actual fee breakdown."""
 from __future__ import annotations
 
+from i18n_inline import platform_fee_notes, platform_name
+
 PLATFORMS = {
     "shopee": {
-        "label": "Shopee",
         "icon": "🟠",
         "color": "#f26222",
         "fees": {
@@ -12,10 +13,8 @@ PLATFORMS = {
             "transaction": 0.0,      # transaction fee %
             "vat_on_fees": 7.0,      # VAT on commission
         },
-        "notes": "ค่า GP 3% + Payment 2% + VAT on commission",
     },
     "lazada": {
-        "label": "Lazada",
         "icon": "🔵",
         "color": "#0d1a8b",
         "fees": {
@@ -24,10 +23,8 @@ PLATFORMS = {
             "transaction": 0.0,
             "vat_on_fees": 7.0,
         },
-        "notes": "ค่า GP 4% + Payment 1.5% + VAT",
     },
     "tiktok_shop": {
-        "label": "TikTok Shop",
         "icon": "⚫",
         "color": "#2d2d2d",
         "fees": {
@@ -36,10 +33,8 @@ PLATFORMS = {
             "transaction": 0.0,
             "vat_on_fees": 7.0,
         },
-        "notes": "ค่า GP 2% + Payment 1% + VAT (โปรโมชั่นช่วงแรก)",
     },
     "facebook": {
-        "label": "Facebook",
         "icon": "🔷",
         "color": "#1877f2",
         "fees": {
@@ -48,10 +43,8 @@ PLATFORMS = {
             "transaction": 0.0,
             "vat_on_fees": 0.0,
         },
-        "notes": "ไม่มีค่า GP (ขายตรงผ่าน Live/DM)",
     },
     "line": {
-        "label": "Line OA",
         "icon": "🟢",
         "color": "#06c755",
         "fees": {
@@ -60,7 +53,6 @@ PLATFORMS = {
             "transaction": 0.0,
             "vat_on_fees": 0.0,
         },
-        "notes": "ค่า Payment Gateway ถ้าใช้ LINE Pay",
     },
 }
 
@@ -83,7 +75,7 @@ def calculate(platform: str, sale_price: float,
 
     return {
         "platform": platform,
-        "label": p["label"],
+        "label": platform_name(platform),
         "revenue": round(revenue, 2),
         "commission": commission,
         "payment_fee": payment_fee,
@@ -95,7 +87,7 @@ def calculate(platform: str, sale_price: float,
         "cogs": round(cogs, 2),
         "gross_profit": round(gross_profit, 2),
         "margin_pct": margin_pct,
-        "notes": p["notes"],
+        "notes": platform_fee_notes(platform),
     }
 
 
@@ -124,7 +116,8 @@ def fee_summary_from_orders(days: int = 30) -> list[dict]:
         ).fetchall()
     result = []
     for r in rows:
-        p = PLATFORMS.get(r["platform"], PLATFORMS.get("shopee"))
+        plat = r["platform"]
+        p = PLATFORMS.get(plat, PLATFORMS.get("shopee"))
         fees_cfg = p["fees"]
         rev = r["revenue"]
         commission = round(rev * fees_cfg["commission"] / 100, 2)
@@ -132,8 +125,8 @@ def fee_summary_from_orders(days: int = 30) -> list[dict]:
         vat_on_comm = round(commission * fees_cfg["vat_on_fees"] / 100, 2)
         total_fees = commission + payment_fee + vat_on_comm
         result.append({
-            "platform": r["platform"],
-            "label": p["label"],
+            "platform": plat,
+            "label": platform_name(plat),
             "revenue": round(rev, 2),
             "orders": r["orders"],
             "total_fees": round(total_fees, 2),

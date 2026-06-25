@@ -39,19 +39,16 @@ HISTORY_PATH = DATA / "policy_history.jsonl"
 DEFAULT_SOURCES: list[dict] = [
     {
         "platform": "shopee",
-        "label": "Shopee TH — Seller fees policy",
         "url": "https://help.shopee.co.th/portal/4/article/77254-นโยบายค่าธรรมเนียม",
         "language": "th",
     },
     {
         "platform": "lazada",
-        "label": "Lazada TH — Seller fees",
         "url": "https://sellercenter.lazada.co.th/seller/helpcenter/article/360001236693",
         "language": "th",
     },
     {
         "platform": "tiktok",
-        "label": "TikTok Shop TH — Fees",
         "url": "https://seller-th.tiktok.com/university/article/10005775",
         "fallback_urls": [
             "https://seller.tiktokglobalshop.com/university/essay?knowledge_id=10005775",
@@ -60,7 +57,6 @@ DEFAULT_SOURCES: list[dict] = [
     },
     {
         "platform": "amazon_us",
-        "label": "Amazon US — Selling Fees",
         "url": "https://sell.amazon.com/pricing",
         "fallback_urls": [
             "https://sellercentral.amazon.com/help/hub/reference/G200336920",
@@ -69,7 +65,6 @@ DEFAULT_SOURCES: list[dict] = [
     },
     {
         "platform": "ebay_us",
-        "label": "eBay US — Fees overview",
         "url": "https://www.ebay.com/sellercenter/run-your-store/fees",
         "language": "en",
     },

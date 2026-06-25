@@ -13,6 +13,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import promo_type_label, promo_status_label
 
 st.set_page_config(page_title="nirva.sell · Promotions",
                    page_icon="🎯", layout="wide")
@@ -47,8 +48,9 @@ with st.expander(t("promo.create_title"), expanded=s["total"] == 0):
             promo_type = st.selectbox(
                 t("promo.f_type"),
                 list(pm.PROMO_TYPES.keys()),
-                format_func=lambda k: pm.PROMO_TYPES[k]["icon"] + " " +
-                pm.PROMO_TYPES[k]["label"],
+                format_func=lambda k: (
+                    pm.PROMO_TYPES[k]["icon"] + " " + promo_type_label(k)
+                ),
             )
             discount_value = st.number_input(
                 t("promo.f_value"),
@@ -116,7 +118,10 @@ for p in promos:
         if p["promo_type"] == "fixed_off"
         else "—"
     )
-    code_str = (" · CODE: " + p["coupon_code"]) if p.get("coupon_code") else ""
+    code_str = (
+        t("promo.code_line", code=p["coupon_code"])
+        if p.get("coupon_code") else ""
+    )
 
     st.markdown(
         "<div style='display:flex;justify-content:space-between;align-items:center;"
@@ -127,9 +132,10 @@ for p in promos:
         "<span style='font-size:11px;color:#9a9485;margin-left:6px'>"
         + disc_str + code_str + "</span></div>"
         "<div style='display:flex;gap:10px;align-items:center'>"
-        "<span style='font-size:12px'>ใช้ " + str(p["use_count"]) + " ครั้ง</span>"
+        "<span style='font-size:12px'>" +
+        t("promo.use_count", n=p["use_count"]) + "</span>"
         "<span style='font-size:12px;font-weight:600;color:" + s_color + "'>"
-        + s_info["icon"] + " " + s_info["label"] + "</span>"
+        + s_info["icon"] + " " + promo_status_label(p["status"]) + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )

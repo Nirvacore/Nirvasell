@@ -5,27 +5,23 @@ Tracks redemption history."""
 from __future__ import annotations
 from datetime import datetime
 import db
-
+from i18n import t
+from i18n_inline import loyalty_reward_name, loyalty_tier
 
 TIERS = {
-    "bronze": {"min_points": 0, "discount_pct": 0, "icon": "🥉",
-               "label": "Bronze", "label_th": "บรอนซ์"},
-    "silver": {"min_points": 500, "discount_pct": 3, "icon": "🥈",
-               "label": "Silver", "label_th": "ซิลเวอร์"},
-    "gold": {"min_points": 2000, "discount_pct": 5, "icon": "🥇",
-             "label": "Gold", "label_th": "โกลด์"},
-    "platinum": {"min_points": 5000, "discount_pct": 8, "icon": "💎",
-                 "label": "Platinum", "label_th": "แพลทินัม"},
-    "diamond": {"min_points": 15000, "discount_pct": 12, "icon": "👑",
-                "label": "Diamond", "label_th": "ไดมอนด์"},
+    "bronze": {"min_points": 0, "discount_pct": 0, "icon": "🥉"},
+    "silver": {"min_points": 500, "discount_pct": 3, "icon": "🥈"},
+    "gold": {"min_points": 2000, "discount_pct": 5, "icon": "🥇"},
+    "platinum": {"min_points": 5000, "discount_pct": 8, "icon": "💎"},
+    "diamond": {"min_points": 15000, "discount_pct": 12, "icon": "👑"},
 }
 
 REWARDS = [
-    {"id": "free_ship", "name": "ส่งฟรี", "points": 100, "icon": "🚚"},
-    {"id": "discount_5", "name": "ส่วนลด 5%", "points": 200, "icon": "🏷"},
-    {"id": "discount_10", "name": "ส่วนลด 10%", "points": 500, "icon": "🎫"},
-    {"id": "free_gift", "name": "ของแถม", "points": 300, "icon": "🎁"},
-    {"id": "priority_ship", "name": "จัดส่งด่วน", "points": 150, "icon": "⚡"},
+    {"id": "free_ship", "points": 100, "icon": "🚚"},
+    {"id": "discount_5", "points": 200, "icon": "🏷"},
+    {"id": "discount_10", "points": 500, "icon": "🎫"},
+    {"id": "free_gift", "points": 300, "icon": "🎁"},
+    {"id": "priority_ship", "points": 150, "icon": "⚡"},
 ]
 
 POINTS_PER_BAHT = 1
@@ -101,7 +97,7 @@ def earn_points(customer_key: str, amount: float,
             INSERT INTO loyalty_history (customer_key, action, points,
                                          balance_after, description)
             VALUES (?, 'earn', ?, ?, ?)
-        """, (customer_key, pts, new_bal, description or "ซื้อสินค้า"))
+        """, (customer_key, pts, new_bal, description or t("loy.earn_default_desc")))
 
     return {"earned": pts, "balance": new_bal, "tier": new_tier}
 
@@ -109,7 +105,7 @@ def earn_points(customer_key: str, amount: float,
 def redeem_points(customer_key: str, reward_id: str) -> dict:
     reward = next((r for r in REWARDS if r["id"] == reward_id), None)
     if not reward:
-        return {"success": False, "error": "ไม่พบรางวัลนี้"}
+        return {"success": False, "error_key": "loy.err_reward_not_found"}
 
     with db.conn() as c:
         existing = c.execute(
@@ -118,7 +114,7 @@ def redeem_points(customer_key: str, reward_id: str) -> dict:
         ).fetchone()
 
         if not existing or existing["points"] < reward["points"]:
-            return {"success": False, "error": "แต้มไม่พอ"}
+            return {"success": False, "error_key": "loy.err_insufficient_points"}
 
         new_bal = existing["points"] - reward["points"]
         c.execute(
@@ -129,9 +125,13 @@ def redeem_points(customer_key: str, reward_id: str) -> dict:
             INSERT INTO loyalty_history (customer_key, action, points,
                                          balance_after, description)
             VALUES (?, 'redeem', ?, ?, ?)
-        """, (customer_key, -reward["points"], new_bal, reward["name"]))
+        """, (customer_key, -reward["points"], new_bal, loyalty_reward_name(reward_id)))
 
-    return {"success": True, "balance": new_bal, "reward": reward["name"]}
+    return {
+        "success": True,
+        "balance": new_bal,
+        "reward": loyalty_reward_name(reward_id),
+    }
 
 
 def customer_loyalty(customer_key: str) -> dict:
@@ -170,7 +170,7 @@ def customer_loyalty(customer_key: str) -> dict:
         "lifetime_points": row["lifetime_points"],
         "tier": tier,
         "tier_icon": tier_info["icon"],
-        "tier_label": tier_info["label_th"],
+        "tier_label": loyalty_tier(tier),
         "discount_pct": tier_info["discount_pct"],
         "next_tier": next_tier,
         "history": [dict(h) for h in history],

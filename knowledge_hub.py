@@ -373,28 +373,30 @@ def stats() -> dict:
 
 # ---- Starter content (opt-in) ----------------------------------------------
 # Seeded only when the user explicitly asks — Nirva invites, never forces.
+_STARTER_SPECS = [
+    ("vision", "vision", "north-star", True),
+    ("mission", "mission", "north-star", True),
+    ("value", "value", "culture", True),
+    ("sop", "sop", "process", False),
+    ("decision", "decision", "log", False),
+]
+
+
 def seed_starter() -> int:
     """Create a small starter graph (Vision → Mission → Values + a few SOP /
     decision stubs, all linked). Skips anything already present. Returns the
     number of nodes created."""
-    starters = [
-        ("vision", "Vision", "ทำไมองค์กรนี้ถึงมีอยู่ — ภาพอนาคตที่เราอยากไปให้ถึง",
-         "north-star", True),
-        ("mission", "Mission", "เราทำอะไรในทุก ๆ วันเพื่อไปสู่ Vision",
-         "north-star", True),
-        ("value", "Core Values", "หลักการที่เรายึดถือเวลาตัดสินใจ", "culture", True),
-        ("sop", "SOP: ตัวอย่างขั้นตอนการทำงาน",
-         "อธิบายขั้นตอนงานหลักทีละขั้น เพื่อให้ความรู้ไม่หายไปกับคน", "process", False),
-        ("decision", "Decision Log: ตัวอย่างการตัดสินใจ",
-         "บันทึกว่าตัดสินใจอะไร เพราะอะไร ใครเกี่ยวข้อง", "log", False),
-    ]
+    from i18n import t
+
     created: dict[str, int] = {}
     n = 0
-    for node_type, title, body, tags, pinned in starters:
+    for node_type, seed_key, tags, pinned in _STARTER_SPECS:
         existing = list_nodes(node_type=node_type, limit=1)
         if existing:
             created[node_type] = existing[0]["id"]
             continue
+        title = t(f"kh.seed.{seed_key}.title")
+        body = t(f"kh.seed.{seed_key}.body")
         nid = add_node(title, body=body, node_type=node_type, tags=tags,
                        status="draft", source="seed", pinned=pinned)
         created[node_type] = nid

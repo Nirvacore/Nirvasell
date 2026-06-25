@@ -90,7 +90,7 @@ with c1:
             )
 
 with c2:
-    st.caption(f"💾 ขนาดประมาณ: {size_b / 1024:.1f} KB")
+    st.caption(t("account.export_size_kb", kb=f"{size_b / 1024:.1f}"))
 
 
 # ---- Danger zone — delete own account ------------------------------------

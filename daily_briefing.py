@@ -55,8 +55,8 @@ def _today_tasks(today: str) -> list[dict]:
     if pending and pending["cnt"] > 0:
         tasks.append({
             "icon": "📦",
-            "task": "Ship " + str(pending["cnt"]) + " pending orders",
-            "task_th": "จัดส่ง " + str(pending["cnt"]) + " ออเดอร์ค้าง",
+            "task_key": "ship_pending",
+            "count": pending["cnt"],
             "priority": "high",
             "page": "PickPack",
         })
@@ -69,8 +69,8 @@ def _today_tasks(today: str) -> list[dict]:
     if low and low["cnt"] > 0:
         tasks.append({
             "icon": "⚠️",
-            "task": str(low["cnt"]) + " items low stock",
-            "task_th": str(low["cnt"]) + " สินค้าสต็อกต่ำ",
+            "task_key": "low_stock",
+            "count": low["cnt"],
             "priority": "high",
             "page": "Turnover",
         })
@@ -84,8 +84,8 @@ def _today_tasks(today: str) -> list[dict]:
         if cod and cod["cnt"] > 0:
             tasks.append({
                 "icon": "💰",
-                "task": "Collect " + str(cod["cnt"]) + " COD payments",
-                "task_th": "เก็บเงิน COD " + str(cod["cnt"]) + " รายการ",
+                "task_key": "cod_collect",
+                "count": cod["cnt"],
                 "priority": "medium",
                 "page": "COD",
             })
@@ -101,8 +101,8 @@ def _today_tasks(today: str) -> list[dict]:
         if today_followups:
             tasks.append({
                 "icon": "💬",
-                "task": str(len(today_followups)) + " customer follow-ups due",
-                "task_th": str(len(today_followups)) + " ลูกค้าต้องติดตาม",
+                "task_key": "followups",
+                "count": len(today_followups),
                 "priority": "medium",
                 "page": "CRM",
             })
@@ -117,8 +117,8 @@ def _today_tasks(today: str) -> list[dict]:
         if today_posts:
             tasks.append({
                 "icon": "📱",
-                "task": str(len(today_posts)) + " posts scheduled for today",
-                "task_th": str(len(today_posts)) + " โพสต์ที่นัดไว้วันนี้",
+                "task_key": "posts_today",
+                "count": len(today_posts),
                 "priority": "medium",
                 "page": "Calendar",
             })
@@ -133,8 +133,8 @@ def _today_tasks(today: str) -> list[dict]:
     if oos and oos["cnt"] > 0:
         tasks.append({
             "icon": "🔴",
-            "task": str(oos["cnt"]) + " items out of stock",
-            "task_th": str(oos["cnt"]) + " สินค้าหมด",
+            "task_key": "out_of_stock",
+            "count": oos["cnt"],
             "priority": "high",
             "page": "Products",
         })
@@ -154,8 +154,8 @@ def _alerts() -> list[dict]:
             alerts.append({
                 "icon": "↩️",
                 "level": "danger",
-                "msg": "Return rate " + str(round(s["return_rate"], 1)) + "% — above 5% threshold",
-                "msg_th": "อัตราคืนสินค้า " + str(round(s["return_rate"], 1)) + "% — เกิน 5%",
+                "alert_key": "return_rate_high",
+                "rate": round(s["return_rate"], 1),
             })
     except Exception:
         pass
@@ -168,8 +168,7 @@ def _alerts() -> list[dict]:
             alerts.append({
                 "icon": "💧",
                 "level": "danger",
-                "msg": "Cash flow negative for next 30 days!",
-                "msg_th": "กระแสเงินสดติดลบ 30 วันข้างหน้า!",
+                "alert_key": "cashflow_negative",
             })
     except Exception:
         pass

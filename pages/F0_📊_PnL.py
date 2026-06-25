@@ -6,6 +6,7 @@ import pnl_statement as pnl
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import expense_category, quarter_short_label
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -58,7 +59,7 @@ def _render_pnl(p: dict):
             bar_w = int(pct * 2)
             row_html = (
                 "<div style='margin:2px 0;font-size:0.83rem'>"
-                "<span style='color:#9a9485;width:160px;display:inline-block'>" + cat + "</span>"
+                "<span style='color:#9a9485;width:160px;display:inline-block'>" + expense_category(cat) + "</span>"
                 "<div style='display:inline-block;background:#2a2a2a;width:" +
                 str(bar_w) + "px;height:10px;vertical-align:middle'></div>"
                 " <span style='color:#d4d0c8'>฿{:,.0f}".format(amt) +
@@ -84,10 +85,10 @@ with tab_quarter:
     year_q = col1.number_input(t("pnl.year"), value=datetime.now().year,
                                 min_value=2020, max_value=2040, step=1, key="pnl_yr_q")
     qtr    = col2.selectbox(t("pnl.quarter"), [1,2,3,4],
-                             format_func=lambda q: "Q" + str(q))
+                             format_func=quarter_short_label)
     with st.spinner(t("pnl.loading")):
         data_q = pnl.quarterly(int(year_q), int(qtr))
-    st.subheader(t("pnl.quarter_label") + " Q" + str(qtr) + " " + str(year_q))
+    st.subheader(data_q["label"])
     _render_pnl(data_q)
 
 with tab_year:
@@ -95,7 +96,7 @@ with tab_year:
                               min_value=2020, max_value=2040, step=1, key="pnl_yr_a")
     with st.spinner(t("pnl.loading")):
         data_a = pnl.annual(int(year_a))
-    st.subheader(str(year_a))
+    st.subheader(data_a["label"])
     _render_pnl(data_a)
 
 with tab_trend:

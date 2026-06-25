@@ -6,6 +6,7 @@ import shop_settings as ss
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import platform_name, carrier_name
 from sidebar import render_sidebar
 
 apply_theme()
@@ -56,6 +57,7 @@ with tab_defaults:
                 current.get("default_carrier","kerry")
             ) if current.get("default_carrier","kerry") in
                 ["kerry","flash","j&t","thaipost","best","ninja_van","other"] else 0,
+            format_func=carrier_name,
         )
         platform = col2.selectbox(
             t("set.f_platform"),
@@ -64,6 +66,7 @@ with tab_defaults:
                 current.get("default_platform","shopee")
             ) if current.get("default_platform","shopee") in
                 ["shopee","lazada","tiktok_shop","facebook","line","direct"] else 0,
+            format_func=platform_name,
         )
         low_stock = col1.number_input(
             t("set.f_low_stock"), min_value=1, max_value=100,

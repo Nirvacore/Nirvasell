@@ -9,10 +9,11 @@ seller tier, volume discounts, and promotional periods.
 Weight tiers in kg, prices in THB."""
 from __future__ import annotations
 
+from i18n_inline import carrier_name, ship_est_days
+
 
 CARRIERS: dict[str, dict] = {
     "kerry": {
-        "name": "Kerry Express",
         "icon": "🟠",
         "rates": [
             (0.5, 40), (1, 50), (2, 60), (3, 70), (5, 90),
@@ -20,10 +21,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 15,
         "cod_pct": 3.0,
-        "est_days": "1-2",
+        "est_key": "1_2",
     },
     "flash": {
-        "name": "Flash Express",
         "icon": "🟡",
         "rates": [
             (0.5, 30), (1, 35), (2, 45), (3, 55), (5, 75),
@@ -31,10 +31,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.5,
-        "est_days": "1-3",
+        "est_key": "1_3",
     },
     "jt": {
-        "name": "J&T Express",
         "icon": "🔴",
         "rates": [
             (0.5, 29), (1, 35), (2, 45), (3, 55), (5, 72),
@@ -42,10 +41,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.5,
-        "est_days": "1-3",
+        "est_key": "1_3",
     },
     "thaipost_ems": {
-        "name": "Thailand Post EMS",
         "icon": "🔵",
         "rates": [
             (0.5, 37), (1, 42), (2, 52), (3, 62), (5, 82),
@@ -53,10 +51,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 0,
         "cod_pct": 0,
-        "est_days": "1-2",
+        "est_key": "1_2",
     },
     "thaipost_reg": {
-        "name": "Thailand Post ลงทะเบียน",
         "icon": "🔵",
         "rates": [
             (0.5, 25), (1, 30), (2, 35), (3, 40), (5, 55),
@@ -64,10 +61,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 0,
         "cod_pct": 0,
-        "est_days": "3-5",
+        "est_key": "3_5",
     },
     "best": {
-        "name": "Best Express",
         "icon": "🟢",
         "rates": [
             (0.5, 28), (1, 33), (2, 42), (3, 52), (5, 70),
@@ -75,10 +71,9 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.0,
-        "est_days": "2-4",
+        "est_key": "2_4",
     },
     "ninja": {
-        "name": "NinjaVan",
         "icon": "🟣",
         "rates": [
             (0.5, 35), (1, 40), (2, 50), (3, 60), (5, 80),
@@ -86,7 +81,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 15,
         "cod_pct": 3.0,
-        "est_days": "2-3",
+        "est_key": "2_3",
     },
 }
 
@@ -123,12 +118,12 @@ def compare_all(weight_kg: float, order_amount: float = 0,
         total = ship + cod
         results.append({
             "carrier": key,
-            "name": info["name"],
+            "name": carrier_name(key),
             "icon": info["icon"],
             "shipping": ship,
             "cod_fee": cod,
             "total": total,
-            "est_days": info["est_days"],
+            "est_days": ship_est_days(info["est_key"]),
         })
     return sorted(results, key=lambda x: x["total"])
 
