@@ -421,3 +421,18 @@ def pnl_period_label(*, mode: str, year: int, month: int | None = None) -> str:
     if mode == "quarterly" and month is not None:
         return tax_quarter_label(month, year)
     return t("pnl.period_year_fmt", year=year)
+
+
+def localized(key: str, lang: str, **fmt) -> str:
+    entry = STRINGS.get(key, {})
+    val = entry.get(lang) or entry.get("en") or entry.get("th") or key
+    if fmt:
+        try:
+            return val.format(**fmt)
+        except (KeyError, IndexError):
+            return val
+    return val
+
+
+def label_style_label(style: str) -> str:
+    return _lookup("lbl.style", style)

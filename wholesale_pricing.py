@@ -15,6 +15,13 @@ DEFAULT_TIERS = [
 ]
 
 
+def _tier_key(min_qty: int) -> str:
+    for tier in DEFAULT_TIERS:
+        if tier["min_qty"] == min_qty:
+            return tier["tier_key"]
+    return ""
+
+
 def init():
     with db.conn() as c:
         c.executescript("""
@@ -39,7 +46,8 @@ def set_tiers(sku: str, tiers: list) -> None:
                 INSERT INTO wholesale_tiers
                     (sku, min_qty, tier_label, price, discount_pct)
                 VALUES (?, ?, ?, ?, ?)
-            """, (sku, tier["min_qty"], tier.get("label", ""),
+            """, (sku, tier["min_qty"],
+                  ws_tier_label(tier["tier_key"]) if tier.get("tier_key") else tier.get("label", ""),
                   tier.get("price"), tier.get("discount_pct", 0)))
 
 
@@ -63,9 +71,11 @@ def get_tiers(sku: str) -> list:
         if price and r["cost_price"]:
             margin = round((price - r["cost_price"]) / price * 100, 1)
 
+        tier_key = _tier_key(r["min_qty"])
         result.append({
             "min_qty": r["min_qty"],
-            "label": r["tier_label"],
+            "tier_key": tier_key,
+            "label": ws_tier_label(tier_key) if tier_key else (r["tier_label"] or ""),
             "price": price,
             "discount_pct": r["discount_pct"],
             "retail_price": r["sell_price"],
@@ -101,7 +111,7 @@ def price_for_qty(sku: str, qty: int) -> dict:
         "sku": sku,
         "qty": qty,
         "price": applicable["price"],
-        "tier_label": applicable["label"],
+        "tier_label": ws_tier_label(_tier_key(applicable["min_qty"])) or applicable.get("label", ""),
         "discount_pct": applicable["discount_pct"],
         "total": round((applicable["price"] or 0) * qty, 0),
     }
