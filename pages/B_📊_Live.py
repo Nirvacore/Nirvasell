@@ -17,7 +17,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
-from i18n_inline import live_promo_label
+from i18n_inline import currency_label, live_promo_label
 from _components import page_header
 
 db.init()
@@ -68,7 +68,7 @@ else:
             delta = (live - static) / static * 100 if static else 0
             table.append({
                 t("live.currency"): cc,
-                t("live.label"): fees_mod.CURRENCY_LABELS.get(cc, ""),
+                t("live.label"): currency_label(cc),
                 f"฿1 {t('live.equals')}": live,
                 f"{t('live.vs_static')} %": delta,
             })

@@ -9,9 +9,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "customer_qa",
-    "label": "💬 Q&A สำหรับลูกค้า",
     "icon": "💬",
-    "blurb": "8 คำถาม-คำตอบสำเร็จรูป ลดเวลาตอบแชต",
     "output_fields": ["qa_text", "qa_count"],
 }
 

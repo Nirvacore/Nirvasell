@@ -20,10 +20,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "review_reply",
-    "label": "Auto Review Reply (AI)",
     "icon": "💬",
-    "blurb": ("ตอบรีวิวลูกค้าแบบ context-aware — อ่านรีวิวจริง + ข้อมูลสินค้า "
-              "→ ตอบตามจริง ไม่ใช่ template สำเร็จรูป"),
     "output_fields": ["reply", "tone", "follow_up"],
 }
 

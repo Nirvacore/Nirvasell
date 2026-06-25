@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "listing",
-    "label": "Marketplace Listing",
     "icon": "🛒",
-    "blurb": "Title + Description + Tags สำหรับ Shopee / Lazada / TikTok bulk upload",
     "output_fields": ["title", "description", "tags"],
 }
 

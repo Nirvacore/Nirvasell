@@ -9,9 +9,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "ad_creative",
-    "label": "🎨 Ad Creative",
     "icon": "🎨",
-    "blurb": "คำขายแบบโฆษณา + คำสั่งภาพ (พื้นหลัง, overlay, สัดส่วน) สำหรับ ads",
     "output_fields": [
         "headline", "subhead", "body", "primary_cta",
         "image_direction", "overlay_text", "best_aspect",

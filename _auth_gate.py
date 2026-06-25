@@ -479,7 +479,8 @@ def _social_provider_buttons(providers: list[str]):
     for p in providers:
         meta = social_oauth.PROVIDERS.get(p, {})
         icon = meta.get("icon", "🔑")
-        label_text = meta.get("label", p.title())
+        from i18n_inline import oauth_provider_label
+        label_text = oauth_provider_label(p)
         label = f"{icon} {t('auth.signin_with').format(provider=label_text)}"
         url = social_oauth.authorize_url(p, callback)
         if not url:

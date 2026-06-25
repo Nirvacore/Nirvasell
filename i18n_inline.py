@@ -54,7 +54,7 @@ def platform_name(slug: str | None) -> str:
     return _lookup("plat", slug)
 
 
-_CARRIER_SLUGS = {"j&t": "j_and_t", "ninjavan": "ninja_van"}
+_CARRIER_SLUGS = {"j&t": "j_and_t", "ninjavan": "ninja_van", "jt": "j_and_t", "ninja": "ninja_van"}
 
 
 def carrier_name(slug: str) -> str:
@@ -364,3 +364,32 @@ def img_preset_label(preset: str) -> str:
 
 def policy_source_label(platform: str) -> str:
     return _lookup("policy.src", platform)
+
+
+def task_label(key: str, *, mod=None) -> str:
+    i18n_key = f"task.{key}.label"
+    if i18n_key in STRINGS:
+        return t(i18n_key)
+    if mod is not None:
+        return mod.TASK.get("label", key)
+    return key.replace("_", " ").title()
+
+
+def task_blurb(key: str, *, mod=None) -> str:
+    i18n_key = f"task.{key}.blurb"
+    if i18n_key in STRINGS:
+        return t(i18n_key)
+    if mod is not None:
+        return mod.TASK.get("blurb", "")
+    return ""
+
+
+def currency_label(code: str) -> str:
+    key = f"curr.{code}"
+    if key in STRINGS:
+        return t(key)
+    return code
+
+
+def oauth_provider_label(provider: str) -> str:
+    return _lookup("oauth.provider", provider)

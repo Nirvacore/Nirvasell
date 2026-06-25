@@ -7,6 +7,7 @@ import db
 import fees as fees_mod
 import auth
 from i18n import LANGS, DEFAULT_LANG, t
+from i18n_inline import currency_label
 
 
 def render():
@@ -191,7 +192,7 @@ def render():
             t("sidebar.currency"),
             currencies,
             index=currencies.index(st.session_state.get("currency", "THB")),
-            format_func=lambda c: f"{c} · {fees_mod.CURRENCY_LABELS.get(c, c)}",
+            format_func=lambda c: f"{c} · {currency_label(c)}",
             key="_currency_input",
         )
         st.session_state["currency"] = currency

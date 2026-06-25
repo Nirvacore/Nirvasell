@@ -507,11 +507,12 @@ def content_status_chips(product_id: int) -> str:
             "SELECT task FROM content WHERE product_id = ?", (product_id,)
         ).fetchall()
     tasks_done = {r["task"] for r in rows}
+    from i18n_inline import task_label
     chips = []
     for k, m in task_registry.ALL.items():
         done = k in tasks_done
         opacity = 1.0 if done else 0.3
-        tooltip = m.TASK["label"]
+        tooltip = task_label(k, mod=m)
         icon = m.TASK["icon"]
         chips.append(
             f"<span class='nirva-tag' style='opacity:{opacity}' title='{tooltip}'>{icon}</span>"

@@ -11,9 +11,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "all_in_one",
-    "label": "ทำให้หมด",
     "icon": "✨",
-    "blurb": "1 call → Listing + LINE + FB + TikTok + Email + Q&A + Promo",
     "output_fields": [],
     "is_mega": True,
 }

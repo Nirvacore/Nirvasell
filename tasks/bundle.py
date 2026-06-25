@@ -8,9 +8,7 @@ from ._base import parse_json
 
 TASK = {
     "key": "bundle",
-    "label": "Bundle Proposal",
     "icon": "📦",
-    "blurb": "รวมหลายสินค้าเป็นชุด พร้อมส่วนลด + คำขายชุดนั้น",
     "output_fields": ["bundle_name", "pitch", "suggested_discount_pct", "bundle_price"],
     "multi_product": True,
 }

@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "line_post",
-    "label": "LINE OA Broadcast",
     "icon": "💚",
-    "blurb": "ข้อความสั้นๆ สำหรับ broadcast ทาง LINE Official Account",
     "output_fields": ["message", "hook", "cta"],
 }
 

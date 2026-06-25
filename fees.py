@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from i18n_inline import currency_label
+
 
 # ---- Currencies -----------------------------------------------------------
 
@@ -31,13 +33,6 @@ FX_RATES_VS_THB: dict[str, float] = {
     "TWD": 0.918,
     "INR": 2.40,
     "AED": 0.105,
-}
-
-CURRENCY_LABELS: dict[str, str] = {
-    "THB": "บาท ฿", "USD": "US $", "EUR": "€", "GBP": "£",
-    "JPY": "¥", "CNY": "¥ CNY", "SGD": "S$", "AUD": "A$",
-    "MYR": "RM", "IDR": "Rp", "VND": "₫", "PHP": "₱",
-    "KRW": "₩", "HKD": "HK$", "TWD": "NT$", "INR": "₹", "AED": "د.إ",
 }
 
 
@@ -62,7 +57,7 @@ def convert_from_thb(thb: float, target: str, prefer_live: bool = True) -> float
 
 def format_money(thb: float, currency: str = "THB") -> str:
     val = convert_from_thb(thb, currency)
-    sym = CURRENCY_LABELS.get(currency, currency)
+    sym = currency_label(currency)
     if currency in ("JPY", "IDR", "VND", "KRW", "TWD"):
         return f"{sym} {val:,.0f}"
     if currency == "THB":

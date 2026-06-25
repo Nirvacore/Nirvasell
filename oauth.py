@@ -40,7 +40,6 @@ import magic_link  # for the HMAC secret
 
 PROVIDERS = {
     "google": {
-        "label":          "Google",
         "icon":           "🇬",
         "color":          "#4285f4",
         "authorize":      "https://accounts.google.com/o/oauth2/v2/auth",
@@ -51,7 +50,6 @@ PROVIDERS = {
         "setup_hint":     "Create OAuth client → Web app → paste the callback URL below as the Authorized redirect URI",
     },
     "microsoft": {
-        "label":          "Microsoft",
         "icon":           "Ⓜ",
         "color":          "#0078d4",
         # `common` lets any Microsoft account (work / school / personal) log in.
@@ -63,7 +61,6 @@ PROVIDERS = {
         "setup_hint":     "App registrations → New → Redirect URI (Web) = the callback URL below → Certificates & secrets → New client secret",
     },
     "github": {
-        "label":          "GitHub",
         "icon":           "🐙",
         "color":          "#24292e",
         "authorize":      "https://github.com/login/oauth/authorize",
@@ -75,7 +72,6 @@ PROVIDERS = {
         "setup_hint":     "New OAuth App → Authorization callback URL = the URL below",
     },
     "facebook": {
-        "label":          "Facebook",
         "icon":           "📘",
         "color":          "#1877f2",
         "authorize":      "https://www.facebook.com/v18.0/dialog/oauth",
@@ -86,7 +82,6 @@ PROVIDERS = {
         "setup_hint":     "Create app → Facebook Login → Settings → Valid OAuth Redirect URIs = the URL below",
     },
     "line": {
-        "label":          "LINE",
         "icon":           "💚",
         "color":          "#06c755",
         "authorize":      "https://access.line.me/oauth2/v2.1/authorize",
