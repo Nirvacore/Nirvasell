@@ -54,6 +54,27 @@ def platform_name(slug: str | None) -> str:
     return _lookup("plat", slug)
 
 
+_PLATFORM_ICONS = {
+    "shopee": "🛒", "lazada": "🟧", "tiktok": "🎵", "tiktok_shop": "🎵",
+    "facebook": "📘", "line": "💚", "instagram": "📸", "website": "🌐",
+    "shopify": "🛍", "amazon": "📦", "ebay": "🏷", "etsy": "🧶",
+}
+
+
+def platform_display(slug: str | None, *, empty: str = "—") -> str:
+    if not slug:
+        return empty
+    icon = _PLATFORM_ICONS.get(slug, "📦")
+    return icon + " " + platform_name(slug)
+
+
+def platform_list_display(plats: str) -> str:
+    if not plats or not plats.strip():
+        return "—"
+    parts = [p.strip() for p in plats.replace(" · ", ",").split(",") if p.strip()]
+    return " · ".join(platform_display(p) for p in parts)
+
+
 _CARRIER_SLUGS = {"j&t": "j_and_t", "ninjavan": "ninja_van", "jt": "j_and_t", "ninja": "ninja_van"}
 
 

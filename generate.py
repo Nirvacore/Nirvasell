@@ -49,7 +49,8 @@ def _with_context(prompt: str,
     extras: list[str] = []
     if campaign:
         from i18n_inline import live_promo_label
-        label = live_promo_label(campaign.get("slug", "")) or "upcoming sale"
+        from i18n import t
+        label = live_promo_label(campaign.get("slug", "")) or t("gen.upcoming_sale_fallback")
         days = campaign.get("days_until")
         date_str = campaign.get("date")
         extras.append(

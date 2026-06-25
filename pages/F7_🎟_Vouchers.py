@@ -6,7 +6,7 @@ import vouchers as vc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import voucher_tpl_label
+from i18n_inline import voucher_tpl_label, platform_display
 from sidebar import render_sidebar
 
 _VOUCHER_TYPES = {
@@ -77,7 +77,8 @@ with tab_create:
         starts    = col7.text_input(t("vou.f_start"), placeholder=t("common.date_ph"))
         expires   = col8.text_input(t("vou.f_expires"), placeholder=t("common.date_ph"))
         platforms = st.multiselect(t("vou.f_platforms"),
-                                    ["shopee","lazada","tiktok_shop","facebook","line"])
+                                    ["shopee","lazada","tiktok_shop","facebook","line"],
+                                    format_func=platform_display)
         if st.form_submit_button(t("vou.create_btn")):
             if code.strip():
                 ok, msg = vc.add(code=code.strip(), label=label_v,
