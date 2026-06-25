@@ -436,3 +436,19 @@ def localized(key: str, lang: str, **fmt) -> str:
 
 def label_style_label(style: str) -> str:
     return _lookup("lbl.style", style)
+
+
+_URGENCY_I18N = {
+    "critical": "rst.filter_critical",
+    "urgent": "rst.filter_urgent",
+    "soon": "rst.filter_soon",
+    "ok": "rst.filter_ok",
+    "none": "rstock.urg_none",
+}
+
+
+def restock_urgency_label(urgency: str) -> str:
+    key = _URGENCY_I18N.get(urgency)
+    if key:
+        return t(key)
+    return urgency

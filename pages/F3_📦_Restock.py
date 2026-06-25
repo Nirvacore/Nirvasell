@@ -6,6 +6,7 @@ import restock_planner as rp
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import restock_urgency_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -71,7 +72,7 @@ with tab_plan:
             days_str = "∞" if days_out >= 999 else str(int(days_out)) + t("rstock.days")
             table_html += "<td style='padding:4px 8px;color:" + color + "'>" + days_str + "</td>"
             table_html += "<td style='padding:4px 8px;color:#d4d0c8'>" + str(p["reorder_qty"]) + "</td>"
-            table_html += "<td style='padding:4px 8px'>" + icon + " " + p["urgency"] + "</td>"
+            table_html += "<td style='padding:4px 8px'>" + icon + " " + restock_urgency_label(p["urgency"]) + "</td>"
             table_html += "</tr>"
         table_html += "</table>"
         st.html(table_html)
@@ -88,7 +89,7 @@ with tab_order:
                 t("rstock.sel_sku"),
                 [p["sku"] for p in skus_need],
                 format_func=lambda s: next((p["sku"] + " — " + (p["name"] or "") +
-                                             " (suggest " + str(p["reorder_qty"]) + ")"
+                                             t("rstock.suggest_qty_fmt", n=p["reorder_qty"])
                                              for p in skus_need if p["sku"]==s), s),
             )
             sel_p = next((p for p in skus_need if p["sku"]==sel_sku), {})
