@@ -13,6 +13,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
+from i18n_inline import expense_category
 
 st.set_page_config(page_title="nirva.sell · P&L", page_icon="📊", layout="wide")
 apply_theme()
@@ -101,7 +102,7 @@ ROWS = [
     ("exp_header",       t("pnl.expenses_header"),    None,                True,  False),
 ]
 for cat, amt in stmt["expenses"].items():
-    ROWS.append((cat, "  " + cat.capitalize(), -amt, False, False))
+    ROWS.append((cat, "  " + expense_category(cat), -amt, False, False))
 ROWS += [
     ("total_exp",        t("pnl.total_expenses"),     -stmt["total_expenses"], False, True),
     ("spacer3", "", None, False, False),

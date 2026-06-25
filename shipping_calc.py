@@ -9,7 +9,7 @@ seller tier, volume discounts, and promotional periods.
 Weight tiers in kg, prices in THB."""
 from __future__ import annotations
 
-from i18n_inline import carrier_name
+from i18n_inline import carrier_name, ship_est_days
 
 
 CARRIERS: dict[str, dict] = {
@@ -21,7 +21,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 15,
         "cod_pct": 3.0,
-        "est_days": "1-2",
+        "est_key": "1_2",
     },
     "flash": {
         "icon": "🟡",
@@ -31,7 +31,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.5,
-        "est_days": "1-3",
+        "est_key": "1_3",
     },
     "jt": {
         "icon": "🔴",
@@ -41,7 +41,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.5,
-        "est_days": "1-3",
+        "est_key": "1_3",
     },
     "thaipost_ems": {
         "icon": "🔵",
@@ -51,7 +51,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 0,
         "cod_pct": 0,
-        "est_days": "1-2",
+        "est_key": "1_2",
     },
     "thaipost_reg": {
         "icon": "🔵",
@@ -61,7 +61,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 0,
         "cod_pct": 0,
-        "est_days": "3-5",
+        "est_key": "3_5",
     },
     "best": {
         "icon": "🟢",
@@ -71,7 +71,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 10,
         "cod_pct": 2.0,
-        "est_days": "2-4",
+        "est_key": "2_4",
     },
     "ninja": {
         "icon": "🟣",
@@ -81,7 +81,7 @@ CARRIERS: dict[str, dict] = {
         ],
         "cod_fee": 15,
         "cod_pct": 3.0,
-        "est_days": "2-3",
+        "est_key": "2_3",
     },
 }
 
@@ -123,7 +123,7 @@ def compare_all(weight_kg: float, order_amount: float = 0,
             "shipping": ship,
             "cod_fee": cod,
             "total": total,
-            "est_days": info["est_days"],
+            "est_days": ship_est_days(info["est_key"]),
         })
     return sorted(results, key=lambda x: x["total"])
 

@@ -6,7 +6,7 @@ import shipping_calc as sc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import carrier_name
+from i18n_inline import carrier_name, ship_est_days
 from sidebar import render_sidebar
 
 apply_theme()
@@ -122,7 +122,7 @@ with tab_rates:
         with st.expander(info["icon"] + " " + carrier_name(key) +
                           " · COD " + str(info["cod_pct"]) + "%"):
             col1, col2 = st.columns(2)
-            col1.write(t("ship.est_days") + ": " + info["est_days"])
+            col1.write(t("ship.est_days") + ": " + ship_est_days(info["est_key"]))
             col2.write(t("ship.cod_flat") + ": ฿" + str(info["cod_fee"]))
             rate_html = "<table style='font-size:0.82rem;border-collapse:collapse'>"
             rate_html += "<tr style='color:#9a9485'><th style='padding:2px 8px'>" + t("ship.weight") + "</th><th style='padding:2px 8px'>" + t("ship.rate_price") + "</th></tr>"

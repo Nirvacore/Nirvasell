@@ -6,17 +6,18 @@ Gross Profit - Expenses = Net Profit
 Used for tax filing, business review, investor reporting."""
 from __future__ import annotations
 import db
+from i18n_inline import pnl_period_label
 
 
 def _fetch_period(year: int, month: int | None = None) -> dict:
     if month:
         date_from = "{:04d}-{:02d}-01".format(year, month)
         date_to = "{:04d}-{:02d}-31".format(year, month)
-        label = "{:04d}-{:02d}".format(year, month)
+        label = pnl_period_label(mode="monthly", year=year, month=month)
     else:
         date_from = "{:04d}-01-01".format(year)
         date_to = "{:04d}-12-31".format(year)
-        label = str(year)
+        label = pnl_period_label(mode="annual", year=year)
 
     with db.conn() as c:
         rev_row = c.execute("""
@@ -141,7 +142,7 @@ def quarterly(year: int, quarter: int) -> dict:
     net_margin = (net_profit / net_revenue * 100) if net_revenue > 0 else 0
 
     return {
-        "label": "Q{} {}".format(quarter, year),
+        "label": pnl_period_label(mode="quarterly", year=year, month=quarter),
         "revenue": round(revenue, 2),
         "returns": round(returns, 2),
         "net_revenue": round(net_revenue, 2),

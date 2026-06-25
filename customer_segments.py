@@ -3,7 +3,7 @@ from __future__ import annotations
 import db
 
 DEFAULT_TAGS = [
-    "VIP", "wholesale", "reseller", "returning", "new",
+    "vip", "wholesale", "reseller", "returning", "new",
     "problematic", "local", "export", "dormant",
 ]
 

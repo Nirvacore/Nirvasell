@@ -12,7 +12,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
-from i18n_inline import marketplace_fee_label
+from i18n_inline import marketplace_fee_label, markup_preset_label
 from _components import page_header
 
 db.init()
@@ -156,9 +156,9 @@ def load_presets() -> list[dict]:
         except Exception:
             pass
     return [
-        {"label": "Electronics / IT", "markup": 15, "round_to": 10},
-        {"label": "Accessories",       "markup": 30, "round_to": 10},
-        {"label": "Premium / Luxury",  "markup": 20, "round_to": 50},
+        {"preset_key": "electronics", "markup": 15, "round_to": 10},
+        {"preset_key": "accessories", "markup": 30, "round_to": 10},
+        {"preset_key": "premium", "markup": 20, "round_to": 50},
     ]
 
 presets = load_presets()
@@ -191,14 +191,14 @@ with c2:
             break
         with cols[i]:
             if st.button(
-                f"{apply_label}: {row['label']}",
+                f"{apply_label}: {markup_preset_label(row.to_dict())}",
                 key=f"apply_{i}",
                 width='stretch',
             ):
                 st.session_state["markup"] = int(row["markup"])
                 st.session_state["round_to"] = int(row["round_to"])
                 st.success(t("settings.preset_applied",
-                             label=row["label"],
+                             label=markup_preset_label(row.to_dict()),
                              markup=int(row["markup"]),
                              round_to=int(row["round_to"])))
                 st.rerun()

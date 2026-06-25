@@ -393,3 +393,31 @@ def currency_label(code: str) -> str:
 
 def oauth_provider_label(provider: str) -> str:
     return _lookup("oauth.provider", provider)
+
+
+def oauth_setup_hint(provider: str) -> str:
+    return _lookup("oauth.setup_hint", provider)
+
+
+def markup_preset_label(row: dict) -> str:
+    preset_key = row.get("preset_key")
+    if preset_key:
+        key = f"settings.preset_{preset_key}"
+        if key in STRINGS:
+            return t(key)
+    label = row.get("label")
+    if label:
+        return label
+    return ""
+
+
+def ship_est_days(est_key: str) -> str:
+    return _lookup("ship.est", est_key)
+
+
+def pnl_period_label(*, mode: str, year: int, month: int | None = None) -> str:
+    if mode == "monthly" and month is not None:
+        return t("pnl.period_month_fmt", year=year, month=f"{month:02d}")
+    if mode == "quarterly" and month is not None:
+        return tax_quarter_label(month, year)
+    return t("pnl.period_year_fmt", year=year)
