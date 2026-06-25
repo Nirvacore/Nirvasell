@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import goal_type_label
 
 st.set_page_config(page_title="nirva.sell · Goals",
                    page_icon="🎯", layout="wide")
@@ -40,7 +41,7 @@ with st.expander(t("goal.set_title"), expanded=False):
             info = goals.METRICS[mk]
             with cols[i]:
                 g_inputs[mk] = st.number_input(
-                    info["icon"] + " " + info["label"],
+                    info["icon"] + " " + goal_type_label(mk),
                     min_value=0.0, value=0.0, step=1000.0,
                     key="_goal_" + mk,
                 )

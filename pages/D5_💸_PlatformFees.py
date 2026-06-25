@@ -6,6 +6,7 @@ import platform_fees as pf
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import platform_fee_notes, platform_name
 from sidebar import render_sidebar
 
 apply_theme()
@@ -23,7 +24,7 @@ with tab_calc:
     st.subheader(t("fees.calc_title"))
     col1, col2 = st.columns(2)
     platform = col1.selectbox(t("fees.sel_platform"), list(pf.PLATFORMS.keys()),
-                               format_func=lambda k: pf.PLATFORMS[k]["label"])
+                               format_func=platform_name)
     qty = col2.number_input(t("fees.qty"), min_value=1, value=1, step=1)
     sale_price = col1.number_input(t("fees.sale_price"), min_value=0.0, step=10.0, value=200.0)
     cost_price = col2.number_input(t("fees.cost_price"), min_value=0.0, step=10.0, value=100.0)
@@ -43,7 +44,7 @@ with tab_calc:
         r5.metric(t("fees.gross_profit"), "฿{:,.2f}".format(result["gross_profit"]))
         r6.metric(t("fees.margin"), str(result["margin_pct"]) + "%")
 
-        st.caption(pf.PLATFORMS[platform]["notes"])
+        st.caption(platform_fee_notes(platform))
 
         st.divider()
         st.write("**" + t("fees.fee_breakdown") + "**")

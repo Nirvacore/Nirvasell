@@ -12,6 +12,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import marketplace_fee_label
 from _components import page_header
 
 db.init()
@@ -32,7 +33,7 @@ current = fees_mod.load()
 edited: dict[str, dict] = {}
 
 for key, f in current.items():
-    with st.expander(f["label"], expanded=True):
+    with st.expander(marketplace_fee_label(key), expanded=True):
         c1, c2, c3, c4 = st.columns(4)
         edited[key] = {
             **f,

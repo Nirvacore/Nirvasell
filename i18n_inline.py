@@ -54,7 +54,7 @@ def platform_name(slug: str | None) -> str:
     return _lookup("plat", slug)
 
 
-_CARRIER_SLUGS = {"j&t": "j_and_t"}
+_CARRIER_SLUGS = {"j&t": "j_and_t", "ninjavan": "ninja_van"}
 
 
 def carrier_name(slug: str) -> str:
@@ -344,3 +344,23 @@ def tax_expense_cat_label(cat: str) -> str:
 
 def tax_quarter_label(quarter: int, year: int) -> str:
     return t("tax.quarter_fmt", q=quarter, year=year)
+
+
+def marketplace_fee_label(slug: str) -> str:
+    return _lookup("fee.plat", slug)
+
+
+def platform_fee_notes(slug: str) -> str:
+    return _lookup("pfee.notes", slug)
+
+
+def cf_week_label(week: int) -> str:
+    return t("cf.week_fmt", n=week)
+
+
+def img_preset_label(preset: str) -> str:
+    return _lookup("img.preset", preset)
+
+
+def policy_source_label(platform: str) -> str:
+    return _lookup("policy.src", platform)

@@ -7,6 +7,7 @@ from __future__ import annotations
 from datetime import datetime, date
 
 import db
+from i18n_inline import goal_type_label, goal_type_unit
 
 
 def init():
@@ -23,11 +24,11 @@ def init():
 
 
 METRICS = {
-    "revenue":       {"label": "ยอดขาย (฿)",      "icon": "💰", "unit": "฿"},
-    "orders":        {"label": "จำนวนออเดอร์",      "icon": "📦", "unit": ""},
-    "profit":        {"label": "กำไร (฿)",          "icon": "💵", "unit": "฿"},
-    "new_customers": {"label": "ลูกค้าใหม่",        "icon": "👥", "unit": ""},
-    "avg_order":     {"label": "AOV (฿)",           "icon": "🎯", "unit": "฿"},
+    "revenue":       {"icon": "💰"},
+    "orders":        {"icon": "📦"},
+    "profit":        {"icon": "💵"},
+    "new_customers": {"icon": "👥"},
+    "avg_order":     {"icon": "🎯"},
 }
 
 
@@ -97,9 +98,9 @@ def goals_for_period(period: str = "") -> list[dict]:
         d["days_remaining"] = max(days_in_month - days_elapsed, 0)
 
         info = METRICS.get(d["metric"], {})
-        d["label"] = info.get("label", d["metric"])
+        d["label"] = goal_type_label(d["metric"])
         d["icon"] = info.get("icon", "🎯")
-        d["unit"] = info.get("unit", "")
+        d["unit"] = goal_type_unit(d["metric"])
 
         results.append(d)
 
