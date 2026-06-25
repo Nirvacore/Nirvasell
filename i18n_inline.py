@@ -329,3 +329,18 @@ def sup_cat_label(cat: str) -> str:
 
 def sup_term_label(term: str) -> str:
     return _lookup("sup.term", term)
+
+
+def event_category_label(category: str) -> str:
+    key = f"alerts.cat_{category}"
+    if key in STRINGS:
+        return t(key)
+    return category.replace("_", " ").title()
+
+
+def tax_expense_cat_label(cat: str) -> str:
+    return _lookup("tax.exp_cat", cat)
+
+
+def tax_quarter_label(quarter: int, year: int) -> str:
+    return t("tax.quarter_fmt", q=quarter, year=year)

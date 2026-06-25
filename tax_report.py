@@ -65,7 +65,6 @@ def quarterly(year: int, quarter: int) -> dict:
     return {
         "year": year,
         "quarter": quarter,
-        "quarter_label": "Q" + str(quarter) + " " + str(year),
         "revenue": round(revenue, 2),
         "returns": round(returns_amt, 2),
         "net_revenue": round(net_revenue, 2),
