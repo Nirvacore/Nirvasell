@@ -6,7 +6,7 @@ import tax_report as tr
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import tax_expense_cat_label, tax_quarter_label
+from i18n_inline import tax_expense_cat_label, tax_quarter_label, quarter_short_label
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -44,7 +44,7 @@ with tab_q:
     sel_year = col_y.number_input(t("tax.sel_year"), min_value=2020, max_value=year+1,
                                    value=year, step=1)
     sel_q = col_q.selectbox(t("tax.sel_quarter"), [1, 2, 3, 4],
-                             format_func=lambda q: "Q" + str(q))
+                             format_func=quarter_short_label)
     try:
         data = tr.quarterly(int(sel_year), sel_q)
         q1, q2, q3 = st.columns(3)

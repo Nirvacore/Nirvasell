@@ -13,7 +13,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
-from i18n_inline import expense_category
+from i18n_inline import expense_category, quarter_short_label
 
 st.set_page_config(page_title="nirva.sell · P&L", page_icon="📊", layout="wide")
 apply_theme()
@@ -45,7 +45,7 @@ with col_m:
                                 value=today.month, step=1, key="_pnl_month")
     elif mode == "quarterly":
         month = st.selectbox(t("pnl.f_quarter"), [1, 2, 3, 4],
-                             format_func=lambda q: "Q" + str(q),
+                             format_func=quarter_short_label,
                              key="_pnl_qtr")
     else:
         month = None

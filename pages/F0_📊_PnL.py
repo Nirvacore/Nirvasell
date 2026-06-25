@@ -6,7 +6,7 @@ import pnl_statement as pnl
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import expense_category
+from i18n_inline import expense_category, quarter_short_label
 from sidebar import render_sidebar
 from datetime import datetime
 
@@ -85,7 +85,7 @@ with tab_quarter:
     year_q = col1.number_input(t("pnl.year"), value=datetime.now().year,
                                 min_value=2020, max_value=2040, step=1, key="pnl_yr_q")
     qtr    = col2.selectbox(t("pnl.quarter"), [1,2,3,4],
-                             format_func=lambda q: "Q" + str(q))
+                             format_func=quarter_short_label)
     with st.spinner(t("pnl.loading")):
         data_q = pnl.quarterly(int(year_q), int(qtr))
     st.subheader(data_q["label"])

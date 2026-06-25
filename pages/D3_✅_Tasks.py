@@ -6,7 +6,7 @@ import team_tasks as tt
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
-from i18n_inline import task_priority_label, task_status_label
+from i18n_inline import task_priority_label, task_status_label, task_category_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -66,7 +66,7 @@ with tab_board:
             with st.expander(label):
                 if tk.get("description"):
                     st.write(tk["description"])
-                st.write(t("task.category") + ": " + tk.get("category",""))
+                st.write(t("task.category") + ": " + task_category_label(tk.get("category", "")))
                 col_s, col_d, col_x = st.columns(3)
                 if col_s.button(t("task.mark_done"), key="td_" + str(tk["id"])):
                     tt.update_status(tk["id"], "done")
@@ -85,7 +85,8 @@ with tab_add:
         title = st.text_input(t("task.f_title"))
         desc  = st.text_area(t("task.f_desc"), height=80)
         col1, col2 = st.columns(2)
-        category = col1.selectbox(t("task.f_category"), tt.CATEGORIES)
+        category = col1.selectbox(t("task.f_category"), tt.CATEGORIES,
+                                   format_func=task_category_label)
         priority = col2.selectbox(t("task.f_priority"),
                                    list(tt.PRIORITIES.keys()),
                                    format_func=task_priority_label)

@@ -216,6 +216,14 @@ def task_status_label(status: str) -> str:
     return _lookup("task.status", status)
 
 
+def task_category_label(category: str) -> str:
+    return _lookup("task.cat", category)
+
+
+def quarter_short_label(q: int) -> str:
+    return t("common.quarter_short", q=q)
+
+
 def flash_status_label(status: str) -> str:
     return _lookup("flash.status", status)
 
