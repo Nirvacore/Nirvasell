@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "email_blast",
-    "label": "Email Blast",
     "icon": "✉️",
-    "blurb": "Subject + Preheader + Body HTML สำหรับ email campaign",
     "output_fields": ["subject", "preheader", "body_text", "body_html"],
 }
 

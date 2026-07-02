@@ -54,7 +54,7 @@ with tab_create:
     with st.form("tax_form"):
         col1, col2 = st.columns(2)
         cust_name = col1.text_input(t("tax.f_customer"), placeholder=t("tax.f_customer_hint"))
-        cust_tax  = col2.text_input(t("tax.f_tax_id"), placeholder="0-0000-00000-00-0")
+        cust_tax  = col2.text_input(t("tax.f_tax_id"), placeholder=t("common.tax_id_ph"))
         cust_addr = st.text_area(t("tax.f_address"), height=60)
 
         st.subheader(t("tax.items_title") + " (VAT " + str(ti.VAT_RATE) + "%)")

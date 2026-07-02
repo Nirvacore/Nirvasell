@@ -85,10 +85,10 @@ if "first_product" not in completed:
     with cA:
         st.markdown(f"**{t('onboard.step2_manual')}**")
         with st.form("ob_product"):
-            name = st.text_input(t("catalog.col_name"), placeholder="Logitech MX Master 3S")
-            brand = st.text_input(t("catalog.col_brand"), placeholder="Logitech")
+            name = st.text_input(t("catalog.col_name"), placeholder=t("onboard.demo_name_ph"))
+            brand = st.text_input(t("catalog.col_brand"), placeholder=t("onboard.demo_brand_ph"))
             price = st.number_input(t("common.price"), min_value=0, value=3200)
-            specs = st.text_area(t("catalog.col_specs"), placeholder="8K DPI, wireless, 70-day battery")
+            specs = st.text_area(t("catalog.col_specs"), placeholder=t("onboard.demo_specs_ph"))
             if st.form_submit_button(t("onboard.step2_add"), type="primary"):
                 if name.strip():
                     try:

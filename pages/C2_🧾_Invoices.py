@@ -47,7 +47,7 @@ with st.expander(t("inv.create_title"), expanded=False):
 
     ic1, ic2 = st.columns(2)
     with ic1:
-        order_id = st.text_input(t("inv.f_order_id"), placeholder="ORD-001")
+        order_id = st.text_input(t("inv.f_order_id"), placeholder=t("comm.order_ph"))
         customer_name = st.text_input(t("inv.f_customer"),
                                       placeholder=t("inv.customer_ph"))
         customer_address = st.text_area(t("inv.f_address"),

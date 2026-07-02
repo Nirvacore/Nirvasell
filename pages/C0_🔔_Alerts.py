@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import alert_kind_name
 
 st.set_page_config(page_title="nirva.sell · Alerts",
                    page_icon="🔔", layout="wide")
@@ -77,7 +78,7 @@ with st.form("alert_config"):
         with c1:
             st.markdown(
                 "<div style='padding-top:8px'>" + info["icon"] +
-                " <strong>" + info["label"] + "</strong></div>",
+                " <strong>" + alert_kind_name(atype) + "</strong></div>",
                 unsafe_allow_html=True,
             )
         with c2:

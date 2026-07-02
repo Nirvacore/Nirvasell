@@ -3,19 +3,19 @@ from __future__ import annotations
 import db
 
 PROMO_TYPES = {
-    "percentage_off": {"label": "ลด %", "icon": "🏷"},
-    "fixed_off":      {"label": "ลดบาท", "icon": "💴"},
-    "flash_sale":     {"label": "Flash Sale", "icon": "⚡"},
-    "buy_x_get_y":   {"label": "ซื้อ X แถม Y", "icon": "🎁"},
-    "free_shipping":  {"label": "ฟรีค่าส่ง", "icon": "🚚"},
-    "bundle_deal":    {"label": "ซื้อเป็นชุด", "icon": "📦"},
+    "percentage_off": {"icon": "🏷"},
+    "fixed_off":      {"icon": "💴"},
+    "flash_sale":     {"icon": "⚡"},
+    "buy_x_get_y":    {"icon": "🎁"},
+    "free_shipping":  {"icon": "🚚"},
+    "bundle_deal":    {"icon": "📦"},
 }
 
 STATUSES = {
-    "draft":  {"label": "ร่าง", "icon": "📝", "color": "#9a9485"},
-    "active": {"label": "กำลังใช้", "icon": "✅", "color": "#4d6c5c"},
-    "paused": {"label": "หยุดชั่วคราว", "icon": "⏸", "color": "#c5963d"},
-    "ended":  {"label": "สิ้นสุด", "icon": "⏹", "color": "#7a7569"},
+    "draft":  {"icon": "📝", "color": "#9a9485"},
+    "active": {"icon": "✅", "color": "#4d6c5c"},
+    "paused": {"icon": "⏸", "color": "#c5963d"},
+    "ended":  {"icon": "⏹", "color": "#7a7569"},
 }
 
 

@@ -18,6 +18,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import event_category_label
 from _components import page_header
 
 db.init()
@@ -102,7 +103,7 @@ else:
             f"padding:12px 14px;margin-bottom:8px'>"
             f"<div style='display:flex;align-items:center;gap:8px;font-size:11px;"
             f"color:#9a9485'>"
-            f"{_cat_icon} <span>{_evt['category'].upper()}</span> · {_ts}</div>"
+            f"{_cat_icon} <span>{event_category_label(_evt['category'])}</span> · {_ts}</div>"
             f"<div style='font-weight:{_bold};color:#1f1f1f;font-size:14px;"
             f"margin-top:4px'>{_sev_icon} {_evt['title']}</div>"
             f"{_body_html}"

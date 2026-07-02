@@ -6,6 +6,7 @@ import vouchers as vc
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import voucher_tpl_label, platform_display
 from sidebar import render_sidebar
 
 _VOUCHER_TYPES = {
@@ -62,8 +63,8 @@ with tab_create:
     st.subheader(t("vou.create_title"))
     with st.form("voucher_form"):
         col1, col2 = st.columns(2)
-        code      = col1.text_input(t("vou.f_code"), placeholder="SALE20")
-        label_v   = col2.text_input(t("vou.f_label"), placeholder="Songkran Sale")
+        code      = col1.text_input(t("vou.f_code"), placeholder=t("vou.code_ph"))
+        label_v   = col2.text_input(t("vou.f_label"), placeholder=t("vou.label_ph"))
         col3, col4 = st.columns(2)
         dtype     = col3.selectbox(t("vou.f_type"),
                                     ["percent","fixed","shipping"],
@@ -73,10 +74,11 @@ with tab_create:
         min_spend = col5.number_input(t("vou.f_min_spend"), min_value=0.0, step=50.0)
         max_uses  = col6.number_input(t("vou.f_max_uses"), min_value=0, step=10)
         col7, col8 = st.columns(2)
-        starts    = col7.text_input(t("vou.f_start"), placeholder="YYYY-MM-DD")
-        expires   = col8.text_input(t("vou.f_expires"), placeholder="YYYY-MM-DD")
+        starts    = col7.text_input(t("vou.f_start"), placeholder=t("common.date_ph"))
+        expires   = col8.text_input(t("vou.f_expires"), placeholder=t("common.date_ph"))
         platforms = st.multiselect(t("vou.f_platforms"),
-                                    ["shopee","lazada","tiktok_shop","facebook","line"])
+                                    ["shopee","lazada","tiktok_shop","facebook","line"],
+                                    format_func=platform_display)
         if st.form_submit_button(t("vou.create_btn")):
             if code.strip():
                 ok, msg = vc.add(code=code.strip(), label=label_v,
@@ -94,7 +96,7 @@ with tab_create:
     st.subheader(t("vou.suggest_title"))
     sel_tmpl = st.selectbox(t("vou.sel_template"),
                               list(vc.TEMPLATES.keys()),
-                              format_func=lambda k: vc.TEMPLATES[k]["icon"] + " " + vc.TEMPLATES[k]["label"])
+                              format_func=lambda k: vc.TEMPLATES[k]["icon"] + " " + voucher_tpl_label(k))
     if sel_tmpl:
         suggested_code = vc.suggest_code(sel_tmpl)
         tmpl = vc.TEMPLATES[sel_tmpl]
@@ -108,7 +110,7 @@ with tab_create:
             from datetime import datetime, timedelta
             start_s = datetime.now().strftime("%Y-%m-%d")
             end_s   = (datetime.now() + timedelta(days=s["duration_days"])).strftime("%Y-%m-%d")
-            vc.add(code=suggested_code, label=tmpl["label"],
+            vc.add(code=suggested_code, label=voucher_tpl_label(sel_tmpl),
                     discount_type=s["discount_type"], discount_value=s["discount_value"],
                     min_spend=s["min_spend"], starts_at=start_s, expires_at=end_s)
             st.success(t("vou.created"))
@@ -122,7 +124,7 @@ with tab_templates:
         row_html = (
             "<div style='margin:4px 0;font-size:0.84rem'>"
             "<span style='width:28px;display:inline-block'>" + tmpl["icon"] + "</span>"
-            "<b style='color:#d4d0c8;width:220px;display:inline-block'>" + tmpl["label"] + "</b>"
+            "<b style='color:#d4d0c8;width:220px;display:inline-block'>" + voucher_tpl_label(key) + "</b>"
             "<span style='color:#9a9485'>" + disc_str +
             (t("vou.min_spend_line", amount=str(s["min_spend"])) if s["min_spend"] > 0 else "") +
             " · " + str(s["duration_days"]) + t("vou.days") + "</span>"

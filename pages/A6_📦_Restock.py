@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import restock_urgency_label
 
 st.set_page_config(page_title="nirva.sell · Restock",
                    page_icon="📦", layout="wide")
@@ -85,10 +86,10 @@ urgency_filter = st.selectbox(
     ["all", "critical", "urgent", "soon", "ok"],
     format_func=lambda x: {
         "all": "🔍 " + t("rst.filter_all"),
-        "critical": "🔴 " + t("rst.filter_critical"),
-        "urgent": "🟡 " + t("rst.filter_urgent"),
-        "soon": "🔵 " + t("rst.filter_soon"),
-        "ok": "🟢 " + t("rst.filter_ok"),
+        "critical": "🔴 " + restock_urgency_label("critical"),
+        "urgent": "🟡 " + restock_urgency_label("urgent"),
+        "soon": "🔵 " + restock_urgency_label("soon"),
+        "ok": "🟢 " + restock_urgency_label("ok"),
     }.get(x, x),
     key="_rst_filter",
 )

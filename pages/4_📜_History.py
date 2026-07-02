@@ -17,6 +17,7 @@ from _auth_gate import require_auth
 from _components import split_images, edit_content, empty_state, toast, friendly_error, page_header, stock_audit_card, bulk_ai_panel
 import onboarding
 from i18n import t
+from i18n_inline import field_label, platform_name
 
 db.init()
 st.set_page_config(page_title="nirva · History", page_icon="📜", layout="wide")
@@ -101,7 +102,7 @@ if task_key == "listing":
             with col:
                 icon = "✅" if summary["passing"] else "❌"
                 st.metric(
-                    f"{icon} {ch_key.title()}",
+                    f"{icon} {platform_name(ch_key)}",
                     f"{summary['error']}🔴 {summary['warn']}🟡",
                 )
 
@@ -110,9 +111,10 @@ if task_key == "listing":
             if not issues:
                 continue
             sev_icons = {"error": "🔴", "warn": "🟡", "info": "🔵"}
-            st.markdown(
-                f"**{ch_key.title()}** — {summary['error']} errors · {summary['warn']} warnings"
-            )
+            st.markdown(t("compliance.platform_summary",
+                           platform=platform_name(ch_key),
+                           errors=summary["error"],
+                           warnings=summary["warn"]))
             issues_df = pd.DataFrame([{
                 "": sev_icons.get(i.severity, "·"),
                 "SKU": i.sku,
@@ -124,7 +126,8 @@ if task_key == "listing":
 
             if summary["error"] > 0:
                 if st.button(
-                    t("compliance.auto_fix_btn", n=summary["error"], platform=ch_key.title()),
+                    t("compliance.auto_fix_btn", n=summary["error"],
+                      platform=platform_name(ch_key)),
                     key=f"autofix_{ch_key}",
                     width='content',
                 ):
@@ -193,7 +196,7 @@ if task_key == "listing":
         fname, data = ch_mod.build(export_df)
         with col:
             st.download_button(
-                f"⬇ {ch_key.title()}",
+                t("history.download_btn", platform=platform_name(ch_key)),
                 data=data, file_name=fname, mime="text/csv",
                 width='stretch', key=f"dl_sea_{ch_key}",
             )
@@ -204,7 +207,7 @@ if task_key == "listing":
         fname, data = ch_mod.build(export_df, currency=currency)
         with col:
             st.download_button(
-                f"⬇ {ch_key.title()}",
+                t("history.download_btn", platform=platform_name(ch_key)),
                 data=data, file_name=fname, mime="text/csv",
                 width='stretch', key=f"dl_global_{ch_key}",
             )
@@ -230,7 +233,7 @@ if task_key == "listing":
         platform_for_export = st.selectbox(
             t("history.multilang_platform"),
             list(SEA.keys()) + list(GLOBAL.keys()),
-            format_func=lambda k: k.title(),
+            format_func=platform_name,
         )
 
     if target_langs and api_key:
@@ -364,7 +367,7 @@ for _, r in df.head(40).iterrows():
                     val = r.get(f, "")
                     if not val:
                         continue
-                    st.markdown(f"**{f.replace('_', ' ').title()}**")
+                    st.markdown("**" + field_label(f) + "**")
                     if f == "body_html":
                         st.code(val, language="html")
                     elif len(str(val)) > 80:

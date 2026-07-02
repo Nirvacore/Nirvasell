@@ -91,7 +91,7 @@ with tab_set:
     st.subheader(t("ws.set_tiers_title"))
     with st.form("ws_tiers_form"):
         col1, col2 = st.columns(2)
-        sku_input  = col1.text_input(t("ws.f_sku_input"), placeholder="SKU-001")
+        sku_input  = col1.text_input(t("ws.f_sku_input"), placeholder=t("common.sku_ph"))
         tier_count = col2.number_input(t("ws.f_tier_count"), min_value=1, max_value=8, value=3)
 
         tiers_input = []

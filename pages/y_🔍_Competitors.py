@@ -83,7 +83,7 @@ with st.expander(t("comp.add_title"), expanded=s["tracked_skus"] == 0):
                 ["shopee", "lazada", "tiktok", "facebook", "website", "other"],
             )
         with cc4:
-            comp_url = st.text_input(t("comp.f_url"), placeholder="https://...")
+            comp_url = st.text_input(t("comp.f_url"), placeholder=t("comp.url_ph"))
 
         comp_note = st.text_input(t("comp.f_note"))
 

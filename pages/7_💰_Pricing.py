@@ -14,6 +14,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import marketplace_fee_label
 from _components import page_header
 
 db.init()
@@ -110,7 +111,7 @@ for s in strategies:
     }
     for p in fees:
         np = per_platform[p]
-        label = fees[p]["label"]
+        label = marketplace_fee_label(p)
         row[f"{label}\nnet"] = int(np["net"])
         row[f"{label}\n%"] = f"{np['margin_pct']:.1f}%"
     table_rows.append(row)

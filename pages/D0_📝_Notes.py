@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import note_type_label, note_priority_label
 
 st.set_page_config(page_title="nirva.sell · Notes",
                    page_icon="📝", layout="wide")
@@ -47,7 +48,7 @@ with st.expander(t("nt.add_title"), expanded=False):
                 t("nt.f_type"),
                 list(nt.NOTE_TYPES.keys()),
                 format_func=lambda k: nt.NOTE_TYPES[k]["icon"] + " " +
-                nt.NOTE_TYPES[k]["label"],
+                note_type_label(k),
             )
         with nc2:
             ref_key = st.text_input(t("nt.f_ref"),
@@ -55,7 +56,7 @@ with st.expander(t("nt.add_title"), expanded=False):
             priority = st.selectbox(
                 t("nt.f_priority"),
                 list(nt.PRIORITIES.keys()),
-                format_func=lambda k: nt.PRIORITIES[k]["label"],
+                format_func=note_priority_label,
             )
             pinned = st.checkbox(t("nt.f_pin"), value=False)
         body = st.text_area(t("nt.f_body"), placeholder="", height=80)
@@ -80,7 +81,7 @@ with fc1:
         t("nt.f_filter"),
         ["all"] + list(nt.NOTE_TYPES.keys()),
         format_func=lambda k: ("🔍 " + t("nt.all_types")) if k == "all"
-        else nt.NOTE_TYPES[k]["icon"] + " " + nt.NOTE_TYPES[k]["label"],
+        else nt.NOTE_TYPES[k]["icon"] + " " + note_type_label(k),
         key="_nt_ft",
     )
 with fc2:
@@ -113,7 +114,7 @@ for note in all_notes:
            note["ref_key"] + "</span>" if note.get("ref_key") else "") +
         "</span>"
         "<span style='font-size:11px;color:" + p_info["color"] +
-        ";font-weight:600'>" + p_info["label"] + " · " +
+        ";font-weight:600'>" + note_priority_label(note.get("priority", "normal")) + " · " +
         (note.get("created_at") or "")[:10] + "</span></div>"
         + ("<div style='font-size:13px;color:#3d3530;white-space:pre-wrap'>" +
            (note.get("body") or "")[:200] + "</div>" if note.get("body") else "") +

@@ -73,7 +73,7 @@ with tab_add:
             ["note","task","reminder","issue","idea"],
             format_func=lambda k: NOTE_TYPE_ICONS.get(k,"") + " " + k)
         body      = st.text_area(t("note.f_body"), height=80)
-        ref_key   = st.text_input(t("note.f_ref"), placeholder="SKU-001 / order #1234")
+        ref_key   = st.text_input(t("note.f_ref"), placeholder=t("nt.ref_ph"))
         pin_it    = st.checkbox(t("note.f_pin"))
         if st.form_submit_button(t("note.add_btn")):
             if title.strip():

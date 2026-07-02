@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint
 from i18n import t
+from i18n_inline import brief_task_text, brief_alert_text
 
 st.set_page_config(page_title="nirva.sell · Daily Briefing",
                    page_icon="☀", layout="wide")
@@ -91,7 +92,7 @@ if alerts:
 
     for a in alerts:
         a_color = "#c54c4c" if a["level"] == "danger" else "#c5963d"
-        msg = a.get("msg_th", a.get("msg", ""))
+        msg = brief_alert_text(a)
         st.markdown(
             "<div style='padding:10px 14px;border-left:4px solid " + a_color + ";"
             "background:rgba(197,76,76,0.04);border-radius:0 8px 8px 0;margin-bottom:6px'>"
@@ -110,7 +111,7 @@ if tasks:
     for task in tasks:
         p_color = {"high": "#c54c4c", "medium": "#c5963d", "low": "#9a9485"}.get(task["priority"], "#7a7569")
         p_badge = {"high": "🔴", "medium": "🟡", "low": "🔵"}.get(task["priority"], "?")
-        task_text = task.get("task_th", task.get("task", ""))
+        task_text = brief_task_text(task)
 
         st.markdown(
             "<div style='display:flex;justify-content:space-between;align-items:center;"

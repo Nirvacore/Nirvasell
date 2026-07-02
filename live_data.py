@@ -119,41 +119,41 @@ def _next_cyber_monday() -> tuple[date, str]:
 
 def upcoming_promotions(within_days: int = 365) -> list[dict]:
     today = date.today()
-    events: list[tuple[date, str, str, str]] = []
-    # (date, label_th, label_en, region)
-    fixed: list[tuple[int, int, str, str, str]] = [
-        (1,  1,  "ปีใหม่ขายดี",        "New Year Sale",        "Global"),
-        (2,  14, "Valentine's",          "Valentine's",          "Global"),
-        (3,  8,  "Women's Day",          "Women's Day",          "Global"),
-        (4,  13, "สงกรานต์",             "Songkran (TH)",        "TH"),
-        (5,  1,  "Labor Day Sale",       "Labor Day Sale",       "Global"),
-        (5,  5,  "5.5 Mid-Year Sale",    "5.5 Mid-Year",         "SEA"),
-        (6,  6,  "6.6 Brand Day",        "6.6 Brand Day",        "SEA"),
-        (7,  7,  "7.7 Mid-Year Mega",    "7.7 Mid-Year Mega",    "SEA"),
-        (8,  8,  "8.8 Brand Day",        "8.8 Brand Day",        "SEA"),
-        (9,  9,  "9.9 Super Shopping",   "9.9 Super Shopping",   "SEA"),
-        (10, 10, "10.10 Brand Mega",     "10.10 Brand Mega",     "SEA"),
-        (11, 1,  "Diwali",               "Diwali",               "IN"),
-        (11, 11, "11.11 Mega Sale",      "11.11 Singles Day",    "Global"),
-        (12, 12, "12.12 Year-end",       "12.12 Year-end",       "SEA"),
-        (12, 25, "Christmas",            "Christmas",            "Global"),
-        (12, 26, "Boxing Day",           "Boxing Day",           "UK/AU/CA"),
+    events: list[tuple[date, str, str]] = []
+    # (date, slug, region)
+    fixed: list[tuple[int, int, str, str]] = [
+        (1,  1,  "new_year_sale",        "Global"),
+        (2,  14, "valentines",           "Global"),
+        (3,  8,  "womens_day",           "Global"),
+        (4,  13, "songkran",             "TH"),
+        (5,  1,  "labor_day",            "Global"),
+        (5,  5,  "mid_year_55",          "SEA"),
+        (6,  6,  "brand_day_66",         "SEA"),
+        (7,  7,  "mid_year_77",          "SEA"),
+        (8,  8,  "brand_day_88",         "SEA"),
+        (9,  9,  "super_shopping_99",    "SEA"),
+        (10, 10, "brand_mega_1010",      "SEA"),
+        (11, 1,  "diwali",               "IN"),
+        (11, 11, "singles_day_1111",     "Global"),
+        (12, 12, "year_end_1212",        "SEA"),
+        (12, 25, "christmas",            "Global"),
+        (12, 26, "boxing_day",           "UK/AU/CA"),
     ]
-    for m, d, label_th, label_en, region in fixed:
-        ev_date, _ = _next_yearly(m, d, label_th)
-        events.append((ev_date, label_th, label_en, region))
+    for m, d, slug, region in fixed:
+        ev_date, _ = _next_yearly(m, d, slug)
+        events.append((ev_date, slug, region))
 
     # Dynamic events
     cny = _approx_lunar_new_year(today)
-    events.append((cny, "ตรุษจีน",  "Chinese New Year", "Asia"))
+    events.append((cny, "chinese_new_year", "Asia"))
     bf, _ = _next_black_friday()
-    events.append((bf, "Black Friday", "Black Friday", "Global"))
+    events.append((bf, "black_friday", "Global"))
     cm, _ = _next_cyber_monday()
-    events.append((cm, "Cyber Monday", "Cyber Monday", "Global"))
+    events.append((cm, "cyber_monday", "Global"))
 
     # Amazon Prime Day — usually mid-July; we use July 16 as best-guess
-    pd_date, _ = _next_yearly(7, 16, "Prime Day")
-    events.append((pd_date, "Amazon Prime Day", "Amazon Prime Day", "Amazon"))
+    pd_date, _ = _next_yearly(7, 16, "prime_day")
+    events.append((pd_date, "prime_day", "Amazon"))
 
     cutoff = today + timedelta(days=within_days)
     events = [e for e in events if today <= e[0] <= cutoff]
@@ -162,9 +162,8 @@ def upcoming_promotions(within_days: int = 365) -> list[dict]:
         {
             "date": e[0].isoformat(),
             "days_until": (e[0] - today).days,
-            "label_th": e[1],
-            "label_en": e[2],
-            "region": e[3],
+            "slug": e[1],
+            "region": e[2],
         }
         for e in events
     ]

@@ -47,19 +47,20 @@ def init():
 # upload. These are the common ones in Thailand.
 
 CARRIERS = {
-    "kerry":     {"label": "Kerry Express",   "shopee": "KERRY",     "lazada": "KE",   "tiktok": "KEX"},
-    "flash":     {"label": "Flash Express",   "shopee": "FLASH",     "lazada": "FLE",  "tiktok": "FLE"},
-    "thaipost":  {"label": "Thailand Post",   "shopee": "TH_POST",   "lazada": "THP",  "tiktok": "THP"},
-    "j&t":       {"label": "J&T Express",     "shopee": "JT",        "lazada": "JT",   "tiktok": "JT"},
-    "ninjavan":  {"label": "Ninja Van",       "shopee": "NINJA_VAN", "lazada": "NJV",  "tiktok": "NJV"},
-    "best":      {"label": "BEST Express",    "shopee": "BEST",      "lazada": "BEST", "tiktok": "BEST"},
-    "scg":       {"label": "SCG Express",     "shopee": "SCG",       "lazada": "SCG",  "tiktok": "SCG"},
-    "dhl":       {"label": "DHL",             "shopee": "DHL",       "lazada": "DHL",  "tiktok": "DHL"},
+    "kerry":     {"shopee": "KERRY",     "lazada": "KE",   "tiktok": "KEX"},
+    "flash":     {"shopee": "FLASH",     "lazada": "FLE",  "tiktok": "FLE"},
+    "thaipost":  {"shopee": "TH_POST",   "lazada": "THP",  "tiktok": "THP"},
+    "j&t":       {"shopee": "JT",        "lazada": "JT",   "tiktok": "JT"},
+    "ninjavan":  {"shopee": "NINJA_VAN", "lazada": "NJV",  "tiktok": "NJV"},
+    "best":      {"shopee": "BEST",      "lazada": "BEST", "tiktok": "BEST"},
+    "scg":       {"shopee": "SCG",       "lazada": "SCG",  "tiktok": "SCG"},
+    "dhl":       {"shopee": "DHL",       "lazada": "DHL",  "tiktok": "DHL"},
 }
 
 
 def carrier_options() -> list[tuple[str, str]]:
-    return [(k, v["label"]) for k, v in CARRIERS.items()]
+    from i18n_inline import carrier_name
+    return [(k, carrier_name(k)) for k in CARRIERS]
 
 
 def platform_code(carrier_key: str, platform: str) -> str:
@@ -67,7 +68,8 @@ def platform_code(carrier_key: str, platform: str) -> str:
     entry = CARRIERS.get(carrier_key.lower())
     if not entry:
         return carrier_key.upper()
-    return entry.get(platform.lower(), entry["label"])
+    from i18n_inline import carrier_name
+    return entry.get(platform.lower(), carrier_name(carrier_key))
 
 
 # ---- Pending orders -----------------------------------------------------

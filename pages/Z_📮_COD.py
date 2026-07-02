@@ -17,7 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
-from i18n_inline import platform_name, payment_type_name
+from i18n_inline import platform_display, platform_name, payment_type_name
 
 st.set_page_config(page_title="nirva.sell · COD",
                    page_icon="📮", layout="wide")
@@ -79,16 +79,13 @@ st.markdown("### " + t("cod.add_title"))
 with st.form("add_cod"):
     c1, c2, c3 = st.columns(3)
     with c1:
-        n_order = st.text_input(t("cod.f_order_id"), placeholder="ORD-12345")
+        n_order = st.text_input(t("cod.f_order_id"), placeholder=t("comm.order_ph"))
         n_buyer = st.text_input(t("cod.f_buyer"), placeholder=t("cod.buyer_placeholder"))
     with c2:
         n_plat = st.selectbox(
             t("cod.f_platform"),
             ["shopee", "lazada", "tiktok", "shopify", "other"],
-            format_func=lambda p: {
-                "shopee": "🛒", "lazada": "🟧", "tiktok": "🎵",
-                "shopify": "🛍", "other": "📝",
-            }.get(p, "📦") + " " + platform_name(p),
+            format_func=platform_display,
         )
         n_type = st.selectbox(
             t("cod.f_payment_type"),

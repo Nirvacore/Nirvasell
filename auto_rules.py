@@ -45,23 +45,23 @@ def init():
 
 # ---- Trigger types ----
 TRIGGERS = {
-    "low_stock":      {"label": "Stock below threshold",  "icon": "📦"},
-    "new_order":      {"label": "New order received",     "icon": "🛒"},
-    "vip_order":      {"label": "VIP customer orders",    "icon": "💎"},
-    "high_return":    {"label": "Return rate too high",   "icon": "↩️"},
-    "price_change":   {"label": "Product price changed",  "icon": "💰"},
-    "dormant_cust":   {"label": "Customer goes dormant",  "icon": "😴"},
-    "daily_summary":  {"label": "Daily summary time",     "icon": "📊"},
+    "low_stock":      {"icon": "📦"},
+    "new_order":      {"icon": "🛒"},
+    "vip_order":      {"icon": "💎"},
+    "high_return":    {"icon": "↩️"},
+    "price_change":   {"icon": "💰"},
+    "dormant_cust":   {"icon": "😴"},
+    "daily_summary":  {"icon": "📊"},
 }
 
 # ---- Action types ----
 ACTIONS = {
-    "line_notify":    {"label": "Send LINE notification", "icon": "💚"},
-    "flag_product":   {"label": "Flag product for review","icon": "🚩"},
-    "auto_reorder":   {"label": "Create reorder alert",   "icon": "📋"},
-    "adjust_price":   {"label": "Suggest price adjustment","icon": "💰"},
-    "tag_customer":   {"label": "Tag customer",            "icon": "🏷️"},
-    "log_only":       {"label": "Log event only",          "icon": "📝"},
+    "line_notify":    {"icon": "💚"},
+    "flag_product":   {"icon": "🚩"},
+    "auto_reorder":   {"icon": "📋"},
+    "adjust_price":   {"icon": "💰"},
+    "tag_customer":   {"icon": "🏷️"},
+    "log_only":       {"icon": "📝"},
 }
 
 

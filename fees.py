@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from i18n_inline import currency_label
+
 
 # ---- Currencies -----------------------------------------------------------
 
@@ -31,13 +33,6 @@ FX_RATES_VS_THB: dict[str, float] = {
     "TWD": 0.918,
     "INR": 2.40,
     "AED": 0.105,
-}
-
-CURRENCY_LABELS: dict[str, str] = {
-    "THB": "บาท ฿", "USD": "US $", "EUR": "€", "GBP": "£",
-    "JPY": "¥", "CNY": "¥ CNY", "SGD": "S$", "AUD": "A$",
-    "MYR": "RM", "IDR": "Rp", "VND": "₫", "PHP": "₱",
-    "KRW": "₩", "HKD": "HK$", "TWD": "NT$", "INR": "₹", "AED": "د.إ",
 }
 
 
@@ -62,7 +57,7 @@ def convert_from_thb(thb: float, target: str, prefer_live: bool = True) -> float
 
 def format_money(thb: float, currency: str = "THB") -> str:
     val = convert_from_thb(thb, currency)
-    sym = CURRENCY_LABELS.get(currency, currency)
+    sym = currency_label(currency)
     if currency in ("JPY", "IDR", "VND", "KRW", "TWD"):
         return f"{sym} {val:,.0f}"
     if currency == "THB":
@@ -76,53 +71,43 @@ def format_money(thb: float, currency: str = "THB") -> str:
 DEFAULT_FEES: dict[str, dict] = {
     # Thailand marketplaces
     "shopee": {
-        "label": "Shopee TH",
         "commission_pct": 6.42, "payment_pct": 3.21, "transaction_pct": 0.0,
         "vat_on_fees": 7.0, "currency": "THB",
     },
     "lazada": {
-        "label": "Lazada TH",
         "commission_pct": 5.0, "payment_pct": 2.0, "transaction_pct": 0.0,
         "vat_on_fees": 7.0, "currency": "THB",
     },
     "tiktok": {
-        "label": "TikTok Shop TH",
         "commission_pct": 5.0, "payment_pct": 2.0, "transaction_pct": 0.0,
         "vat_on_fees": 7.0, "currency": "THB",
     },
     # Global marketplaces (typical referral / final value fees)
     "shopify": {
-        "label": "Shopify (own store)",
         "commission_pct": 0.0, "payment_pct": 2.9, "transaction_pct": 0.3,
         "vat_on_fees": 0.0, "currency": "USD",
     },
     "amazon_us": {
-        "label": "Amazon US",
         "commission_pct": 15.0, "payment_pct": 0.0, "transaction_pct": 0.0,
         "vat_on_fees": 0.0, "currency": "USD",
     },
     "ebay_us": {
-        "label": "eBay US",
         "commission_pct": 12.55, "payment_pct": 0.30, "transaction_pct": 0.0,
         "vat_on_fees": 0.0, "currency": "USD",
     },
     "etsy": {
-        "label": "Etsy",
         "commission_pct": 6.5, "payment_pct": 3.0, "transaction_pct": 0.25,
         "vat_on_fees": 0.0, "currency": "USD",
     },
     "amazon_jp": {
-        "label": "Amazon JP",
         "commission_pct": 15.0, "payment_pct": 0.0, "transaction_pct": 0.0,
         "vat_on_fees": 10.0, "currency": "JPY",
     },
     "rakuten": {
-        "label": "Rakuten JP",
         "commission_pct": 8.0, "payment_pct": 0.0, "transaction_pct": 0.0,
         "vat_on_fees": 10.0, "currency": "JPY",
     },
     "tokopedia": {
-        "label": "Tokopedia ID",
         "commission_pct": 4.5, "payment_pct": 0.5, "transaction_pct": 0.0,
         "vat_on_fees": 11.0, "currency": "IDR",
     },

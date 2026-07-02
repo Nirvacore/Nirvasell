@@ -11,13 +11,13 @@ from PIL import Image, ImageOps
 
 
 PLATFORM_SIZES: dict[str, dict] = {
-    "shopee_main":   {"label": "Shopee main",          "size": (1024, 1024), "fit": "pad_white"},
-    "lazada_main":   {"label": "Lazada main",          "size": (1024, 1024), "fit": "pad_white"},
-    "tiktok_main":   {"label": "TikTok Shop main",     "size": (1080, 1080), "fit": "pad_white"},
-    "tiktok_video":  {"label": "TikTok video cover",   "size": (1080, 1920), "fit": "smart_crop"},
-    "facebook_post": {"label": "Facebook post",        "size": (1200, 630),  "fit": "smart_crop"},
-    "line_thumb":    {"label": "LINE thumbnail",       "size": (1040, 1040), "fit": "pad_white"},
-    "instagram":     {"label": "Instagram square",     "size": (1080, 1080), "fit": "pad_white"},
+    "shopee_main":   {"size": (1024, 1024), "fit": "pad_white"},
+    "lazada_main":   {"size": (1024, 1024), "fit": "pad_white"},
+    "tiktok_main":   {"size": (1080, 1080), "fit": "pad_white"},
+    "tiktok_video":  {"size": (1080, 1920), "fit": "smart_crop"},
+    "facebook_post": {"size": (1200, 630),  "fit": "smart_crop"},
+    "line_thumb":    {"size": (1040, 1040), "fit": "pad_white"},
+    "instagram":     {"size": (1080, 1080), "fit": "pad_white"},
 }
 
 

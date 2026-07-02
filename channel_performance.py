@@ -1,29 +1,30 @@
 """Channel Performance — compare revenue/orders/margin across selling platforms."""
 from __future__ import annotations
 import db
+from i18n_inline import channel_fee_label, platform_name
 
 CHANNELS = {
-    "shopee":      {"label": "Shopee",      "icon": "🟠", "color": "#f26222"},
-    "lazada":      {"label": "Lazada",      "icon": "🔵", "color": "#0d1a8b"},
-    "tiktok_shop": {"label": "TikTok Shop", "icon": "⚫", "color": "#2d2d2d"},
-    "facebook":    {"label": "Facebook",    "icon": "🔷", "color": "#1877f2"},
-    "line":        {"label": "Line OA",     "icon": "🟢", "color": "#06c755"},
-    "instagram":   {"label": "Instagram",   "icon": "🌸", "color": "#e1306c"},
-    "website":     {"label": "Website",     "icon": "🌐", "color": "#4d6c5c"},
-    "direct":      {"label": "Direct",      "icon": "📞", "color": "#9a7569"},
-    "other":       {"label": "อื่นๆ",       "icon": "📌", "color": "#9a9485"},
+    "shopee":      {"icon": "🟠", "color": "#f26222"},
+    "lazada":      {"icon": "🔵", "color": "#0d1a8b"},
+    "tiktok_shop": {"icon": "⚫", "color": "#2d2d2d"},
+    "facebook":    {"icon": "🔷", "color": "#1877f2"},
+    "line":        {"icon": "🟢", "color": "#06c755"},
+    "instagram":   {"icon": "🌸", "color": "#e1306c"},
+    "website":     {"icon": "🌐", "color": "#4d6c5c"},
+    "direct":      {"icon": "📞", "color": "#9a7569"},
+    "other":       {"icon": "📌", "color": "#9a9485"},
 }
 
 PLATFORM_FEES = {
-    "shopee":      {"pct": 3.5, "label": "GP 3.5%"},
-    "lazada":      {"pct": 4.0, "label": "GP 4%"},
-    "tiktok_shop": {"pct": 2.0, "label": "GP 2%"},
-    "facebook":    {"pct": 0.0, "label": "No GP"},
-    "line":        {"pct": 0.0, "label": "No GP"},
-    "instagram":   {"pct": 0.0, "label": "No GP"},
-    "website":     {"pct": 0.0, "label": "No GP"},
-    "direct":      {"pct": 0.0, "label": "No GP"},
-    "other":       {"pct": 0.0, "label": "No GP"},
+    "shopee":      {"pct": 3.5},
+    "lazada":      {"pct": 4.0},
+    "tiktok_shop": {"pct": 2.0},
+    "facebook":    {"pct": 0.0},
+    "line":        {"pct": 0.0},
+    "instagram":   {"pct": 0.0},
+    "website":     {"pct": 0.0},
+    "direct":      {"pct": 0.0},
+    "other":       {"pct": 0.0},
 }
 
 
@@ -53,7 +54,8 @@ def channel_stats(days: int = 30) -> list[dict]:
             share = round(revenue / total_rev * 100, 1)
             result.append({
                 "platform": r["platform"],
-                "label": ch["label"],
+                "label": platform_name(r["platform"]),
+                "fee_label": channel_fee_label(r["platform"]),
                 "icon": ch["icon"],
                 "color": ch["color"],
                 "orders": r["orders"],

@@ -6,6 +6,7 @@ import daily_briefing as db
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import brief_task_text, brief_alert_text
 from sidebar import render_sidebar
 
 apply_theme()
@@ -55,17 +56,15 @@ if alerts:
     st.divider()
     st.subheader("🚨 " + t("brief.alerts"))
     for a in alerts:
-        icon  = a.get("icon","⚠️")
-        label = a.get("label") or a.get("type","alert")
-        msg   = a.get("message","")
-        color = a.get("color","#c5963d")
+        icon = a.get("icon", "⚠️")
+        msg = brief_alert_text(a)
+        color = "#c54c4c" if a.get("level") == "danger" else "#c5963d"
         a_html = (
             "<div style='display:flex;gap:8px;align-items:flex-start;"
             "background:#1a1a1a;padding:8px;margin:4px 0'>"
             "<span style='font-size:1.2rem'>" + icon + "</span>"
-            "<div><div style='color:" + color + ";font-size:0.85rem;font-weight:600'>" +
-            label + "</div>"
-            "<div style='color:#9a9485;font-size:0.82rem'>" + msg + "</div></div></div>"
+            "<div><div style='color:" + color + ";font-size:0.85rem;font-weight:600'>"
+            + msg + "</div></div></div>"
         )
         st.html(a_html)
 
@@ -75,7 +74,7 @@ if tasks:
     st.divider()
     st.subheader("✅ " + t("brief.today_tasks"))
     for task in tasks:
-        task_str = task if isinstance(task, str) else (task.get("label") or str(task))
+        task_str = brief_task_text(task) if isinstance(task, dict) else str(task)
         t_html = (
             "<div style='display:flex;align-items:center;gap:8px;margin:4px 0;"
             "font-size:0.85rem'>"

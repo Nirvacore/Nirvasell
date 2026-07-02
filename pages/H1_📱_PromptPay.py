@@ -29,7 +29,7 @@ with tab_qr:
         col1, col2 = st.columns(2)
         amount = col1.number_input(t("pay.f_amount"), min_value=0.0, step=10.0,
                                     value=0.0, help=t("pay.amount_hint"))
-        ref    = col2.text_input(t("pay.f_ref"), placeholder="#1234")
+        ref    = col2.text_input(t("pay.f_ref"), placeholder=t("common.order_ref_ph"))
 
         if st.button("📱 " + t("pay.gen_qr"), type="primary"):
             qr_amt = float(amount) if amount > 0 else None

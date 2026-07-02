@@ -13,6 +13,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import po_status
 
 st.set_page_config(page_title="nirva.sell · Purchase Orders",
                    page_icon="🛒", layout="wide")
@@ -160,7 +161,7 @@ for order in active:
         "<span style='font-size:12px'>" + t("common.n_items", n=str(order["item_count"])) + "</span>"
         "<span style='font-weight:600'>฿{:,.0f}".format(order["total_amount"]) + "</span>"
         "<span style='font-size:12px;color:" + (st_info.get("color") or "#9a9485") + ";font-weight:600'>"
-        + st_info.get("label_th", order["status"]) + "</span>"
+        + po_status(order["status"]) + "</span>"
         "</div></div>",
         unsafe_allow_html=True,
     )

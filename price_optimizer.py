@@ -7,6 +7,7 @@ Then AI suggests psychological pricing (e.g. ฿999 instead of ฿1,012)."""
 from __future__ import annotations
 
 import fees as fees_mod
+from i18n_inline import marketplace_fee_label
 
 
 def optimal_price(*, cost: float, target_margin_pct: float = 20,
@@ -53,7 +54,7 @@ def compare_platforms(cost: float, target_margin_pct: float = 20,
             cost=cost, target_margin_pct=target_margin_pct,
             platform=plat, shipping=shipping, fees=fees,
         )
-        r["platform_label"] = fees[plat].get("label", plat)
+        r["platform_label"] = marketplace_fee_label(plat)
         results.append(r)
     results.sort(key=lambda r: r.get("suggested") or r.get("raw_price") or 99999)
     return results

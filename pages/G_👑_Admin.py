@@ -11,6 +11,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import oauth_provider_label, oauth_setup_hint
 from _components import page_header
 
 st.set_page_config(page_title="nirva.sell · Admin", page_icon="👑", layout="wide")
@@ -157,8 +158,8 @@ for _key, _meta in _oauth.PROVIDERS.items():
     _cfg = _oauth.get_config(_key)
     _is_set = bool(_cfg["client_id"] and _cfg["client_secret"])
     _badge = "✅" if _is_set else "⚪"
-    with st.expander(f"{_badge} {_meta['icon']} {_meta['label']}"):
-        st.caption(_meta["setup_hint"])
+    with st.expander(f"{_badge} {_meta['icon']} {oauth_provider_label(_key)}"):
+        st.caption(oauth_setup_hint(_key))
         st.markdown(f"📖 [{t('admin.oauth_setup_console')}]({_meta['setup_url']})")
         with st.form(f"oauth_form_{_key}"):
             _cid = st.text_input(

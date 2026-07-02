@@ -17,6 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, toast, friendly_error
 from i18n import t
+from i18n_inline import voucher_tpl_label, platform_display
 
 _VOUCHER_TYPES = {
     "percent": "vouch.type_percent",
@@ -59,7 +60,7 @@ for i, tk in enumerate(template_keys):
     tpl = v.TEMPLATES[tk]
     with template_cols[i % len(template_cols)]:
         if st.button(
-            f"{tpl['icon']}  {tpl['label']}",
+            f"{tpl['icon']}  {voucher_tpl_label(tk)}",
             key=f"_tpl_{tk}",
             width="stretch",
         ):
@@ -89,7 +90,7 @@ if tpl_key and tpl_key in v.TEMPLATES:
     s = tpl["suggested"]
     defaults.update({
         "code":           v.suggest_code(tpl_key),
-        "label":          tpl["label"],
+        "label":          voucher_tpl_label(tpl_key),
         "discount_type":  s["discount_type"],
         "discount_value": s["discount_value"],
         "min_spend":      s["min_spend"],
@@ -101,7 +102,7 @@ with st.form("create_voucher"):
     with c1:
         n_code = st.text_input(t("vouch.f_code"),
                                 value=defaults["code"],
-                                placeholder="SONGKRAN15A")
+                                placeholder=t("vou.festival_code_ph"))
         st.caption(t("vouch.code_hint"))
     with c2:
         n_label = st.text_input(t("vouch.f_label"),
@@ -147,7 +148,7 @@ with st.form("create_voucher"):
             t("vouch.f_platforms"),
             options=["shopee", "lazada", "tiktok"],
             default=defaults["platforms"],
-            format_func=lambda p: {"shopee":"🛒 Shopee","lazada":"🟧 Lazada","tiktok":"🎵 TikTok"}.get(p, p),
+            format_func=platform_display,
         )
 
     if st.form_submit_button(t("vouch.create_btn"), type="primary"):
@@ -182,8 +183,7 @@ else:
         si = STATUS_ICONS[live_status]
         discount_str = v.format_discount(r)
         platforms_chip = " · ".join(
-            {"shopee":"🛒 Shopee","lazada":"🟧 Lazada","tiktok":"🎵 TikTok"}.get(p, p)
-            for p in (r.get("platforms") or "").split(",") if p
+            platform_display(p) for p in (r.get("platforms") or "").split(",") if p
         ) or "—"
 
         cA, cB = st.columns([5, 2])
@@ -246,7 +246,7 @@ else:
         ]
         with col:
             data = fn(plat_vouchers) if plat_vouchers else b""
-            label = {"shopee":"🛒 Shopee","lazada":"🟧 Lazada","tiktok":"🎵 TikTok"}[plat_key]
+            label = platform_display(plat_key)
             st.download_button(
                 f"⬇ {label}  ({len(plat_vouchers)})",
                 data=data,

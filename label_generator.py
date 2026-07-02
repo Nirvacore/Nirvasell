@@ -1,12 +1,11 @@
 """Label Generator — packing slip and shipping address label text."""
 from __future__ import annotations
-import db
 
-LABEL_STYLES = {
-    "full":    "ครบทุกข้อมูล",
-    "compact": "กระชับ (เฉพาะที่จำเป็น)",
-    "cod":     "COD (แสดงยอดเก็บปลายทาง)",
-}
+import db
+from i18n import t
+from i18n_inline import carrier_name
+
+LABEL_STYLES = ("full", "compact", "cod")
 
 
 def init() -> None:
@@ -26,7 +25,7 @@ def _shop_info() -> dict:
         except Exception:
             pass
     return {
-        "name": "ร้านค้า", "phone": "", "address": "",
+        "name": t("lbl.shop_default"), "phone": "", "address": "",
         "line": "", "facebook": "",
     }
 
@@ -41,40 +40,48 @@ def generate_label(order_id: str = "", buyer_name: str = "",
         items = []
 
     shop = _shop_info()
+    dash = "-" * 40
+    eq = "=" * 40
+    carrier_label = carrier_name(carrier)
 
     lines = []
     if style == "full":
         lines += [
-            "=" * 40,
-            "📦 ใบแพ็คสินค้า / PACKING SLIP",
-            "=" * 40,
-            "ออเดอร์: " + (order_id or "—"),
-            "ผู้รับ: " + (buyer_name or "—"),
-            "โทร: " + (buyer_phone or "—"),
-            "ที่อยู่: " + (buyer_address or "—"),
-            "-" * 40,
+            eq,
+            t("lbl.body_title"),
+            eq,
+            t("lbl.body_order", id=order_id or "—"),
+            t("lbl.body_recipient", name=buyer_name or "—"),
+            t("lbl.body_phone", phone=buyer_phone or "—"),
+            t("lbl.body_address", address=buyer_address or "—"),
+            dash,
         ]
+        unit = t("lbl.unit_pcs")
         for item in items:
-            lines.append(
-                "  " + (item.get("sku") or "") + " · " +
-                str(item.get("qty", 1)) + " ชิ้น" +
-                (" · ฿{:,.0f}".format(item.get("price", 0)) if item.get("price") else "")
-            )
+            line = t("lbl.body_item",
+                     sku=item.get("sku") or "",
+                     qty=str(item.get("qty", 1)),
+                     unit=unit)
+            if item.get("price"):
+                line += t("lbl.body_item_price",
+                          amount="{:,.0f}".format(item.get("price", 0)))
+            lines.append(line)
         lines += [
-            "-" * 40,
-            "ยอดรวม: ฿{:,.0f}".format(total_price),
+            dash,
+            t("lbl.body_total", amount="{:,.0f}".format(total_price)),
         ]
         if cod_amount > 0:
-            lines.append("💰 ยอดเก็บปลายทาง (COD): ฿{:,.0f}".format(cod_amount))
+            lines.append(t("lbl.body_cod", amount="{:,.0f}".format(cod_amount)))
         if tracking:
-            lines.append("Tracking: " + tracking + " (" + carrier + ")")
+            lines.append(t("lbl.body_tracking",
+                           number=tracking, carrier=carrier_label))
         if notes:
-            lines.append("หมายเหตุ: " + notes)
+            lines.append(t("lbl.body_notes", notes=notes))
         lines += [
-            "-" * 40,
-            "ผู้ส่ง: " + shop.get("name", ""),
-            "โทร: " + shop.get("phone", ""),
-            "=" * 40,
+            dash,
+            t("lbl.body_sender", name=shop.get("name", "")),
+            t("lbl.body_phone", phone=shop.get("phone", "")),
+            eq,
         ]
     elif style == "compact":
         lines += [
@@ -83,16 +90,17 @@ def generate_label(order_id: str = "", buyer_name: str = "",
             buyer_address or "—",
         ]
         if cod_amount > 0:
-            lines.append("COD ฿{:,.0f}".format(cod_amount))
+            lines.append(t("lbl.body_cod_compact",
+                           amount="{:,.0f}".format(cod_amount)))
         if tracking:
             lines.append(tracking)
     elif style == "cod":
         lines += [
             "=" * 30,
-            "ผู้รับ: " + (buyer_name or "—"),
-            "โทร: " + (buyer_phone or "—"),
-            "ที่อยู่: " + (buyer_address or "—"),
-            "💰 เก็บเงินปลายทาง: ฿{:,.0f}".format(cod_amount),
+            t("lbl.body_recipient", name=buyer_name or "—"),
+            t("lbl.body_phone", phone=buyer_phone or "—"),
+            t("lbl.body_address", address=buyer_address or "—"),
+            t("lbl.body_cod_collect", amount="{:,.0f}".format(cod_amount)),
             (tracking or ""),
             "=" * 30,
         ]
@@ -108,7 +116,7 @@ def from_order(order_id_str: str, style: str = "full") -> str:
                 (order_id_str, order_id_str),
             ).fetchone()
             if not row:
-                return "ไม่พบออเดอร์ " + order_id_str
+                return t("lbl.order_not_found", id=order_id_str)
             items_rows = c.execute(
                 "SELECT sku, quantity qty, unit_price price "
                 "FROM order_items WHERE order_id=?",
@@ -130,7 +138,7 @@ def from_order(order_id_str: str, style: str = "full") -> str:
                 style=style,
             )
         except Exception as e:
-            return "Error: " + str(e)
+            return t("lbl.error_prefix", msg=str(e))
 
 
 def stats() -> dict:

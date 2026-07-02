@@ -11,6 +11,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import notif_kind_name
 from _components import page_header
 
 _NOTIF_KINDS = {
@@ -155,7 +156,7 @@ with st.form(f"add_{kind}"):
         if not clean:
             st.error(t("notif.config_empty"))
         else:
-            cid = notifier.add_channel(kind, name or kind.title(), clean)
+            cid = notifier.add_channel(kind, name or notif_kind_name(kind), clean)
             st.success(t("notif.added", id=cid))
             st.rerun()
 

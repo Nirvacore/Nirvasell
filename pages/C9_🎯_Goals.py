@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import goal_type_label, goal_type_unit, goal_period_label
 
 st.set_page_config(page_title="nirva.sell · Goals",
                    page_icon="🎯", layout="wide")
@@ -44,18 +45,19 @@ with st.expander(t("goal.set_title"), expanded=s["total_active"] == 0):
             goal_type = st.selectbox(
                 t("goal.f_type"),
                 list(gt.GOAL_TYPES.keys()),
-                format_func=lambda k: gt.GOAL_TYPES[k]["icon"] + " " +
-                gt.GOAL_TYPES[k]["label"],
+                format_func=lambda k: (
+                    gt.GOAL_TYPES[k]["icon"] + " " + goal_type_label(k)
+                ),
             )
         with gc2:
             period = st.selectbox(
                 t("goal.f_period"),
                 list(gt.PERIODS.keys()),
-                format_func=lambda k: gt.PERIODS[k],
+                format_func=goal_period_label,
             )
         with gc3:
             target = st.number_input(
-                t("goal.f_target") + " (" + gt.GOAL_TYPES.get(goal_type, {}).get("unit", "") + ")",
+                t("goal.f_target") + " (" + goal_type_unit(goal_type) + ")",
                 min_value=0.0, value=10000.0, step=500.0,
             )
         goal_notes = st.text_input(t("goal.f_notes"), placeholder="")

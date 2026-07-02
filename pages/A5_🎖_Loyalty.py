@@ -14,6 +14,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import loyalty_tier
 
 st.set_page_config(page_title="nirva.sell · Loyalty",
                    page_icon="🎖", layout="wide")
@@ -58,7 +59,7 @@ for i, (tname, tinfo) in enumerate(loy.TIERS.items()):
             "<div style='text-align:center;padding:12px;background:white;"
             "border:0.5px solid rgba(40,30,20,0.07);border-radius:10px'>"
             "<div style='font-size:1.8rem'>" + tinfo["icon"] + "</div>"
-            "<div style='font-weight:600'>" + tinfo["label_th"] + "</div>"
+            "<div style='font-weight:600'>" + loyalty_tier(tname) + "</div>"
             "<div style='font-size:12px;color:#7a7569'>" +
             t("loy.discount_pct", pct=str(tinfo["discount_pct"])) + "</div>"
             "<div style='font-size:12px;color:#9a9485'>" + str(tinfo["min_points"]) + t("loy.pts_min_suffix") + "</div>"

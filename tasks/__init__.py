@@ -16,6 +16,9 @@ BUILTIN = {t.TASK["key"]: t for t in [
 ]}
 
 
+from i18n_inline import task_label
+
+
 def all_tasks() -> dict:
     """Built-in + per-user custom (custom tasks override built-ins on key collision)."""
     out = dict(BUILTIN)
@@ -63,4 +66,4 @@ def get(key: str):
 
 
 def options() -> list[tuple[str, str]]:
-    return [(k, f"{m.TASK['icon']} {m.TASK['label']}") for k, m in all_tasks().items()]
+    return [(k, f"{m.TASK['icon']} {task_label(k, mod=m)}") for k, m in all_tasks().items()]

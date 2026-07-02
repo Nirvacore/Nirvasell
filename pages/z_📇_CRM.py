@@ -15,6 +15,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import crm_note_type_label, crm_tag_label
 
 st.set_page_config(page_title="nirva.sell · CRM",
                    page_icon="📇", layout="wide")
@@ -128,7 +129,7 @@ if selected_cust:
     # Tags
     current_tags = profile["tags"]
     st.markdown("**🏷 " + t("crm.tags") + ":** " +
-                (" ".join("`" + tg + "`" for tg in current_tags) if current_tags else "—"))
+                (" ".join("`" + crm_tag_label(tg) + "`" for tg in current_tags) if current_tags else "—"))
 
     tag_col1, tag_col2 = st.columns(2)
     with tag_col1:
@@ -136,6 +137,7 @@ if selected_cust:
             t("crm.add_tag"),
             [tg for tg in crm.DEFAULT_TAGS if tg not in current_tags],
             label_visibility="collapsed",
+            format_func=crm_tag_label,
             key="_tag_sel",
         )
         if st.button(t("crm.add_tag_btn"), key="_add_tag", type="tertiary"):
@@ -151,7 +153,7 @@ if selected_cust:
             note_type = st.selectbox(
                 t("crm.f_type"),
                 list(crm.NOTE_TYPES.keys()),
-                format_func=lambda k: crm.NOTE_TYPES[k]["icon"] + " " + crm.NOTE_TYPES[k]["label"],
+                format_func=lambda k: crm.NOTE_TYPES[k]["icon"] + " " + crm_note_type_label(k),
                 label_visibility="collapsed",
             )
         if st.form_submit_button(t("crm.add_note_btn"), type="tertiary"):

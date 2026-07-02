@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import seg_rfm_label, seg_rfm_desc, seg_tag_label
 
 st.set_page_config(page_title="nirva.sell · Segments",
                    page_icon="👥", layout="wide")
@@ -53,14 +54,13 @@ for i, (seg_key, seg_info) in enumerate(cs.RFM_SEGMENTS.items()):
         st.markdown(
             "<div style='text-align:center;padding:8px;border-radius:8px;"
             "border:0.5px solid rgba(40,30,20,0.08)'>"
-            "<div style='font-size:1.3rem'>" +
-            seg_info["label"].split(" ")[-1] + "</div>"
+            "<div style='font-size:1.3rem'>" + seg_info["icon"] + "</div>"
             "<div style='font-weight:600;font-size:1.1rem;color:" +
             seg_info["color"] + "'>" + str(count) + "</div>"
             "<div style='font-size:11px;color:#9a9485'>" +
-            seg_info["label"].split(" ")[0] + "</div>"
+            seg_rfm_label(seg_key) + "</div>"
             "<div style='font-size:10px;color:#9a9485'>" +
-            seg_info["desc"] + "</div></div>",
+            seg_rfm_desc(seg_key) + "</div></div>",
             unsafe_allow_html=True,
         )
 
@@ -71,7 +71,7 @@ filter_seg = st.selectbox(
     t("seg.f_segment"),
     ["all"] + list(cs.RFM_SEGMENTS.keys()),
     format_func=lambda k: ("🔍 " + t("seg.all")) if k == "all"
-    else cs.RFM_SEGMENTS[k]["label"],
+    else cs.RFM_SEGMENTS[k]["icon"] + " " + seg_rfm_label(k),
     key="_seg_filter",
 )
 
@@ -90,7 +90,7 @@ for cust in customers:
         "<span style='font-size:10px;padding:2px 6px;"
         "background:rgba(40,30,20,0.06);border-radius:10px;margin-right:3px'>"
         + tag + "</span>"
-        for tag in cust["tags"]
+        for tag in (seg_tag_label(tg) for tg in cust["tags"])
     )
     st.markdown(
         "<div style='padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
@@ -104,7 +104,7 @@ for cust in customers:
         "<span style='color:#9a9485;font-size:11px'>" +
         t("common.days_ago", n=str(cust["recency_days"] or 0)) + "</span>"
         "<span style='font-size:11px;font-weight:600;color:" +
-        seg_info["color"] + "'>" + seg_info["label"] + "</span>"
+        seg_info["color"] + "'>" + seg_rfm_label(cust["segment"]) + "</span>"
         "</div></div></div>",
         unsafe_allow_html=True,
     )
@@ -115,6 +115,7 @@ for cust in customers:
             add_tag = st.selectbox(
                 t("seg.f_add_tag"),
                 [t("seg.select_tag")] + cs.DEFAULT_TAGS,
+                format_func=lambda tg: t("seg.select_tag") if tg == t("seg.select_tag") else seg_tag_label(tg),
                 key="_addtag_" + (cust["customer_key"] or str(id(cust))),
             )
             if add_tag != t("seg.select_tag") and st.button(

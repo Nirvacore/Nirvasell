@@ -39,7 +39,7 @@ with tab_pending:
         with st.expander(label):
             with st.form("ship_" + oid_display):
                 col1, col2 = st.columns(2)
-                tracking = col1.text_input(t("ful.f_tracking"), placeholder="TH12345678")
+                tracking = col1.text_input(t("ful.f_tracking"), placeholder=t("ful.tracking_ph"))
                 carrier  = col2.selectbox(t("ful.f_carrier"),
                     list(ff.CARRIERS.keys()),
                     format_func=lambda c: c)
@@ -80,7 +80,7 @@ with tab_bulk:
     st.caption(t("ful.bulk_hint"))
     bulk_text = st.text_area(t("ful.bulk_input"),
                               height=200,
-                              placeholder="order_id,tracking,carrier\n1001,TH12345,kerry\n1002,TH12346,flash")
+                              placeholder=t("ful.csv_import_ph"))
     default_carrier = st.selectbox(t("ful.default_carrier"),
                                     list(ff.CARRIERS.keys()))
     if st.button(t("ful.bulk_btn")):

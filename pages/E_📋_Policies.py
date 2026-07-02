@@ -21,6 +21,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import friendly_error
 from i18n import t
+from i18n_inline import policy_source_label
 
 db.init()
 kh.init()
@@ -74,7 +75,7 @@ api_key = st.session_state.get("api_key", "")
 
 for s in sources:
     platform = s.get("platform")
-    label = s.get("label", platform)
+    label = policy_source_label(platform) if platform else ""
     url = s.get("url")
     if not platform or not url:
         continue

@@ -6,6 +6,7 @@ import promotions as pr
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import promo_type_label, promo_status_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -36,7 +37,9 @@ tab_all, tab_create = st.tabs([t("promo.tab_all"), t("promo.tab_create")])
 with tab_all:
     status_f = st.segmented_control(t("promo.status_filter"),
         ["all"] + list(pr.STATUSES.keys()),
-        format_func=lambda s: t("promo.all") if s=="all" else pr.STATUSES[s]["label"],
+        format_func=lambda s: (
+            t("promo.all") if s == "all" else promo_status_label(s)
+        ),
         default="all")
     promos = pr.all_promos(status=None if status_f=="all" else status_f)
     if not promos:
@@ -44,10 +47,10 @@ with tab_all:
     for p in promos:
         pi, si = p["promo_info"], p["status_info"]
         label = pi["icon"] + " **" + p["title"] + "**" + \
-                " · " + pi["label"] + \
+                " · " + promo_type_label(p["promo_type"]) + \
                 " · " + (t("common.discount") + " " + str(p["discount_value"]) +
                           ("%" if "percent" in p["promo_type"] else " ฿")) + \
-                " · " + si["icon"] + " " + si["label"]
+                " · " + si["icon"] + " " + promo_status_label(p["status"])
         with st.expander(label):
             col1, col2 = st.columns(2)
             col1.write(t("promo.min_order") + ": ฿" + str(p["min_order_amount"] or 0))
@@ -75,17 +78,20 @@ with tab_create:
         col1, col2 = st.columns(2)
         ptype     = col1.selectbox(t("promo.f_type"),
                                     list(pr.PROMO_TYPES.keys()),
-                                    format_func=lambda k: pr.PROMO_TYPES[k]["icon"] + " " + pr.PROMO_TYPES[k]["label"])
+                                    format_func=lambda k: (
+                                        pr.PROMO_TYPES[k]["icon"] + " " +
+                                        promo_type_label(k)
+                                    ))
         disc_val  = col2.number_input(t("promo.f_value"), min_value=0.0, step=5.0)
         col3, col4 = st.columns(2)
         min_order = col3.number_input(t("promo.f_min_order"), min_value=0.0, step=50.0)
         max_uses  = col4.number_input(t("promo.f_max_uses"), min_value=0, step=10)
         col5, col6 = st.columns(2)
-        coupon    = col5.text_input(t("promo.f_coupon"), placeholder="SALE20")
-        sku_filter= col6.text_input(t("promo.f_sku_filter"), placeholder="SKU-001,SKU-002")
+        coupon    = col5.text_input(t("promo.f_coupon"), placeholder=t("promo.coupon_ph"))
+        sku_filter= col6.text_input(t("promo.f_sku_filter"), placeholder=t("promo.sku_filter_ph"))
         col7, col8 = st.columns(2)
-        start_dt  = col7.text_input(t("promo.f_start"), placeholder="YYYY-MM-DD")
-        end_dt    = col8.text_input(t("promo.f_end"), placeholder="YYYY-MM-DD")
+        start_dt  = col7.text_input(t("promo.f_start"), placeholder=t("common.date_ph"))
+        end_dt    = col8.text_input(t("promo.f_end"), placeholder=t("common.date_ph"))
         notes     = st.text_input(t("promo.f_notes"))
         if st.form_submit_button(t("promo.create_btn")):
             if title.strip():

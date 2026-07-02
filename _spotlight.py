@@ -171,10 +171,11 @@ def maybe_render_dialog():
                 unsafe_allow_html=True,
             )
             for key, mod in task_hits[:6]:
+                from i18n_inline import task_blurb, task_label
                 _row(
                     mod.TASK.get("icon", "🤖"),
-                    mod.TASK.get("label", key),
-                    mod.TASK.get("blurb", ""),
+                    task_label(key, mod=mod),
+                    task_blurb(key, mod=mod),
                     target="pages/3_🤖_Generate.py",
                     key=f"sp_tk_{key}",
                 )
@@ -234,10 +235,10 @@ def _filter_pages(q: str):
 
 
 def _filter_tasks(q: str, tasks_all: dict):
+    from i18n_inline import task_blurb, task_label
     out = []
     for key, mod in tasks_all.items():
-        T = mod.TASK
-        hay = (T.get("label", "") + " " + T.get("blurb", "") + " " + key).lower()
+        hay = (task_label(key, mod=mod) + " " + task_blurb(key, mod=mod) + " " + key).lower()
         if not q or q in hay:
             out.append((key, mod))
     return out

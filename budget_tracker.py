@@ -23,16 +23,16 @@ def init():
 
 
 CATEGORIES = {
-    "packaging":   {"label": "บรรจุภัณฑ์",     "icon": "📦"},
-    "shipping":    {"label": "ค่าส่ง",          "icon": "🚚"},
-    "ads":         {"label": "โฆษณา",          "icon": "📣"},
-    "platform":    {"label": "ค่าแพลตฟอร์ม",    "icon": "🛒"},
-    "salary":      {"label": "เงินเดือน/ค่าแรง", "icon": "👤"},
-    "rent":        {"label": "ค่าเช่า",         "icon": "🏠"},
-    "utilities":   {"label": "ค่าน้ำ/ไฟ/เน็ต",  "icon": "💡"},
-    "supplies":    {"label": "วัสดุสิ้นเปลือง",   "icon": "🧴"},
-    "tools":       {"label": "เครื่องมือ/ซอฟต์แวร์", "icon": "🔧"},
-    "other":       {"label": "อื่นๆ",           "icon": "📋"},
+    "packaging":   {"icon": "📦"},
+    "shipping":    {"icon": "🚚"},
+    "ads":         {"icon": "📣"},
+    "platform":    {"icon": "🛒"},
+    "salary":      {"icon": "👤"},
+    "rent":        {"icon": "🏠"},
+    "utilities":   {"icon": "💡"},
+    "supplies":    {"icon": "🧴"},
+    "tools":       {"icon": "🔧"},
+    "other":       {"icon": "📋"},
 }
 
 
@@ -106,11 +106,10 @@ def budget_vs_actual(month: str = "") -> list[dict]:
         else:
             status = "ok"
 
-        cat_info = CATEGORIES.get(cat, {"label": cat, "icon": "📋"})
+        cat_info = CATEGORIES.get(cat, {"icon": "📋"})
 
         result.append({
             "category": cat,
-            "label": cat_info["label"],
             "icon": cat_info["icon"],
             "budget": limit_,
             "spent": spent,

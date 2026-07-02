@@ -3,14 +3,14 @@ from __future__ import annotations
 import db
 
 CATEGORIES = {
-    "greet":        {"label": "ทักทาย", "icon": "👋"},
-    "order_confirm":{"label": "ยืนยันออเดอร์", "icon": "✅"},
-    "tracking":     {"label": "แจ้งเลข Tracking", "icon": "📦"},
-    "payment":      {"label": "แจ้งชำระเงิน", "icon": "💳"},
-    "promotion":    {"label": "โปรโมชั่น", "icon": "🎉"},
-    "complaint":    {"label": "ตอบคำร้องเรียน", "icon": "🙏"},
-    "review_req":   {"label": "ขอรีวิว", "icon": "⭐"},
-    "custom":       {"label": "กำหนดเอง", "icon": "✏️"},
+    "greet":        {"icon": "👋"},
+    "order_confirm":{"icon": "✅"},
+    "tracking":     {"icon": "📦"},
+    "payment":      {"icon": "💳"},
+    "promotion":    {"icon": "🎉"},
+    "complaint":    {"icon": "🙏"},
+    "review_req":   {"icon": "⭐"},
+    "custom":       {"icon": "✏️"},
 }
 
 PLATFORMS = ["facebook", "line", "instagram", "tiktok", "shopee", "lazada", "all"]

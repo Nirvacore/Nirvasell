@@ -69,7 +69,7 @@ with st.expander(t("tax.create_title"), expanded=len(invoices) == 0):
             seller_tin = st.text_input(
                 t("tax.f_seller_tin") + " *",
                 value=st.session_state.get("_tax_seller_tin", ""),
-                placeholder="0-0000-00000-00-0",
+                placeholder=t("common.tax_id_ph"),
             )
         seller_addr = st.text_input(
             t("tax.f_seller_addr"),
@@ -87,7 +87,7 @@ with st.expander(t("tax.create_title"), expanded=len(invoices) == 0):
         with bc2:
             buyer_tin = st.text_input(
                 t("tax.f_buyer_tin"),
-                placeholder="0-0000-00000-00-0",
+                placeholder=t("common.tax_id_ph"),
             )
         buyer_addr = st.text_input(
             t("tax.f_buyer_addr"),
@@ -145,7 +145,7 @@ with st.expander(t("tax.create_title"), expanded=len(invoices) == 0):
 
         order_id = st.text_input(
             t("tax.f_order_id"),
-            placeholder="SHP-20260601-001",
+            placeholder=t("tax.invoice_no_ph"),
         )
         note = st.text_input(t("tax.f_note"), placeholder=t("tax.ph_note"))
 

@@ -6,6 +6,7 @@ import cod_tracker as ct
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import cod_status_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -51,7 +52,9 @@ with tab_track:
     st.subheader(t("cod.track_title"))
     orders = ct.all_orders(limit=80)
     status_filter = st.selectbox(t("cod.status_filter"),
-                                  ["all"] + ct.COD_STATUSES, key="cod_sf")
+                                  ["all"] + ct.COD_STATUSES,
+                                  format_func=lambda s: t("cod.filter_all") if s == "all" else cod_status_label(s),
+                                  key="cod_sf")
     if status_filter != "all":
         orders = [o for o in orders if o["status"] == status_filter]
     for o in orders:
@@ -68,6 +71,7 @@ with tab_track:
                 t("cod.update_status"),
                 ct.COD_STATUSES,
                 index=ct.COD_STATUSES.index(o["status"]) if o["status"] in ct.COD_STATUSES else 0,
+                format_func=cod_status_label,
                 key="cs_" + str(o["id"]),
             )
             col_s, col_d = st.columns(2)

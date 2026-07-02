@@ -263,14 +263,14 @@ def dimension_details() -> list[dict]:
     dims = result["dimensions"]
 
     details = [
-        {"key": "revenue",   "icon": "📈", "label": "Revenue Growth",    "score": dims["revenue"],   "weight": 20},
-        {"key": "margin",    "icon": "💰", "label": "Profit Margin",     "score": dims["margin"],    "weight": 20},
-        {"key": "customers", "icon": "👥", "label": "Customer Health",   "score": dims["customers"], "weight": 15},
-        {"key": "stock",     "icon": "📦", "label": "Stock Health",      "score": dims["stock"],     "weight": 10},
-        {"key": "cash",      "icon": "💧", "label": "Cash Flow",         "score": dims["cash"],      "weight": 10},
-        {"key": "returns",   "icon": "↩️", "label": "Return Rate",       "score": dims["returns"],   "weight": 10},
-        {"key": "expenses",  "icon": "💸", "label": "Expense Control",   "score": dims["expenses"],  "weight": 10},
-        {"key": "channels",  "icon": "🌐", "label": "Channel Diversity", "score": dims["channels"],  "weight": 5},
+        {"key": "revenue",   "icon": "📈", "score": dims["revenue"],   "weight": 20},
+        {"key": "margin",    "icon": "💰", "score": dims["margin"],    "weight": 20},
+        {"key": "customers", "icon": "👥", "score": dims["customers"], "weight": 15},
+        {"key": "stock",     "icon": "📦", "score": dims["stock"],     "weight": 10},
+        {"key": "cash",      "icon": "💧", "score": dims["cash"],      "weight": 10},
+        {"key": "returns",   "icon": "↩️", "score": dims["returns"],   "weight": 10},
+        {"key": "expenses",  "icon": "💸", "score": dims["expenses"],  "weight": 10},
+        {"key": "channels",  "icon": "🌐", "score": dims["channels"],  "weight": 5},
     ]
 
     for d in details:

@@ -40,7 +40,6 @@ import magic_link  # for the HMAC secret
 
 PROVIDERS = {
     "google": {
-        "label":          "Google",
         "icon":           "🇬",
         "color":          "#4285f4",
         "authorize":      "https://accounts.google.com/o/oauth2/v2/auth",
@@ -48,10 +47,8 @@ PROVIDERS = {
         "userinfo":       "https://www.googleapis.com/oauth2/v3/userinfo",
         "scope":          "openid email profile",
         "setup_url":      "https://console.cloud.google.com/apis/credentials",
-        "setup_hint":     "Create OAuth client → Web app → paste the callback URL below as the Authorized redirect URI",
     },
     "microsoft": {
-        "label":          "Microsoft",
         "icon":           "Ⓜ",
         "color":          "#0078d4",
         # `common` lets any Microsoft account (work / school / personal) log in.
@@ -60,10 +57,8 @@ PROVIDERS = {
         "userinfo":       "https://graph.microsoft.com/v1.0/me",
         "scope":          "openid email profile User.Read",
         "setup_url":      "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
-        "setup_hint":     "App registrations → New → Redirect URI (Web) = the callback URL below → Certificates & secrets → New client secret",
     },
     "github": {
-        "label":          "GitHub",
         "icon":           "🐙",
         "color":          "#24292e",
         "authorize":      "https://github.com/login/oauth/authorize",
@@ -72,10 +67,8 @@ PROVIDERS = {
         "userinfo_email": "https://api.github.com/user/emails",
         "scope":          "read:user user:email",
         "setup_url":      "https://github.com/settings/developers",
-        "setup_hint":     "New OAuth App → Authorization callback URL = the URL below",
     },
     "facebook": {
-        "label":          "Facebook",
         "icon":           "📘",
         "color":          "#1877f2",
         "authorize":      "https://www.facebook.com/v18.0/dialog/oauth",
@@ -83,10 +76,8 @@ PROVIDERS = {
         "userinfo":       "https://graph.facebook.com/me?fields=id,name,email,picture",
         "scope":          "email public_profile",
         "setup_url":      "https://developers.facebook.com/apps/",
-        "setup_hint":     "Create app → Facebook Login → Settings → Valid OAuth Redirect URIs = the URL below",
     },
     "line": {
-        "label":          "LINE",
         "icon":           "💚",
         "color":          "#06c755",
         "authorize":      "https://access.line.me/oauth2/v2.1/authorize",
@@ -94,7 +85,6 @@ PROVIDERS = {
         "userinfo":       "https://api.line.me/v2/profile",
         "scope":          "profile openid email",
         "setup_url":      "https://developers.line.biz/console/",
-        "setup_hint":     "Create LINE Login channel → Callback URL = the URL below",
     },
 }
 

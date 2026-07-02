@@ -455,17 +455,18 @@ def _login_as_demo():
 # ---- Sub-components ----------------------------------------------------
 
 _PROVIDER_META = {
-    "google":    {"label": "Google",    "icon": "🇬",  "color": "#4285f4"},
-    "apple":     {"label": "Apple ID",  "icon": "",  "color": "#000000"},
-    "microsoft": {"label": "Microsoft", "icon": "Ⓜ", "color": "#0078d4"},
+    "google":    {"icon": "🇬",  "color": "#4285f4"},
+    "apple":     {"icon": "",  "color": "#000000"},
+    "microsoft": {"icon": "Ⓜ", "color": "#0078d4"},
 }
 
 
 def _provider_buttons(providers: list[str]):
     """Native-OIDC buttons (Google / Apple / Microsoft via st.login())."""
+    from i18n_inline import oauth_provider_label
     for p in providers:
-        meta = _PROVIDER_META.get(p, {"label": p.title(), "icon": "🔑", "color": "#444"})
-        label = f"{meta['icon']} {t('auth.signin_with').format(provider=meta['label'])}"
+        meta = _PROVIDER_META.get(p, {"icon": "🔑", "color": "#444"})
+        label = f"{meta['icon']} {t('auth.signin_with').format(provider=oauth_provider_label(p))}"
         if st.button(label, key=f"oauth_{p}", width='stretch'):
             try:
                 st.login(p)
@@ -479,7 +480,8 @@ def _social_provider_buttons(providers: list[str]):
     for p in providers:
         meta = social_oauth.PROVIDERS.get(p, {})
         icon = meta.get("icon", "🔑")
-        label_text = meta.get("label", p.title())
+        from i18n_inline import oauth_provider_label
+        label_text = oauth_provider_label(p)
         label = f"{icon} {t('auth.signin_with').format(provider=label_text)}"
         url = social_oauth.authorize_url(p, callback)
         if not url:

@@ -4,18 +4,18 @@ import json
 import db
 
 SETTING_KEYS = {
-    "shop_name":       {"label": "ชื่อร้าน", "default": ""},
-    "shop_phone":      {"label": "เบอร์โทร", "default": ""},
-    "shop_address":    {"label": "ที่อยู่ผู้ส่ง", "default": ""},
-    "shop_line":       {"label": "Line ID", "default": ""},
-    "shop_facebook":   {"label": "Facebook Page", "default": ""},
-    "shop_tax_id":     {"label": "เลขผู้เสียภาษี", "default": ""},
-    "default_carrier": {"label": "ขนส่งหลัก", "default": "kerry"},
-    "default_platform":{"label": "แพลตฟอร์มหลัก", "default": "shopee"},
-    "low_stock_threshold": {"label": "เตือนสต็อกต่ำเมื่อ (ชิ้น)", "default": "5"},
-    "default_vat":     {"label": "แสดง VAT ในใบกำกับ", "default": "false"},
-    "currency_symbol": {"label": "สกุลเงิน", "default": "฿"},
-    "order_prefix":    {"label": "Prefix เลขออเดอร์", "default": "ORD"},
+    "shop_name":       {"default": ""},
+    "shop_phone":      {"default": ""},
+    "shop_address":    {"default": ""},
+    "shop_line":       {"default": ""},
+    "shop_facebook":   {"default": ""},
+    "shop_tax_id":     {"default": ""},
+    "default_carrier": {"default": "kerry"},
+    "default_platform":{"default": "shopee"},
+    "low_stock_threshold": {"default": "5"},
+    "default_vat":     {"default": "false"},
+    "currency_symbol": {"default": "฿"},
+    "order_prefix":    {"default": "ORD"},
 }
 
 

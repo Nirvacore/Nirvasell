@@ -5,9 +5,7 @@ from ._base import common_context, parse_json
 
 TASK = {
     "key": "tiktok_script",
-    "label": "TikTok Script (30s)",
     "icon": "🎵",
-    "blurb": "Script วิดีโอ TikTok 30 วินาที พร้อม shot list และ hook",
     "output_fields": ["hook", "script", "hashtags"],
 }
 

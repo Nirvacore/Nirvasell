@@ -234,8 +234,7 @@ with tab_history:
             n_lang = st.selectbox(
                 t("fulfill.notify_lang"),
                 ["th", "en", "zh"],
-                format_func=lambda l: {"th": "🇹🇭 ไทย", "en": "🇬🇧 English",
-                                       "zh": "🇨🇳 中文"}.get(l, l),
+                format_func=lambda lang: t(f"common.lang_{lang}"),
             )
         with n3:
             shop_name = us.get("fulfill.seller_name", "") or t("fulfill.default_shop")

@@ -14,9 +14,7 @@ from ._base import parse_json
 
 TASK = {
     "key": "ai_review",
-    "label": "🤖 AI Review",
     "icon": "🤖",
-    "blurb": "Claude อ่าน listing แล้วบอกประเด็นที่ rule check ไม่เจอ (โทน, ความซื่อสัตย์, brand-safe)",
     "output_fields": ["score", "issues_text", "n_blockers", "n_warnings"],
     "is_review": True,
 }

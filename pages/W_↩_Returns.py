@@ -17,7 +17,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
-from i18n_inline import platform_name
+from i18n_inline import platform_display
 
 st.set_page_config(page_title="nirva.sell · Returns",
                    page_icon="↩", layout="wide")
@@ -70,16 +70,13 @@ st.markdown("### " + t("ret.add_title"))
 with st.form("add_return"):
     c1, c2, c3 = st.columns(3)
     with c1:
-        n_order = st.text_input(t("ret.f_order_id"), placeholder="ORD-12345")
-        n_sku = st.text_input(t("ret.f_sku"), placeholder="SKU-001")
+        n_order = st.text_input(t("ret.f_order_id"), placeholder=t("comm.order_ph"))
+        n_sku = st.text_input(t("ret.f_sku"), placeholder=t("common.sku_ph"))
     with c2:
         n_plat = st.selectbox(
             t("ret.f_platform"),
             ["shopee", "lazada", "tiktok", "shopify", "other"],
-            format_func=lambda p: {
-                "shopee": "🛒", "lazada": "🟧", "tiktok": "🎵",
-                "shopify": "🛍", "other": "📝",
-            }.get(p, "📦") + " " + platform_name(p),
+            format_func=platform_display,
         )
         n_reason = st.selectbox(
             t("ret.f_reason"),
@@ -114,12 +111,11 @@ with cP:
     if bp:
         for r in bp:
             plat = r.get("platform", "?")
-            icon = {"shopee": "🛒", "lazada": "🟧", "tiktok": "🎵"}.get(plat, "📦")
             loss = (r.get("refund") or 0) + (r.get("ship") or 0)
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
                 "padding:8px 0;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-                "<div>" + icon + " " + platform_name(plat) + " · " +
+                "<div>" + platform_display(plat) + " · " +
                 t("common.n_returns", n=str(r["count"])) + "</div>"
                 "<div style='color:#c54c4c'>-฿" + "{:,.0f}".format(loss) + "</div>"
                 "</div>",

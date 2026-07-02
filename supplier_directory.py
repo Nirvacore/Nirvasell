@@ -2,14 +2,7 @@
 from __future__ import annotations
 import db
 
-PAYMENT_TERMS = {
-    "cod":      "Cash on Delivery",
-    "prepay":   "โอนก่อน",
-    "net7":     "Net 7 วัน",
-    "net15":    "Net 15 วัน",
-    "net30":    "Net 30 วัน",
-    "credit":   "เครดิต (ตกลงกัน)",
-}
+PAYMENT_TERMS = ["cod", "prepay", "net7", "net15", "net30", "credit"]
 
 CATEGORIES = [
     "manufacturer", "distributor", "wholesaler",
@@ -119,8 +112,6 @@ def all_suppliers(active_only: bool = True) -> list[dict]:
         result = []
         for r in rows:
             d = dict(r)
-            d["terms_label"] = PAYMENT_TERMS.get(r["payment_terms"],
-                                                  r["payment_terms"])
             result.append(d)
         return result
 
@@ -133,8 +124,6 @@ def get(supplier_id: int) -> dict | None:
             return None
         d = dict(row)
         d["skus"] = get_skus(supplier_id)
-        d["terms_label"] = PAYMENT_TERMS.get(row["payment_terms"],
-                                              row["payment_terms"])
         try:
             po_rows = c.execute(
                 "SELECT COUNT(*) cnt, COALESCE(SUM(total_amount),0) total "

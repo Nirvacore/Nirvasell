@@ -26,6 +26,7 @@ from _components import split_images, friendly_error, toast, page_header
 from _auth_gate import require_auth
 from exporters import ALL as EXPORTERS
 from i18n import t, current_lang
+from i18n_inline import marketplace_fee_label
 
 load_dotenv()
 
@@ -219,14 +220,14 @@ if df is not None and not df.empty:
     m3.metric(t("upload.stat_sell"), f"฿{df['sell_price'].sum():,.0f}")
     best_platform = max(profits, key=profits.get)
     m4.metric(
-        t("ws.best_profit", platform=fees[best_platform]["label"]),
+        t("ws.best_profit", platform=marketplace_fee_label(best_platform)),
         f"฿{int(profits[best_platform]):,}",
     )
 
     with st.expander(t("ws.profit_breakdown"), expanded=False):
         rows = []
         for p, total in profits.items():
-            label = fees[p]["label"]
+            label = marketplace_fee_label(p)
             base_pct = (
                 fees[p]["commission_pct"] + fees[p]["payment_pct"] + fees[p]["transaction_pct"]
             )
@@ -283,7 +284,8 @@ if df is not None and not df.empty:
         )
         st.session_state["auto_campaign"] = auto_camp
         if auto_camp and nxt_big:
-            label = nxt_big.get("label_th") if current_lang() == "th" else nxt_big.get("label_en")
+            from i18n_inline import live_promo_label
+            label = live_promo_label(nxt_big.get("slug", ""))
             st.caption(f"⏰ {label} — {t('live.in_n_days', n=nxt_big['days_until'])}")
 
     with cc3:

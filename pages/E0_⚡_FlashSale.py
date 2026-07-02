@@ -6,6 +6,7 @@ import flash_sale as fs
 from theme import apply_theme
 from auth import require_auth
 from i18n import t
+from i18n_inline import flash_status_label, flash_discount_label
 from sidebar import render_sidebar
 
 apply_theme()
@@ -42,7 +43,7 @@ with tab_active:
         si = sale["status_info"]
         st.markdown("### 🔥 " + sale["title"])
         col1, col2, col3 = st.columns(3)
-        dt = fs.DISCOUNT_TYPES.get(sale["discount_type"],"")
+        dt = flash_discount_label(sale["discount_type"])
         col1.metric(t("flash.discount"),
                     str(sale["discount_value"]) + ("%" if sale["discount_type"]=="percentage" else " ฿") +
                     " (" + dt + ")")
@@ -58,8 +59,9 @@ with tab_all:
     status_f = st.segmented_control(
         t("flash.status_filter"),
         ["all", "upcoming", "active", "ended", "draft"],
-        format_func=lambda s: t("flash.all") if s=="all" else
-                              fs.STATUSES.get(s, {}).get("label", s),
+        format_func=lambda s: (
+            t("flash.all") if s == "all" else flash_status_label(s)
+        ),
         default="all",
     )
     sales = fs.all_sales(status_filter=None if status_f=="all" else status_f)
@@ -71,7 +73,7 @@ with tab_all:
                 " · " + sale["start_dt"] + " → " + sale["end_dt"]
         with st.expander(label):
             col1, col2 = st.columns(2)
-            dt_label = fs.DISCOUNT_TYPES.get(sale["discount_type"],"")
+            dt_label = flash_discount_label(sale["discount_type"])
             col1.write(t("flash.discount") + ": " +
                        str(sale["discount_value"]) +
                        ("%" if sale["discount_type"]=="percentage" else "฿") +
@@ -97,11 +99,11 @@ with tab_create:
         col1, col2 = st.columns(2)
         disc_type  = col1.selectbox(t("flash.f_discount_type"),
                                      list(fs.DISCOUNT_TYPES.keys()),
-                                     format_func=lambda k: fs.DISCOUNT_TYPES[k])
+                                     format_func=flash_discount_label)
         disc_val   = col2.number_input(t("flash.f_discount_value"), min_value=0.0, step=5.0)
         col3, col4 = st.columns(2)
-        start_dt   = col3.text_input(t("flash.f_start"), placeholder="2026-12-12 10:00")
-        end_dt     = col4.text_input(t("flash.f_end"), placeholder="2026-12-12 23:59")
+        start_dt   = col3.text_input(t("flash.f_start"), placeholder=t("common.datetime_ph"))
+        end_dt     = col4.text_input(t("flash.f_end"), placeholder=t("common.datetime_ph"))
         col5, col6 = st.columns(2)
         platform   = col5.selectbox(t("flash.f_platform"),
                                      ["all","shopee","lazada","tiktok_shop","facebook","line"])

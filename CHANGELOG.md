@@ -20,6 +20,60 @@ Built iteratively. Current stats:
 
 ---
 
+## v103 — PO/wholesale/tasks/flash/goals/influencer module pass
+- Helpers: `ws_tier_label`, `task_*_label`, `flash_*_label`, `goal_*_label`, `inf_*_label`
+- Modules: purchase_orders, wholesale_pricing, team_tasks, flash_sale, goal_tracker, influencer_tracker
+- Pages: B4, D3, E0, C9, D9 (+ po_status already on E5/B3)
+- 41 new keys → 19 langs
+
+## v102 — loyalty/promo_engine/residual pages pass
+- `loyalty_reward_name()`, `peng_type_label()`, `peng_discount_label()`, `cal_post_*()` helpers
+- `loyalty.py`: rewards/errors via i18n; `promo_engine.py`: labels removed
+- Pages: F5, o_Promos, H_Account, K_Fulfillment, 0_Start, 6_Settings, G2
+- 32 new keys → 19 langs
+
+## v101 — promotions module type + inline pass (C1/F6/promotions.py)
+- `promo_type_label()`, `promo_status_label()` helpers (status reuses `promo.status_*`)
+- Removed hardcoded Thai labels from `PROMO_TYPES` / `STATUSES`
+- C1: use count + coupon code line via `t()`
+- 8 new keys → 19 langs
+
+## v100 — daily briefing task + alert pass (A0/G7/daily_briefing.py)
+- `brief_task_text()`, `brief_alert_text()` helpers
+- Task keys: `brief.task_*` (6) + alert keys: `brief.alert_*` (2)
+- Removed `task_th`/`msg_th` from `daily_briefing.generate()`
+- 8 new keys → 19 langs
+
+## v99 — alerts module i18n pass (C0/F4/alerts.py)
+- `alert_kind_name()` helper; `alrt.kind_*` + `alrt.msg_*` keys (6 alert types)
+- Removed hardcoded Thai from `ALERT_TYPES` labels and `check_all()` messages
+- 12 new keys → 19 langs
+
+## v98 — content_cal module + live promo i18n + placeholder pass (B0/B/D4/R/d)
+- New `content_cal.py` — fixes B0 runtime mismatch with `content_calendar.py`; `content_calendar` table for alerts
+- `content_type_label()`, `content_status_label()`, `live_promo_label()` helpers
+- Promo calendar: slug-based `live.promo_*` keys (19 langs); updated B_Live, sidebar, app, generate
+- Placeholders: D4 CSV, R live chat, d Bundles name
+- 33 new keys → 19 langs
+
+## v97 — G/F/H/E/D placeholder + budget/notif pass (24 pages)
+- `notif_kind_name()`, `budget_category()` helpers
+- Placeholders: date/time/datetime, tax ID, voucher, fulfillment, labels, etc.
+- G1 budget categories via `bgt.cat_*`; I Notifications channel kind labels
+- 24 new keys → 19 langs
+
+## v96 — Field labels / loyalty / PO / placeholder pass (4/F5/A5/B3/E5/D8/C2/C7/F9/e)
+- `field_label()`, `loyalty_tier()`, `po_status()` helpers
+- 32 `outfield.*` task output fields, 5 loyalty tiers, 5 PO statuses
+- Common placeholders: month/date/time/tax/supplier/hashtags
+- 52 new keys → 19 langs
+
+## v95 — History/catalog/settings + placeholder pass (4/2/D6/C3/W/Z/o)
+- History compliance/export channels via `platform_name()`; download btn + summary keys
+- Catalog QR target, D6 carrier/platform selectboxes
+- Reuse `comm.order_ph`, `promo.coupon_ph`; new `common.sku_ph`, `common.qr_custom`
+- 11 new keys → 19 langs
+
 ## v94 — Platform/carrier/COD/ads label pass (w/W/c/e/K/Z/D8/A4/F9)
 - `platform_name()`, `carrier_name()`, `expense_category()`, `payment_type_name()` helpers
 - 16 platform + 7 carrier + COD/ads/expense keys

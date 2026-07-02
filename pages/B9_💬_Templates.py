@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import tmpl_cat_label
 
 st.set_page_config(page_title="nirva.sell · Templates",
                    page_icon="💬", layout="wide")
@@ -44,7 +45,7 @@ with st.expander(t("tmpl.add_title"), expanded=False):
                 t("tmpl.f_category"),
                 list(mt.CATEGORIES.keys()),
                 format_func=lambda k: mt.CATEGORIES[k]["icon"] + " " +
-                mt.CATEGORIES[k]["label"],
+                tmpl_cat_label(k),
             )
         with tc2:
             platforms = st.selectbox(t("tmpl.f_platform"), mt.PLATFORMS)
@@ -68,7 +69,7 @@ with fc1:
         t("tmpl.f_filter_cat"),
         ["all"] + list(mt.CATEGORIES.keys()),
         format_func=lambda k: ("🔍 " + t("tmpl.all_cats")) if k == "all"
-        else mt.CATEGORIES[k]["icon"] + " " + mt.CATEGORIES[k]["label"],
+        else mt.CATEGORIES[k]["icon"] + " " + tmpl_cat_label(k),
     )
 with fc2:
     filter_platform = st.selectbox(

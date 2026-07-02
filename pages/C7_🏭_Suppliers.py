@@ -12,6 +12,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header, metric_with_hint, toast
 from i18n import t
+from i18n_inline import sup_cat_label, sup_term_label
 
 st.set_page_config(page_title="nirva.sell · Suppliers",
                    page_icon="🏭", layout="wide")
@@ -43,15 +44,16 @@ with st.expander(t("sup.add_title"), expanded=s["total"] == 0):
         with sc1:
             sup_name = st.text_input(t("sup.f_name"), placeholder=t("sup.name_ph"))
             contact = st.text_input(t("sup.f_contact"), placeholder=t("sup.contact_ph"))
-            phone = st.text_input(t("sup.f_phone"), placeholder="08X-XXX-XXXX")
-            line_id = st.text_input(t("sup.f_line"), placeholder="@LineID")
+            phone = st.text_input(t("sup.f_phone"), placeholder=t("sup.phone_ph"))
+            line_id = st.text_input(t("sup.f_line"), placeholder=t("sup.line_id_ph"))
         with sc2:
-            email = st.text_input(t("sup.f_email"), placeholder="supplier@email.com")
-            category = st.selectbox(t("sup.f_category"), sd.CATEGORIES)
+            email = st.text_input(t("sup.f_email"), placeholder=t("sup.email_ph"))
+            category = st.selectbox(t("sup.f_category"), sd.CATEGORIES,
+                                    format_func=sup_cat_label)
             payment_terms = st.selectbox(
                 t("sup.f_terms"),
-                list(sd.PAYMENT_TERMS.keys()),
-                format_func=lambda k: sd.PAYMENT_TERMS[k],
+                sd.PAYMENT_TERMS,
+                format_func=sup_term_label,
             )
             min_order = st.number_input(t("sup.f_min_order"),
                                          min_value=0.0, value=0.0, step=100.0)
@@ -92,7 +94,7 @@ for sup in suppliers:
         + (" · " + (sup.get("contact_name") or "")
            if sup.get("contact_name") else "") +
         "<span style='font-size:11px;color:#9a9485;margin-left:6px'>"
-        + sup.get("terms_label", "") + "</span></div>"
+        + sup_term_label(sup.get("payment_terms", "")) + "</span></div>"
         "<div style='display:flex;gap:12px;font-size:12px'>"
         "<span>" + (sup.get("phone") or "") + "</span>"
         "<span style='color:#9a9485'>" + t("common.n_skus", n=str(sup.get("sku_count", 0))) + "</span>"
@@ -110,7 +112,7 @@ for sup in suppliers:
                 st.markdown(t("sup.line_display") + " " + (details.get("line_id") or "—"))
             with di2:
                 st.markdown("📧 " + (details.get("email") or "—"))
-                st.markdown("💳 " + details["terms_label"])
+                st.markdown("💳 " + sup_term_label(details.get("payment_terms", "")))
             with di3:
                 st.markdown(t("sup.min_order_line", amount="{:,.0f}".format(
                     details.get("min_order_amount") or 0

@@ -11,6 +11,7 @@ from __future__ import annotations
 from datetime import datetime, date, timedelta
 
 import db
+from i18n_inline import cf_week_label
 
 
 def forecast(days_ahead: int = 30) -> dict:
@@ -114,7 +115,7 @@ def weekly_projection(weeks: int = 4) -> list[dict]:
         f = forecast(days)
         results.append({
             "week": w + 1,
-            "label": "Week " + str(w + 1),
+            "label": cf_week_label(w + 1),
             "incoming": f["total_incoming"],
             "outgoing": f["total_outgoing"],
             "net": f["net_flow"],

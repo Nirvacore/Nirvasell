@@ -15,6 +15,7 @@ from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from i18n import t
+from i18n_inline import marketplace_fee_label
 from _components import page_header
 
 db.init()
@@ -42,7 +43,7 @@ with c2:
         t("global.pick_platforms"),
         all_platforms,
         default=all_platforms,
-        format_func=lambda k: fees[k]["label"],
+        format_func=marketplace_fee_label,
     )
 
 if not platforms:
@@ -58,7 +59,7 @@ for p in platforms:
     net_local = fees_mod.convert_from_thb(np_data["net"], f["currency"])
     fee_pct = (f["commission_pct"] + f["payment_pct"] + f["transaction_pct"])
     rows.append({
-        t("global.platform"): f["label"],
+        t("global.platform"): marketplace_fee_label(p),
         t("global.local_currency"): f["currency"],
         t("global.sell_local"): sell_local,
         t("global.fee_pct"): f"{fee_pct:.1f}%",
@@ -110,7 +111,7 @@ for prod in products:
         t("upload.field.name").rstrip(" *"): (prod["name"] or "")[:50],
         t("common.cost"): cost,
         t("common.sell"): sell,
-        t("global.best_platform"): fees[best]["label"],
+        t("global.best_platform"): marketplace_fee_label(best),
         t("global.best_net_thb"): int(nets[best]),
     })
 

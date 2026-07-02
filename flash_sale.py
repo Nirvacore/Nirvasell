@@ -4,18 +4,14 @@ from datetime import datetime
 import db
 
 STATUSES = {
-    "draft":    {"label": "ร่าง", "icon": "📝", "color": "#9a9485"},
-    "upcoming": {"label": "กำลังจะมาถึง", "icon": "⏰", "color": "#4a7ab5"},
-    "active":   {"label": "กำลังดำเนินการ!", "icon": "🔥", "color": "#c54c4c"},
-    "ended":    {"label": "สิ้นสุด", "icon": "✓", "color": "#4d6c5c"},
-    "cancelled":{"label": "ยกเลิก", "icon": "✕", "color": "#4a4a4a"},
+    "draft":    {"icon": "📝", "color": "#9a9485"},
+    "upcoming": {"icon": "⏰", "color": "#4a7ab5"},
+    "active":   {"icon": "🔥", "color": "#c54c4c"},
+    "ended":    {"icon": "✓", "color": "#4d6c5c"},
+    "cancelled":{"icon": "✕", "color": "#4a4a4a"},
 }
 
-DISCOUNT_TYPES = {
-    "percentage": "ลดเปอร์เซ็นต์",
-    "fixed":      "ลดเป็นบาท",
-    "free_shipping": "ส่งฟรี",
-}
+DISCOUNT_TYPES = ["percentage", "fixed", "free_shipping"]
 
 
 def init() -> None:
