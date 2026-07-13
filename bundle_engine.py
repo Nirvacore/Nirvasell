@@ -1,4 +1,4 @@
-"""Bundle Engine — increase average order value with smart bundles.
+"""Bundle Engine — increase average order value with smart bundle_suggestions.
 
 Uses order history to find products frequently bought together,
 then suggests bundle pricing with a small discount that still
@@ -11,7 +11,7 @@ import db
 def init():
     with db.conn() as c:
         c.execute("""
-            CREATE TABLE IF NOT EXISTS bundles (
+            CREATE TABLE IF NOT EXISTS bundle_suggestions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 skus TEXT NOT NULL,
@@ -86,7 +86,7 @@ def create_bundle(name: str, skus: list[str],
     sku_str = ",".join(skus)
     with db.conn() as c:
         c.execute(
-            "INSERT INTO bundles (name, skus, individual_total, bundle_price, discount_pct) "
+            "INSERT INTO bundle_suggestions (name, skus, individual_total, bundle_price, discount_pct) "
             "VALUES (?,?,?,?,?)",
             (name, sku_str, individual_total, bundle_price, discount),
         )
@@ -96,7 +96,7 @@ def create_bundle(name: str, skus: list[str],
 def all_bundles() -> list[dict]:
     with db.conn() as c:
         rows = c.execute(
-            "SELECT * FROM bundles ORDER BY created_at DESC"
+            "SELECT * FROM bundle_suggestions ORDER BY created_at DESC"
         ).fetchall()
     return [dict(r) for r in rows]
 
@@ -113,20 +113,20 @@ def update_bundle(bundle_id: int, **kwargs):
     vals.append(bundle_id)
     with db.conn() as c:
         c.execute(
-            "UPDATE bundles SET " + ",".join(sets) + " WHERE id=?",
+            "UPDATE bundle_suggestions SET " + ",".join(sets) + " WHERE id=?",
             vals,
         )
 
 
 def delete_bundle(bundle_id: int):
     with db.conn() as c:
-        c.execute("DELETE FROM bundles WHERE id=?", (bundle_id,))
+        c.execute("DELETE FROM bundle_suggestions WHERE id=?", (bundle_id,))
 
 
 def record_sale(bundle_id: int):
     with db.conn() as c:
         c.execute(
-            "UPDATE bundles SET times_sold = times_sold + 1 WHERE id=?",
+            "UPDATE bundle_suggestions SET times_sold = times_sold + 1 WHERE id=?",
             (bundle_id,),
         )
 
@@ -138,7 +138,7 @@ def stats() -> dict:
             "SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) as active, "
             "COALESCE(SUM(times_sold),0) as total_sold, "
             "COALESCE(SUM(times_sold * bundle_price),0) as total_revenue "
-            "FROM bundles"
+            "FROM bundle_suggestions"
         ).fetchone()
     return {
         "total": r["total"],

@@ -57,10 +57,9 @@ def all_kpis(days: int = 30) -> dict:
 
         # COGS and margin
         cogs_row = _safe(lambda: c.execute(
-            "SELECT COALESCE(SUM(oi.quantity * p.cost_price),0) cogs "
-            "FROM order_items oi "
-            "JOIN orders o ON oi.order_id=o.id "
-            "JOIN products p ON oi.sku=p.sku "
+            "SELECT COALESCE(SUM(o.qty * p.cost_price),0) cogs "
+            "FROM orders o "
+            "JOIN products p ON o.sku=p.sku "
             "WHERE date(o.order_date) >= date('now','-' || ? || ' days','localtime') "
             "  AND o.status NOT IN ('cancelled','returned')",
             (days,),
@@ -72,7 +71,7 @@ def all_kpis(days: int = 30) -> dict:
         # Expenses
         exp_row = _safe(lambda: c.execute(
             "SELECT COALESCE(SUM(amount),0) total FROM expenses "
-            "WHERE date(expense_date) >= date('now','-' || ? || ' days','localtime')",
+            "WHERE date(date) >= date('now','-' || ? || ' days','localtime')",
             (days,),
         ).fetchone())
         expenses = exp_row["total"] if exp_row else 0

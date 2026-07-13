@@ -23,13 +23,12 @@ def weekly_trend(weeks: int = 4) -> list[dict]:
 
         with db.conn() as c:
             rows = c.execute("""
-                SELECT oi.sku,
-                       COALESCE(SUM(oi.qty), 0) AS qty,
-                       COALESCE(SUM(oi.qty * oi.unit_price), 0) AS revenue
-                FROM order_items oi
-                JOIN orders o ON o.order_id = oi.order_id
+                SELECT o.sku,
+                       COALESCE(SUM(o.qty), 0) AS qty,
+                       COALESCE(SUM(o.qty * o.unit_price), 0) AS revenue
+                FROM orders o
                 WHERE o.order_date >= ? AND o.order_date < ?
-                GROUP BY oi.sku
+                GROUP BY o.sku
             """, (s_str, e_str)).fetchall()
 
         for r in rows:
@@ -99,11 +98,10 @@ def new_products(days: int = 14) -> list[dict]:
     with db.conn() as c:
         rows = c.execute("""
             SELECT p.sku, p.name, p.stock, p.sell_price,
-                   COALESCE(SUM(oi.qty), 0) AS total_sold,
-                   COALESCE(SUM(oi.qty * oi.unit_price), 0) AS total_revenue
+                   COALESCE(SUM(o.qty), 0) AS total_sold,
+                   COALESCE(SUM(o.qty * o.unit_price), 0) AS total_revenue
             FROM products p
-            LEFT JOIN order_items oi ON oi.sku = p.sku
-            LEFT JOIN orders o ON o.order_id = oi.order_id
+            LEFT JOIN orders o ON o.sku = p.sku
             WHERE p.created_at >= ?
             GROUP BY p.sku
             ORDER BY total_sold DESC

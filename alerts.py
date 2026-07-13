@@ -118,7 +118,7 @@ def check_all() -> list[dict]:
         if cfg.get("low_stock", {}).get("enabled", 1):
             threshold = cfg.get("low_stock", {}).get("threshold", 5)
             rows = c.execute(
-                "SELECT COUNT(*) cnt FROM products WHERE stock<=? AND active=1",
+                "SELECT COUNT(*) cnt FROM products WHERE stock<=?",
                 (threshold,),
             ).fetchone()
             count = rows["cnt"] if rows else 0

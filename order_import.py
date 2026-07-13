@@ -170,6 +170,8 @@ def save_orders(df: pd.DataFrame) -> int:
     if df.empty:
         return 0
 
+    db.init()  # guarantees buyer/tracking columns exist on orders
+
     # Map sku → product_id where it exists
     with db.conn() as c:
         sku_to_id = {
@@ -209,8 +211,8 @@ def save_orders(df: pd.DataFrame) -> int:
                     """
                     INSERT OR IGNORE INTO orders
                     (order_id, sku, product_id, platform, qty, unit_price, total_price,
-                     currency, order_date, status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     currency, order_date, status, buyer_name, buyer_phone, buyer_address)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         str(r["order_id"]), str(r["sku"]), product_id,
@@ -218,6 +220,9 @@ def save_orders(df: pd.DataFrame) -> int:
                         r.get("currency", "THB"),
                         order_date,
                         str(r.get("status") or "paid"),
+                        str(r.get("buyer_name") or "").strip(),
+                        str(r.get("buyer_phone") or "").strip(),
+                        str(r.get("buyer_address") or "").strip(),
                     ),
                 )
                 if c.total_changes > before:
@@ -313,5 +318,4 @@ def _decrement_stock(c, product_id: int, qty: int) -> None:
     if not m:
         return
     new_n = max(0, int(m.group(0)) - int(qty or 1))
-    new_stock = re.sub(r"\d+", str(new_n), s, count=1)
-    c.execute("UPDATE products SET stock = ? WHERE id = ?", (new_stock, product_id))
+    c.execute("UPDATE products SET stock = ? WHERE id = ?", (new_n, product_id))

@@ -18,14 +18,12 @@ def detect(days: int = 30) -> list[dict]:
         # Products with stock but no recent sales
         rows = c.execute("""
             SELECT p.sku, p.name, p.stock, p.cost_price, p.sell_price,
-                   (SELECT MAX(o.order_date) FROM order_items oi
-                    JOIN orders o ON o.order_id = oi.order_id
-                    WHERE oi.sku = p.sku) AS last_sale_date,
-                   (SELECT COALESCE(SUM(oi.qty), 0) FROM order_items oi
-                    JOIN orders o ON o.order_id = oi.order_id
-                    WHERE oi.sku = p.sku AND o.order_date >= ?) AS recent_qty,
-                   (SELECT COALESCE(SUM(oi.qty), 0) FROM order_items oi
-                    WHERE oi.sku = p.sku) AS total_qty
+                   (SELECT MAX(o.order_date) FROM orders o
+                    WHERE o.sku = p.sku) AS last_sale_date,
+                   (SELECT COALESCE(SUM(o.qty), 0) FROM orders o
+                    WHERE o.sku = p.sku AND o.order_date >= ?) AS recent_qty,
+                   (SELECT COALESCE(SUM(o.qty), 0) FROM orders o
+                    WHERE o.sku = p.sku) AS total_qty
             FROM products p
             WHERE p.stock > 0
             ORDER BY recent_qty ASC, p.stock DESC

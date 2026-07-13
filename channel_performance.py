@@ -88,14 +88,13 @@ def top_skus_by_channel(channel: str, days: int = 30,
                          limit: int = 5) -> list[dict]:
     with db.conn() as c:
         rows = c.execute(
-            "SELECT oi.sku, SUM(oi.quantity) total_qty, "
-            "  SUM(oi.quantity*oi.unit_price) revenue "
-            "FROM order_items oi "
-            "JOIN orders o ON oi.order_id=o.id "
+            "SELECT o.sku, SUM(o.qty) total_qty, "
+            "  SUM(o.qty*o.unit_price) revenue "
+            "FROM orders o "
             "WHERE COALESCE(o.platform,'direct')=? "
             "  AND date(o.order_date) >= date('now','-' || ? || ' days','localtime') "
             "  AND o.status NOT IN ('cancelled','returned') "
-            "GROUP BY oi.sku ORDER BY revenue DESC LIMIT ?",
+            "GROUP BY o.sku ORDER BY revenue DESC LIMIT ?",
             (channel, days, limit),
         ).fetchall()
         return [dict(r) for r in rows]

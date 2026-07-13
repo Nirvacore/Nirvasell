@@ -18,7 +18,7 @@ import db
 def init():
     with db.conn() as c:
         c.execute("""
-            CREATE TABLE IF NOT EXISTS promotions (
+            CREATE TABLE IF NOT EXISTS promo_campaigns (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 promo_type TEXT NOT NULL,
@@ -62,7 +62,7 @@ def add(name: str, promo_type: str, platform: str = "all",
         coupon_code: str = "", budget: float = 0, note: str = "") -> int:
     with db.conn() as c:
         c.execute(
-            "INSERT INTO promotions "
+            "INSERT INTO promo_campaigns "
             "(name, promo_type, platform, start_date, end_date, "
             "discount_type, discount_value, min_order, max_discount, "
             "coupon_code, budget, note) "
@@ -76,7 +76,7 @@ def add(name: str, promo_type: str, platform: str = "all",
 
 def update_status(promo_id: int, status: str):
     with db.conn() as c:
-        c.execute("UPDATE promotions SET status=? WHERE id=?",
+        c.execute("UPDATE promo_campaigns SET status=? WHERE id=?",
                   (status, promo_id))
 
 
@@ -84,7 +84,7 @@ def record_redemption(promo_id: int, discount_given: float, order_revenue: float
     """Record a coupon/promo redemption."""
     with db.conn() as c:
         c.execute(
-            "UPDATE promotions SET "
+            "UPDATE promo_campaigns SET "
             "redemptions=redemptions+1, "
             "spent=spent+?, "
             "revenue_generated=revenue_generated+? "
@@ -95,13 +95,13 @@ def record_redemption(promo_id: int, discount_given: float, order_revenue: float
 
 def delete(promo_id: int):
     with db.conn() as c:
-        c.execute("DELETE FROM promotions WHERE id=?", (promo_id,))
+        c.execute("DELETE FROM promo_campaigns WHERE id=?", (promo_id,))
 
 
 def all_promos() -> list[dict]:
     with db.conn() as c:
         rows = c.execute(
-            "SELECT * FROM promotions ORDER BY created_at DESC"
+            "SELECT * FROM promo_campaigns ORDER BY created_at DESC"
         ).fetchall()
     results = []
     for r in rows:

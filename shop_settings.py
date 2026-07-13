@@ -22,21 +22,21 @@ SETTING_KEYS = {
 def init() -> None:
     with db.conn() as c:
         c.execute("""
-            CREATE TABLE IF NOT EXISTS settings (
+            CREATE TABLE IF NOT EXISTS shop_settings (
                 key     TEXT PRIMARY KEY,
                 value   TEXT DEFAULT ''
             )
         """)
         for key, info in SETTING_KEYS.items():
             c.execute(
-                "INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)",
+                "INSERT OR IGNORE INTO shop_settings (key,value) VALUES (?,?)",
                 (key, info["default"]),
             )
 
 
 def get(key: str) -> str:
     with db.conn() as c:
-        row = c.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+        row = c.execute("SELECT value FROM shop_settings WHERE key=?", (key,)).fetchone()
         if row:
             return row["value"] or ""
         return SETTING_KEYS.get(key, {}).get("default", "")
@@ -44,20 +44,20 @@ def get(key: str) -> str:
 
 def set(key: str, value: str) -> None:
     with db.conn() as c:
-        c.execute("INSERT OR REPLACE INTO settings (key,value) VALUES (?,?)",
+        c.execute("INSERT OR REPLACE INTO shop_settings (key,value) VALUES (?,?)",
                   (key, value))
 
 
 def get_all() -> dict:
     with db.conn() as c:
-        rows = c.execute("SELECT key, value FROM settings").fetchall()
+        rows = c.execute("SELECT key, value FROM shop_settings").fetchall()
         return {r["key"]: r["value"] for r in rows}
 
 
 def set_many(updates: dict) -> None:
     with db.conn() as c:
         for key, value in updates.items():
-            c.execute("INSERT OR REPLACE INTO settings (key,value) VALUES (?,?)",
+            c.execute("INSERT OR REPLACE INTO shop_settings (key,value) VALUES (?,?)",
                       (key, str(value)))
 
 

@@ -19,13 +19,12 @@ def calculate() -> list[dict]:
     with db.conn() as c:
         rows = c.execute("""
             SELECT p.sku, p.name, p.stock, p.cost_price, p.sell_price,
-                   COALESCE(SUM(oi.qty), 0) AS total_sold,
+                   COALESCE(SUM(o.qty), 0) AS total_sold,
                    COUNT(DISTINCT o.order_id) AS order_count,
                    MIN(o.order_date) AS first_sale,
                    MAX(o.order_date) AS last_sale
             FROM products p
-            LEFT JOIN order_items oi ON oi.sku = p.sku
-            LEFT JOIN orders o ON o.order_id = oi.order_id
+            LEFT JOIN orders o ON o.sku = p.sku
             GROUP BY p.sku
             ORDER BY total_sold DESC
         """).fetchall()

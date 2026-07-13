@@ -74,12 +74,12 @@ def _revenue_score() -> float:
     """Score based on whether revenue is growing."""
     with db.conn() as c:
         this_month = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS rev
+            SELECT COALESCE(SUM(total_price), 0) AS rev
             FROM orders WHERE order_date >= date('now','start of month')
         """).fetchone()["rev"]
 
         last_month = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS rev
+            SELECT COALESCE(SUM(total_price), 0) AS rev
             FROM orders WHERE order_date >= date('now','start of month','-1 month')
               AND order_date < date('now','start of month')
         """).fetchone()["rev"]
@@ -100,11 +100,10 @@ def _margin_score() -> float:
     """Score based on average profit margin."""
     with db.conn() as c:
         rows = c.execute("""
-            SELECT COALESCE(SUM(oi.qty * oi.unit_price), 0) AS rev,
-                   COALESCE(SUM(oi.qty * p.cost_price), 0) AS cogs
-            FROM order_items oi
-            LEFT JOIN products p ON p.sku = oi.sku
-            JOIN orders o ON o.order_id = oi.order_id
+            SELECT COALESCE(SUM(o.qty * o.unit_price), 0) AS rev,
+                   COALESCE(SUM(o.qty * p.cost_price), 0) AS cogs
+            FROM orders o
+            LEFT JOIN products p ON p.sku = o.sku
             WHERE o.order_date >= date('now','-30 day')
         """).fetchone()
 
@@ -209,13 +208,13 @@ def _expense_score() -> float:
     """Score based on expense-to-revenue ratio."""
     with db.conn() as c:
         rev = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) FROM orders
+            SELECT COALESCE(SUM(total_price), 0) FROM orders
             WHERE order_date >= date('now','-30 day')
         """).fetchone()[0]
 
         exp = c.execute("""
             SELECT COALESCE(SUM(amount), 0) FROM expenses
-            WHERE expense_date >= date('now','-30 day')
+            WHERE date >= date('now','-30 day')
         """).fetchone()[0]
 
     if rev <= 0:
