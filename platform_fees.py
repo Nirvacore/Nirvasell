@@ -56,6 +56,30 @@ PLATFORMS = {
     },
 }
 
+# Keep the big-3 marketplace rates in lockstep with fees.py (the single
+# source of truth, incl. user overrides) — the two tables used to disagree.
+def _sync_with_fees():
+    try:
+        import fees as _fees
+        table = _fees.load()
+    except Exception:
+        return
+    for local_key, fees_key in (("shopee", "shopee"), ("lazada", "lazada"),
+                                ("tiktok_shop", "tiktok")):
+        f = table.get(fees_key)
+        if not f or local_key not in PLATFORMS:
+            continue
+        PLATFORMS[local_key]["fees"].update({
+            "commission": f.get("commission_pct", 0),
+            "payment": f.get("payment_pct", 0),
+            "transaction": f.get("transaction_pct", 0),
+            "vat_on_fees": f.get("vat_on_fees", 0),
+        })
+
+
+_sync_with_fees()
+
+
 
 def calculate(platform: str, sale_price: float,
               cost_price: float = 0, qty: int = 1) -> dict:

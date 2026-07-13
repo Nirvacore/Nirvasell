@@ -17,10 +17,10 @@ st.caption(t("skutr.caption"))
 
 summary = skut.summary()
 c1, c2, c3, c4 = st.columns(4)
-c1.metric(t("skutr.kpi_rising"), summary.get("rising_count",0))
-c2.metric(t("skutr.kpi_declining"), summary.get("declining_count",0),
-          delta_color="inverse" if summary.get("declining_count",0) > 0 else "off")
-c3.metric(t("skutr.kpi_new"), summary.get("new_count",0))
+c1.metric(t("skutr.kpi_rising"), summary.get("rising",0))
+c2.metric(t("skutr.kpi_declining"), summary.get("declining",0),
+          delta_color="inverse" if summary.get("declining",0) > 0 else "off")
+c3.metric(t("skutr.kpi_new"), len(skut.new_products()))
 c4.metric(t("skutr.kpi_total"), summary.get("total_skus",0))
 
 st.divider()
@@ -44,7 +44,7 @@ with tab_rising:
     if not rising:
         st.info(t("skutr.no_rising"))
     for r in rising:
-        pct  = r.get("change_pct",0)
+        pct  = r.get("qty_change_pct",0)
         sku  = r.get("sku","?")
         name = r.get("name") or sku
         row_html = (
@@ -53,7 +53,7 @@ with tab_rising:
             " <span style='color:#9a9485'>(" + sku + ")</span></div>"
             "<div style='margin-top:2px'>" + _trend_bar(pct, True) +
             "<span style='color:#9a9485;margin-left:8px'>prev " +
-            str(r.get("prev_qty",0)) + " → " + str(r.get("curr_qty",0)) + t("skutr.units") +
+            str(r.get("qty_last_week",0)) + " → " + str(r.get("qty_this_week",0)) + t("skutr.units") +
             "</span></div></div>"
         )
         st.html(row_html)
@@ -63,7 +63,7 @@ with tab_declining:
     if not declining:
         st.success(t("skutr.no_declining"))
     for d in declining:
-        pct  = d.get("change_pct",0)
+        pct  = d.get("qty_change_pct",0)
         sku  = d.get("sku","?")
         name = d.get("name") or sku
         row_html = (
@@ -72,7 +72,7 @@ with tab_declining:
             " <span style='color:#9a9485'>(" + sku + ")</span></div>"
             "<div style='margin-top:2px'>" + _trend_bar(pct, False) +
             "<span style='color:#9a9485;margin-left:8px'>prev " +
-            str(d.get("prev_qty",0)) + " → " + str(d.get("curr_qty",0)) + t("skutr.units") +
+            str(d.get("qty_last_week",0)) + " → " + str(d.get("qty_this_week",0)) + t("skutr.units") +
             "</span></div></div>"
         )
         st.html(row_html)
@@ -84,7 +84,7 @@ with tab_new:
     for p in new_prods:
         sku  = p.get("sku","?")
         name = p.get("name") or sku
-        qty  = p.get("total_qty",0)
+        qty  = p.get("total_sold",0)
         rev  = p.get("total_revenue",0)
         new_html = (
             "<div style='margin:4px 0;font-size:0.84rem'>"

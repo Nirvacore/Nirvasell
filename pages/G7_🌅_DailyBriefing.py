@@ -35,7 +35,7 @@ st.subheader("📊 " + t("brief.yesterday"))
 c1, c2, c3, c4 = st.columns(4)
 c1.metric(t("brief.y_orders"), yest.get("orders", 0))
 c2.metric(t("brief.y_revenue"), "฿{:,.0f}".format(yest.get("revenue", 0)))
-c3.metric(t("brief.y_top"), yest.get("top_sku") or "—")
+c3.metric(t("brief.y_top"), yest.get("new_customers", 0))
 c4.metric(t("brief.y_returns"), yest.get("returns", 0),
           delta_color="inverse" if yest.get("returns", 0) > 0 else "off")
 

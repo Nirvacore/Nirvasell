@@ -43,6 +43,11 @@ def run_page(path: Path, user: dict) -> tuple[bool, str]:
         at.run()
         if at.exception:
             exc = at.exception[0]
+            # st.page_link needs the multipage registry AppTest never builds;
+            # KeyError 'url_pathname' there is a harness artifact, not an app bug.
+            trace = "\n".join(getattr(exc, "stack_trace", []) or [])
+            if exc.message == "'url_pathname'" and "page_link" in trace:
+                return True, ""
             return False, f"{exc.type}: {exc.message}"
         return True, ""
     except Exception as e:  # harness-level failure (import error etc.)

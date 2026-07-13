@@ -46,7 +46,7 @@ with tab_overview:
                 ";width:" + str(bar_w) + "px;height:12px;vertical-align:middle;opacity:0.6'></div>"
                 " <span style='font-size:0.83rem;color:#9a9485'>" +
                 str(seg["count"]) + t("rfm.custs_unit") + " (" + str(pct) + "%)"
-                " · ฿{:,.0f}".format(seg["avg_spent"]) + " avg · " + rfm_action_label(action) + "</span>"
+                " · ฿{:,.0f}".format(avg_spent) + " avg · " + rfm_action_label(action) + "</span>"
                 "</div>"
             )
             st.html(seg_html)

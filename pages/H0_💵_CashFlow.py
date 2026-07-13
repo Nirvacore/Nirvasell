@@ -16,10 +16,13 @@ st.title(t("cf.title"))
 st.caption(t("cf.caption"))
 
 summary = cf.summary()
+month_rows = cf.monthly(months=1)
+total_in = sum(m.get("income", 0) for m in month_rows)
+total_out = sum(m.get("expenses", 0) for m in month_rows)
 c1, c2, c3, c4 = st.columns(4)
-c1.metric(t("cf.kpi_inflow"), "฿{:,.0f}".format(summary.get("total_inflow",0)))
-c2.metric(t("cf.kpi_outflow"), "฿{:,.0f}".format(summary.get("total_outflow",0)))
-net = summary.get("net_flow",0)
+c1.metric(t("cf.kpi_inflow"), "฿{:,.0f}".format(total_in))
+c2.metric(t("cf.kpi_outflow"), "฿{:,.0f}".format(total_out))
+net = total_in - total_out
 c3.metric(t("cf.kpi_net"), "฿{:,.0f}".format(net),
           delta_color="normal" if net >= 0 else "inverse")
 forecast = cf.current_month_forecast()
@@ -35,16 +38,16 @@ with tab_daily:
     if not daily:
         st.info(t("cf.empty"))
     else:
-        max_val = max(max(abs(d.get("inflow",0)), abs(d.get("outflow",0))) for d in daily) or 1
+        max_val = max(max(abs(d.get("income",0)), abs(d.get("expenses",0))) for d in daily) or 1
         for d in daily:
-            inf_w = int(d.get("inflow",0) / max_val * 160)
-            out_w = int(d.get("outflow",0) / max_val * 160)
-            net_d  = d.get("inflow",0) - d.get("outflow",0)
+            inf_w = int(d.get("income",0) / max_val * 160)
+            out_w = int(d.get("expenses",0) / max_val * 160)
+            net_d  = d.get("net",0)
             net_c  = "#4d6c5c" if net_d >= 0 else "#c54c4c"
             row_html = (
                 "<div style='margin:3px 0;font-size:0.82rem'>"
                 "<span style='color:#9a9485;width:80px;display:inline-block'>" +
-                (d.get("date") or "—") + "</span>"
+                (d.get("day") or "—") + "</span>"
                 "<span style='display:inline-block;background:#4d6c5c;width:" +
                 str(inf_w) + "px;height:10px;margin-right:4px'></span>"
                 "<span style='display:inline-block;background:#c54c4c;width:" +
