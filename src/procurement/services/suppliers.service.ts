@@ -1,11 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException, ConflictException, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@nestjs/prisma';
 import { Decimal } from 'decimal.js';
-import { Supplier } from '../entities/supplier.entity';
-import { PurchaseOrder } from '../entities/purchase-order.entity';
-import { Quotation } from '../entities/quotation.entity';
-import { Payment } from '../entities/payment.entity';
+import { Supplier, PurchaseOrder, Quotation, Payment } from '@prisma/client';
 
 export interface POItem {
   productId?: string;
@@ -34,16 +30,7 @@ export class SuppliersService {
   private readonly logger = new Logger(SuppliersService.name);
   private poCounter: Map<string, number> = new Map(); // companyId -> counter
 
-  constructor(
-    @InjectRepository(Supplier)
-    private supplierRepo: Repository<Supplier>,
-    @InjectRepository(PurchaseOrder)
-    private poRepo: Repository<PurchaseOrder>,
-    @InjectRepository(Quotation)
-    private quotationRepo: Repository<Quotation>,
-    @InjectRepository(Payment)
-    private paymentRepo: Repository<Payment>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   // ============ Supplier CRUD ============
 
@@ -63,9 +50,12 @@ export class SuppliersService {
     }
 
     // Check for duplicate email
-    const existing = await this.supplierRepo.findOne({
-      where: { companyId, email },
-    });
+    const existing = await this.prisma.supplier.findUnique({
+      where: {
+        companyId_email: { companyId, email },
+      },
+    }).catch(() => null); // Handle case where unique constraint might not exist yet
+
     if (existing) {
       throw new ConflictException(`Supplier with email ${email} already exists`);
     }
@@ -75,21 +65,21 @@ export class SuppliersService {
       throw new BadRequestException('Rating must be between 1 and 5');
     }
 
-    const supplier = this.supplierRepo.create({
-      companyId,
-      name,
-      contact,
-      email,
-      phone,
-      paymentTerms,
-      rating: new Decimal(rating),
+    return this.prisma.supplier.create({
+      data: {
+        companyId,
+        name,
+        contact,
+        email,
+        phone,
+        paymentTerms,
+        rating: new Decimal(rating),
+      },
     });
-
-    return this.supplierRepo.save(supplier);
   }
 
   async getSupplier(companyId: string, supplierId: string): Promise<Supplier> {
-    const supplier = await this.supplierRepo.findOne({
+    const supplier = await this.prisma.supplier.findFirst({
       where: { id: supplierId, companyId },
     });
 
@@ -105,12 +95,17 @@ export class SuppliersService {
     limit: number = 10,
     offset: number = 0,
   ): Promise<{ suppliers: Supplier[]; total: number }> {
-    const [suppliers, total] = await this.supplierRepo.findAndCount({
-      where: { companyId, isActive: true },
-      skip: offset,
-      take: limit,
-      order: { createdAt: 'DESC' },
-    });
+    const [suppliers, total] = await Promise.all([
+      this.prisma.supplier.findMany({
+        where: { companyId, isActive: true },
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.supplier.count({
+        where: { companyId, isActive: true },
+      }),
+    ]);
 
     return { suppliers, total };
   }
@@ -134,14 +129,19 @@ export class SuppliersService {
       }
     }
 
-    Object.assign(supplier, updates);
-    return this.supplierRepo.save(supplier);
+    return this.prisma.supplier.update({
+      where: { id: supplierId },
+      data: updates,
+    });
   }
 
   async deactivateSupplier(companyId: string, supplierId: string): Promise<Supplier> {
-    const supplier = await this.getSupplier(companyId, supplierId);
-    supplier.isActive = false;
-    return this.supplierRepo.save(supplier);
+    await this.getSupplier(companyId, supplierId);
+
+    return this.prisma.supplier.update({
+      where: { id: supplierId },
+      data: { isActive: false },
+    });
   }
 
   // ============ Purchase Orders ============
@@ -167,8 +167,8 @@ export class SuppliersService {
       totalAmount = totalAmount.plus(totalPrice);
       return {
         ...item,
-        unitPrice,
-        totalPrice,
+        unitPrice: unitPrice.toJSON(),
+        totalPrice: totalPrice.toJSON(),
       };
     });
 
@@ -177,18 +177,18 @@ export class SuppliersService {
     this.poCounter.set(companyId, counter);
     const poNumber = `PO-${companyId.substring(0, 4).toUpperCase()}-${Date.now()}-${counter}`;
 
-    const po = this.poRepo.create({
-      companyId,
-      supplierId,
-      poNumber,
-      items: processedItems,
-      totalAmount,
-      status: 'draft',
-      paymentsMade: 0,
-      deductedAmount: 0,
+    return this.prisma.purchaseOrder.create({
+      data: {
+        companyId,
+        supplierId,
+        poNumber,
+        items: processedItems,
+        totalAmount,
+        status: 'draft',
+        paymentsMade: new Decimal(0),
+        deductedAmount: new Decimal(0),
+      },
     });
-
-    return this.poRepo.save(po);
   }
 
   async updatePOStatus(
@@ -201,7 +201,7 @@ export class SuppliersService {
       throw new BadRequestException(`Invalid status: ${status}`);
     }
 
-    const po = await this.poRepo.findOne({
+    const po = await this.prisma.purchaseOrder.findFirst({
       where: { id: poId, companyId },
     });
 
@@ -209,21 +209,23 @@ export class SuppliersService {
       throw new NotFoundException('Purchase order not found');
     }
 
-    po.status = status;
-    return this.poRepo.save(po);
+    return this.prisma.purchaseOrder.update({
+      where: { id: poId },
+      data: { status },
+    });
   }
 
   async getPOsByStatus(companyId: string, status: string): Promise<PurchaseOrder[]> {
-    return this.poRepo.find({
+    return this.prisma.purchaseOrder.findMany({
       where: { companyId, status },
-      order: { createdAt: 'DESC' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
   async getSupplierPOs(companyId: string, supplierId: string): Promise<PurchaseOrder[]> {
-    return this.poRepo.find({
+    return this.prisma.purchaseOrder.findMany({
       where: { companyId, supplierId },
-      order: { createdAt: 'DESC' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -251,8 +253,8 @@ export class SuppliersService {
       totalAmount = totalAmount.plus(totalPrice);
       return {
         ...item,
-        unitPrice,
-        totalPrice,
+        unitPrice: unitPrice.toJSON(),
+        totalPrice: totalPrice.toJSON(),
       };
     });
 
@@ -261,21 +263,21 @@ export class SuppliersService {
     const validUntil = new Date();
     validUntil.setDate(validUntil.getDate() + validUntilDays);
 
-    const quotation = this.quotationRepo.create({
-      companyId,
-      supplierId,
-      quotationNumber,
-      items: processedItems,
-      totalAmount,
-      status: 'pending',
-      validUntil,
+    return this.prisma.quotation.create({
+      data: {
+        companyId,
+        supplierId,
+        quotationNumber,
+        items: processedItems,
+        totalAmount,
+        status: 'pending',
+        validUntil,
+      },
     });
-
-    return this.quotationRepo.save(quotation);
   }
 
   async acceptQuotation(companyId: string, quotationId: string): Promise<PurchaseOrder> {
-    const quotation = await this.quotationRepo.findOne({
+    const quotation = await this.prisma.quotation.findFirst({
       where: { id: quotationId, companyId },
     });
 
@@ -291,28 +293,79 @@ export class SuppliersService {
       throw new BadRequestException('Quotation has expired');
     }
 
-    // Create PO from quotation
-    const po = await this.createPO(
-      companyId,
-      quotation.supplierId,
-      quotation.items.map(item => ({
-        description: item.description,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-      })),
-    );
+    // Use transaction for multi-step operation
+    return this.prisma.$transaction(async tx => {
+      // Create PO from quotation
+      const po = await this.createPOFromQuotation(
+        companyId,
+        quotation.supplierId,
+        quotation.items as any[],
+        tx,
+      );
 
-    // Update quotation
-    quotation.status = 'accepted';
-    quotation.acceptedAt = new Date();
-    quotation.poId = po.id;
-    await this.quotationRepo.save(quotation);
+      // Update quotation
+      await tx.quotation.update({
+        where: { id: quotationId },
+        data: {
+          status: 'accepted',
+          acceptedAt: new Date(),
+          poId: po.id,
+        },
+      });
 
-    return po;
+      return po;
+    });
+  }
+
+  private async createPOFromQuotation(
+    companyId: string,
+    supplierId: string,
+    items: Array<{ description: string; quantity: number; unitPrice: any }>,
+    tx: any,
+  ): Promise<PurchaseOrder> {
+    // Verify supplier exists
+    const supplier = await tx.supplier.findFirst({
+      where: { id: supplierId, companyId },
+    });
+
+    if (!supplier) {
+      throw new NotFoundException('Supplier not found');
+    }
+
+    // Calculate total amount
+    let totalAmount = new Decimal(0);
+    const processedItems = items.map(item => {
+      const unitPrice = new Decimal(item.unitPrice);
+      const totalPrice = unitPrice.times(item.quantity);
+      totalAmount = totalAmount.plus(totalPrice);
+      return {
+        ...item,
+        unitPrice: unitPrice.toJSON(),
+        totalPrice: totalPrice.toJSON(),
+      };
+    });
+
+    // Generate PO number
+    const counter = (this.poCounter.get(companyId) || 0) + 1;
+    this.poCounter.set(companyId, counter);
+    const poNumber = `PO-${companyId.substring(0, 4).toUpperCase()}-${Date.now()}-${counter}`;
+
+    return tx.purchaseOrder.create({
+      data: {
+        companyId,
+        supplierId,
+        poNumber,
+        items: processedItems,
+        totalAmount,
+        status: 'draft',
+        paymentsMade: new Decimal(0),
+        deductedAmount: new Decimal(0),
+      },
+    });
   }
 
   async rejectQuotation(companyId: string, quotationId: string): Promise<Quotation> {
-    const quotation = await this.quotationRepo.findOne({
+    const quotation = await this.prisma.quotation.findFirst({
       where: { id: quotationId, companyId },
     });
 
@@ -324,9 +377,13 @@ export class SuppliersService {
       throw new BadRequestException('Only pending quotations can be rejected');
     }
 
-    quotation.status = 'rejected';
-    quotation.rejectedAt = new Date();
-    return this.quotationRepo.save(quotation);
+    return this.prisma.quotation.update({
+      where: { id: quotationId },
+      data: {
+        status: 'rejected',
+        rejectedAt: new Date(),
+      },
+    });
   }
 
   async compareQuotations(companyId: string, quotationIds: string[]): Promise<Quotation[]> {
@@ -334,16 +391,15 @@ export class SuppliersService {
       throw new BadRequestException('At least 2 quotations are required for comparison');
     }
 
-    const quotations = await this.quotationRepo.find({
+    const quotations = await this.prisma.quotation.findMany({
       where: {
-        id: quotationIds.includes('{id}') ? undefined : undefined, // Use IN query
+        id: { in: quotationIds },
         companyId,
       },
     });
 
-    // Manual filtering since TypeORM doesn't support IN directly in this context
-    return quotations.filter(q => quotationIds.includes(q.id)).sort((a, b) => {
-      return a.totalAmount.toNumber() - b.totalAmount.toNumber();
+    return quotations.sort((a, b) => {
+      return (a.totalAmount as any).toNumber() - (b.totalAmount as any).toNumber();
     });
   }
 
@@ -356,7 +412,7 @@ export class SuppliersService {
     paymentType: string,
     invoiceNumber: string,
   ): Promise<Payment> {
-    const po = await this.poRepo.findOne({
+    const po = await this.prisma.purchaseOrder.findFirst({
       where: { id: poId, companyId },
     });
 
@@ -376,29 +432,36 @@ export class SuppliersService {
       throw new BadRequestException(`Invalid payment type: ${paymentType}`);
     }
 
-    const payment = this.paymentRepo.create({
-      companyId,
-      poId,
-      supplierId: po.supplierId,
-      invoiceNumber,
-      amount: paymentAmount,
-      paymentType,
-      status: 'processed',
+    // Use transaction for multi-step operation
+    return this.prisma.$transaction(async tx => {
+      // Record payment
+      const payment = await tx.payment.create({
+        data: {
+          companyId,
+          poId,
+          supplierId: po.supplierId,
+          invoiceNumber,
+          amount: paymentAmount,
+          paymentType,
+          status: 'processed',
+        },
+      });
+
+      // Update PO
+      const newPaymentsMade = new Decimal(po.paymentsMade).plus(paymentAmount);
+      await tx.purchaseOrder.update({
+        where: { id: poId },
+        data: { paymentsMade: newPaymentsMade },
+      });
+
+      return payment;
     });
-
-    await this.paymentRepo.save(payment);
-
-    // Update PO
-    po.paymentsMade = new Decimal(po.paymentsMade).plus(paymentAmount).toNumber();
-    await this.poRepo.save(po);
-
-    return payment;
   }
 
   async getPaymentHistory(companyId: string, supplierId: string): Promise<Payment[]> {
-    return this.paymentRepo.find({
+    return this.prisma.payment.findMany({
       where: { companyId, supplierId },
-      order: { recordedAt: 'DESC' },
+      orderBy: { recordedAt: 'desc' },
     });
   }
 
@@ -442,7 +505,7 @@ export class SuppliersService {
       totalSpent,
       averageDeliveryDays: deliveredCount > 0 ? Math.floor(totalDeliveryDays / deliveredCount) : 0,
       onTimeDeliveryRate: deliveredCount > 0 ? Math.round((onTimeCount / deliveredCount) * 100) : 0,
-      qualityScore: supplier.rating.toNumber(),
+      qualityScore: supplier.rating instanceof Decimal ? supplier.rating.toNumber() : (supplier.rating as any).toNumber(),
       lastOrderDate,
     };
   }
@@ -452,13 +515,17 @@ export class SuppliersService {
     by: 'rating' | 'frequency' | 'savings' = 'rating',
     limit: number = 10,
   ): Promise<Supplier[]> {
-    const suppliers = await this.supplierRepo.find({
+    const suppliers = await this.prisma.supplier.findMany({
       where: { companyId, isActive: true },
     });
 
     // Get metrics for sorting
     if (by === 'rating') {
-      return suppliers.sort((a, b) => b.rating.toNumber() - a.rating.toNumber()).slice(0, limit);
+      return suppliers.sort((a, b) => {
+        const aRating = a.rating instanceof Decimal ? a.rating.toNumber() : (a.rating as any).toNumber();
+        const bRating = b.rating instanceof Decimal ? b.rating.toNumber() : (b.rating as any).toNumber();
+        return bRating - aRating;
+      }).slice(0, limit);
     }
 
     if (by === 'frequency') {

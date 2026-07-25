@@ -1,75 +1,80 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@nestjs/prisma';
 import { Decimal } from 'decimal.js';
 import { SuppliersService } from './suppliers.service';
-import { Supplier } from '../entities/supplier.entity';
-import { PurchaseOrder } from '../entities/purchase-order.entity';
-import { Quotation } from '../entities/quotation.entity';
-import { Payment } from '../entities/payment.entity';
 import { BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 
 describe('SuppliersService', () => {
   let service: SuppliersService;
-  let supplierRepo: Repository<Supplier>;
-  let poRepo: Repository<PurchaseOrder>;
-  let quotationRepo: Repository<Quotation>;
-  let paymentRepo: Repository<Payment>;
+  let prisma: PrismaService;
 
   const mockCompanyId = 'company-123';
   const mockSupplierId = 'supplier-456';
   const mockPoId = 'po-789';
   const mockQuotationId = 'quotation-101';
 
+  const mockSupplier = {
+    id: mockSupplierId,
+    companyId: mockCompanyId,
+    name: 'Test Supplier',
+    contact: 'John Doe',
+    email: 'john@supplier.com',
+    phone: '123456789',
+    paymentTerms: 'net30',
+    rating: new Decimal(4.5),
+    address: '123 Street',
+    city: 'City',
+    country: 'Country',
+    taxId: 'TAX123',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SuppliersService,
         {
-          provide: getRepositoryToken(Supplier),
+          provide: PrismaService,
           useValue: {
-            findOne: jest.fn(),
-            find: jest.fn(),
-            findAndCount: jest.fn(),
-            create: jest.fn(),
-            save: jest.fn(),
-          },
-        },
-        {
-          provide: getRepositoryToken(PurchaseOrder),
-          useValue: {
-            findOne: jest.fn(),
-            find: jest.fn(),
-            create: jest.fn(),
-            save: jest.fn(),
-          },
-        },
-        {
-          provide: getRepositoryToken(Quotation),
-          useValue: {
-            findOne: jest.fn(),
-            find: jest.fn(),
-            create: jest.fn(),
-            save: jest.fn(),
-          },
-        },
-        {
-          provide: getRepositoryToken(Payment),
-          useValue: {
-            findOne: jest.fn(),
-            find: jest.fn(),
-            create: jest.fn(),
-            save: jest.fn(),
+            supplier: {
+              findUnique: jest.fn(),
+              findFirst: jest.fn(),
+              findMany: jest.fn(),
+              count: jest.fn(),
+              create: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            purchaseOrder: {
+              findFirst: jest.fn(),
+              findMany: jest.fn(),
+              create: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            quotation: {
+              findFirst: jest.fn(),
+              findMany: jest.fn(),
+              create: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            payment: {
+              findMany: jest.fn(),
+              create: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            $transaction: jest.fn(),
           },
         },
       ],
     }).compile();
 
     service = module.get<SuppliersService>(SuppliersService);
-    supplierRepo = module.get<Repository<Supplier>>(getRepositoryToken(Supplier));
-    poRepo = module.get<Repository<PurchaseOrder>>(getRepositoryToken(PurchaseOrder));
-    quotationRepo = module.get<Repository<Quotation>>(getRepositoryToken(Quotation));
-    paymentRepo = module.get<Repository<Payment>>(getRepositoryToken(Payment));
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(() => {
@@ -80,23 +85,8 @@ describe('SuppliersService', () => {
 
   describe('createSupplier', () => {
     it('should create a supplier successfully', async () => {
-      const mockSupplier = {
-        id: mockSupplierId,
-        companyId: mockCompanyId,
-        name: 'Test Supplier',
-        contact: 'John Doe',
-        email: 'john@supplier.com',
-        phone: '123456789',
-        paymentTerms: 'net30',
-        rating: new Decimal(4.5),
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(null);
-      jest.spyOn(supplierRepo, 'create').mockReturnValue(mockSupplier);
-      jest.spyOn(supplierRepo, 'save').mockResolvedValue(mockSupplier);
+      jest.spyOn(prisma.supplier, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prisma.supplier, 'create').mockResolvedValue(mockSupplier);
 
       const result = await service.createSupplier(
         mockCompanyId,
@@ -109,15 +99,21 @@ describe('SuppliersService', () => {
       );
 
       expect(result).toEqual(mockSupplier);
-      expect(supplierRepo.findOne).toHaveBeenCalledWith({
-        where: { companyId: mockCompanyId, email: 'john@supplier.com' },
+      expect(prisma.supplier.create).toHaveBeenCalledWith({
+        data: {
+          companyId: mockCompanyId,
+          name: 'Test Supplier',
+          contact: 'John Doe',
+          email: 'john@supplier.com',
+          phone: '123456789',
+          paymentTerms: 'net30',
+          rating: expect.any(Decimal),
+        },
       });
     });
 
     it('should throw ConflictException if supplier email already exists', async () => {
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue({
-        id: 'existing-id',
-      } as Supplier);
+      jest.spyOn(prisma.supplier, 'findUnique').mockResolvedValue(mockSupplier);
 
       await expect(
         service.createSupplier(
@@ -132,7 +128,7 @@ describe('SuppliersService', () => {
     });
 
     it('should throw BadRequestException for invalid payment terms', async () => {
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(null);
+      jest.spyOn(prisma.supplier, 'findUnique').mockResolvedValue(null);
 
       await expect(
         service.createSupplier(
@@ -147,7 +143,7 @@ describe('SuppliersService', () => {
     });
 
     it('should throw BadRequestException for invalid rating', async () => {
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(null);
+      jest.spyOn(prisma.supplier, 'findUnique').mockResolvedValue(null);
 
       await expect(
         service.createSupplier(
@@ -165,23 +161,18 @@ describe('SuppliersService', () => {
 
   describe('getSupplier', () => {
     it('should return a supplier by ID', async () => {
-      const mockSupplier = {
-        id: mockSupplierId,
-        companyId: mockCompanyId,
-      } as Supplier;
-
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(mockSupplier);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
 
       const result = await service.getSupplier(mockCompanyId, mockSupplierId);
 
       expect(result).toEqual(mockSupplier);
-      expect(supplierRepo.findOne).toHaveBeenCalledWith({
+      expect(prisma.supplier.findFirst).toHaveBeenCalledWith({
         where: { id: mockSupplierId, companyId: mockCompanyId },
       });
     });
 
     it('should throw NotFoundException if supplier not found', async () => {
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(null);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(null);
 
       await expect(service.getSupplier(mockCompanyId, 'unknown-id')).rejects.toThrow(
         NotFoundException,
@@ -192,26 +183,31 @@ describe('SuppliersService', () => {
   describe('listSuppliers', () => {
     it('should list suppliers with pagination', async () => {
       const mockSuppliers = [
-        { id: 'sup-1', companyId: mockCompanyId } as Supplier,
-        { id: 'sup-2', companyId: mockCompanyId } as Supplier,
+        { id: 'sup-1', companyId: mockCompanyId },
+        { id: 'sup-2', companyId: mockCompanyId },
       ];
 
-      jest.spyOn(supplierRepo, 'findAndCount').mockResolvedValue([mockSuppliers, 2]);
+      jest.spyOn(prisma.supplier, 'findMany').mockResolvedValue(mockSuppliers as any);
+      jest.spyOn(prisma.supplier, 'count').mockResolvedValue(2);
 
       const result = await service.listSuppliers(mockCompanyId, 10, 0);
 
       expect(result.suppliers).toEqual(mockSuppliers);
       expect(result.total).toBe(2);
-      expect(supplierRepo.findAndCount).toHaveBeenCalledWith({
+      expect(prisma.supplier.findMany).toHaveBeenCalledWith({
         where: { companyId: mockCompanyId, isActive: true },
         skip: 0,
         take: 10,
-        order: { createdAt: 'DESC' },
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(prisma.supplier.count).toHaveBeenCalledWith({
+        where: { companyId: mockCompanyId, isActive: true },
       });
     });
 
     it('should handle empty supplier list', async () => {
-      jest.spyOn(supplierRepo, 'findAndCount').mockResolvedValue([[], 0]);
+      jest.spyOn(prisma.supplier, 'findMany').mockResolvedValue([]);
+      jest.spyOn(prisma.supplier, 'count').mockResolvedValue(0);
 
       const result = await service.listSuppliers(mockCompanyId);
 
@@ -227,7 +223,7 @@ describe('SuppliersService', () => {
         companyId: mockCompanyId,
         name: 'Old Name',
         rating: new Decimal(3),
-      } as Supplier;
+      };
 
       const updatedSupplier = {
         ...existingSupplier,
@@ -235,8 +231,8 @@ describe('SuppliersService', () => {
         rating: new Decimal(4),
       };
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(existingSupplier);
-      jest.spyOn(supplierRepo, 'save').mockResolvedValue(updatedSupplier);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(existingSupplier as any);
+      jest.spyOn(prisma.supplier, 'update').mockResolvedValue(updatedSupplier as any);
 
       const result = await service.updateSupplier(mockCompanyId, mockSupplierId, {
         name: 'New Name',
@@ -244,16 +240,11 @@ describe('SuppliersService', () => {
       });
 
       expect(result.name).toBe('New Name');
-      expect(supplierRepo.save).toHaveBeenCalled();
+      expect(prisma.supplier.update).toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid rating update', async () => {
-      const existingSupplier = {
-        id: mockSupplierId,
-        companyId: mockCompanyId,
-      } as Supplier;
-
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(existingSupplier);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
 
       await expect(
         service.updateSupplier(mockCompanyId, mockSupplierId, {
@@ -269,17 +260,21 @@ describe('SuppliersService', () => {
         id: mockSupplierId,
         companyId: mockCompanyId,
         isActive: true,
-      } as Supplier;
+      };
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
-      jest.spyOn(supplierRepo, 'save').mockResolvedValue({
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(supplier as any);
+      jest.spyOn(prisma.supplier, 'update').mockResolvedValue({
         ...supplier,
         isActive: false,
-      });
+      } as any);
 
       const result = await service.deactivateSupplier(mockCompanyId, mockSupplierId);
 
       expect(result.isActive).toBe(false);
+      expect(prisma.supplier.update).toHaveBeenCalledWith({
+        where: { id: mockSupplierId },
+        data: { isActive: false },
+      });
     });
   });
 
@@ -287,32 +282,29 @@ describe('SuppliersService', () => {
 
   describe('createPO', () => {
     it('should create a purchase order successfully', async () => {
-      const supplier = { id: mockSupplierId, companyId: mockCompanyId } as Supplier;
       const items = [
         { description: 'Product A', quantity: 10, unitPrice: new Decimal(100) },
       ];
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
-      jest.spyOn(poRepo, 'create').mockReturnValue({
+      const mockPO = {
         id: mockPoId,
         companyId: mockCompanyId,
         supplierId: mockSupplierId,
         status: 'draft',
-      } as any);
-      jest.spyOn(poRepo, 'save').mockResolvedValue({
-        id: mockPoId,
         totalAmount: new Decimal(1000),
-      } as PurchaseOrder);
+      };
+
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
+      jest.spyOn(prisma.purchaseOrder, 'create').mockResolvedValue(mockPO as any);
 
       const result = await service.createPO(mockCompanyId, mockSupplierId, items);
 
       expect(result.id).toBe(mockPoId);
-      expect(poRepo.save).toHaveBeenCalled();
+      expect(prisma.purchaseOrder.create).toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for empty items', async () => {
-      const supplier = { id: mockSupplierId } as Supplier;
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
 
       await expect(service.createPO(mockCompanyId, mockSupplierId, [])).rejects.toThrow(
         BadRequestException,
@@ -320,24 +312,23 @@ describe('SuppliersService', () => {
     });
 
     it('should calculate correct total amount', async () => {
-      const supplier = { id: mockSupplierId } as Supplier;
       const items = [
         { description: 'Item 1', quantity: 5, unitPrice: new Decimal(50) },
         { description: 'Item 2', quantity: 3, unitPrice: new Decimal(100) },
       ];
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
-      let capturedPO: any;
-      jest.spyOn(poRepo, 'create').mockImplementation(po => {
-        capturedPO = po;
-        return po as any;
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
+
+      let capturedData: any;
+      jest.spyOn(prisma.purchaseOrder, 'create').mockImplementation((args: any) => {
+        capturedData = args.data;
+        return Promise.resolve({ id: mockPoId, ...args.data } as any);
       });
-      jest.spyOn(poRepo, 'save').mockResolvedValue({} as PurchaseOrder);
 
       await service.createPO(mockCompanyId, mockSupplierId, items);
 
       // Total should be (5*50) + (3*100) = 250 + 300 = 550
-      expect(capturedPO.totalAmount.toNumber()).toBe(550);
+      expect(capturedData.totalAmount.toNumber()).toBe(550);
     });
   });
 
@@ -347,13 +338,13 @@ describe('SuppliersService', () => {
         id: mockPoId,
         companyId: mockCompanyId,
         status: 'draft',
-      } as PurchaseOrder;
+      };
 
-      jest.spyOn(poRepo, 'findOne').mockResolvedValue(po);
-      jest.spyOn(poRepo, 'save').mockResolvedValue({
+      jest.spyOn(prisma.purchaseOrder, 'findFirst').mockResolvedValue(po as any);
+      jest.spyOn(prisma.purchaseOrder, 'update').mockResolvedValue({
         ...po,
         status: 'submitted',
-      });
+      } as any);
 
       const result = await service.updatePOStatus(mockCompanyId, mockPoId, 'submitted');
 
@@ -367,7 +358,7 @@ describe('SuppliersService', () => {
     });
 
     it('should throw NotFoundException if PO not found', async () => {
-      jest.spyOn(poRepo, 'findOne').mockResolvedValue(null);
+      jest.spyOn(prisma.purchaseOrder, 'findFirst').mockResolvedValue(null);
 
       await expect(
         service.updatePOStatus(mockCompanyId, 'unknown-po', 'submitted'),
@@ -378,32 +369,40 @@ describe('SuppliersService', () => {
   describe('getPOsByStatus', () => {
     it('should return POs by status', async () => {
       const pos = [
-        { id: 'po-1', status: 'submitted' } as PurchaseOrder,
-        { id: 'po-2', status: 'submitted' } as PurchaseOrder,
+        { id: 'po-1', status: 'submitted' },
+        { id: 'po-2', status: 'submitted' },
       ];
 
-      jest.spyOn(poRepo, 'find').mockResolvedValue(pos);
+      jest.spyOn(prisma.purchaseOrder, 'findMany').mockResolvedValue(pos as any);
 
       const result = await service.getPOsByStatus(mockCompanyId, 'submitted');
 
       expect(result).toEqual(pos);
       expect(result.length).toBe(2);
+      expect(prisma.purchaseOrder.findMany).toHaveBeenCalledWith({
+        where: { companyId: mockCompanyId, status: 'submitted' },
+        orderBy: { createdAt: 'desc' },
+      });
     });
   });
 
   describe('getSupplierPOs', () => {
     it('should return all POs for a supplier', async () => {
       const pos = [
-        { id: 'po-1', supplierId: mockSupplierId } as PurchaseOrder,
-        { id: 'po-2', supplierId: mockSupplierId } as PurchaseOrder,
+        { id: 'po-1', supplierId: mockSupplierId },
+        { id: 'po-2', supplierId: mockSupplierId },
       ];
 
-      jest.spyOn(poRepo, 'find').mockResolvedValue(pos);
+      jest.spyOn(prisma.purchaseOrder, 'findMany').mockResolvedValue(pos as any);
 
       const result = await service.getSupplierPOs(mockCompanyId, mockSupplierId);
 
       expect(result).toEqual(pos);
       expect(result.length).toBe(2);
+      expect(prisma.purchaseOrder.findMany).toHaveBeenCalledWith({
+        where: { companyId: mockCompanyId, supplierId: mockSupplierId },
+        orderBy: { createdAt: 'desc' },
+      });
     });
   });
 
@@ -411,27 +410,22 @@ describe('SuppliersService', () => {
 
   describe('requestQuotation', () => {
     it('should create a quotation', async () => {
-      const supplier = { id: mockSupplierId } as Supplier;
       const items = [{ description: 'Item', quantity: 5, unitPrice: new Decimal(50) }];
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
-      jest.spyOn(quotationRepo, 'create').mockReturnValue({
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
+      jest.spyOn(prisma.quotation, 'create').mockResolvedValue({
         id: mockQuotationId,
         status: 'pending',
       } as any);
-      jest.spyOn(quotationRepo, 'save').mockResolvedValue({
-        id: mockQuotationId,
-      } as Quotation);
 
       const result = await service.requestQuotation(mockCompanyId, mockSupplierId, items);
 
       expect(result.id).toBe(mockQuotationId);
-      expect(quotationRepo.save).toHaveBeenCalled();
+      expect(prisma.quotation.create).toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for empty items', async () => {
-      const supplier = { id: mockSupplierId } as Supplier;
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(mockSupplier);
 
       await expect(
         service.requestQuotation(mockCompanyId, mockSupplierId, []),
@@ -449,21 +443,26 @@ describe('SuppliersService', () => {
         validUntil: new Date(Date.now() + 86400000), // Tomorrow
         items: [{ description: 'Item', quantity: 5, unitPrice: new Decimal(50) }],
         totalAmount: new Decimal(250),
-      } as Quotation;
+      };
 
-      jest.spyOn(quotationRepo, 'findOne').mockResolvedValue(quotation);
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue({
-        id: mockSupplierId,
-      } as Supplier);
-      jest.spyOn(poRepo, 'create').mockReturnValue({ id: mockPoId } as any);
-      jest.spyOn(poRepo, 'save').mockResolvedValue({
+      const mockPO = {
         id: mockPoId,
         totalAmount: new Decimal(250),
-      } as PurchaseOrder);
-      jest.spyOn(quotationRepo, 'save').mockResolvedValue({
-        ...quotation,
-        status: 'accepted',
-        poId: mockPoId,
+      };
+
+      jest.spyOn(prisma.quotation, 'findFirst').mockResolvedValue(quotation as any);
+      jest.spyOn(prisma, '$transaction' as any).mockImplementation(async (callback: any) => {
+        return callback({
+          supplier: {
+            findFirst: jest.fn().mockResolvedValue(mockSupplier),
+          },
+          purchaseOrder: {
+            create: jest.fn().mockResolvedValue(mockPO),
+          },
+          quotation: {
+            update: jest.fn().mockResolvedValue({ ...quotation, status: 'accepted', poId: mockPoId }),
+          },
+        });
       });
 
       const result = await service.acceptQuotation(mockCompanyId, mockQuotationId);
@@ -477,9 +476,9 @@ describe('SuppliersService', () => {
         companyId: mockCompanyId,
         status: 'pending',
         validUntil: new Date(Date.now() - 86400000), // Yesterday
-      } as Quotation;
+      };
 
-      jest.spyOn(quotationRepo, 'findOne').mockResolvedValue(quotation);
+      jest.spyOn(prisma.quotation, 'findFirst').mockResolvedValue(quotation as any);
 
       await expect(
         service.acceptQuotation(mockCompanyId, mockQuotationId),
@@ -493,13 +492,13 @@ describe('SuppliersService', () => {
         id: mockQuotationId,
         companyId: mockCompanyId,
         status: 'pending',
-      } as Quotation;
+      };
 
-      jest.spyOn(quotationRepo, 'findOne').mockResolvedValue(quotation);
-      jest.spyOn(quotationRepo, 'save').mockResolvedValue({
+      jest.spyOn(prisma.quotation, 'findFirst').mockResolvedValue(quotation as any);
+      jest.spyOn(prisma.quotation, 'update').mockResolvedValue({
         ...quotation,
         status: 'rejected',
-      });
+      } as any);
 
       const result = await service.rejectQuotation(mockCompanyId, mockQuotationId);
 
@@ -510,16 +509,16 @@ describe('SuppliersService', () => {
   describe('compareQuotations', () => {
     it('should compare multiple quotations', async () => {
       const quotations = [
-        { id: 'qt-1', totalAmount: new Decimal(100) } as Quotation,
-        { id: 'qt-2', totalAmount: new Decimal(150) } as Quotation,
+        { id: 'qt-1', totalAmount: new Decimal(100) },
+        { id: 'qt-2', totalAmount: new Decimal(150) },
       ];
 
-      jest.spyOn(quotationRepo, 'find').mockResolvedValue(quotations);
+      jest.spyOn(prisma.quotation, 'findMany').mockResolvedValue(quotations as any);
 
       const result = await service.compareQuotations(mockCompanyId, ['qt-1', 'qt-2']);
 
       expect(result.length).toBe(2);
-      expect(result[0].totalAmount.toNumber()).toBe(100); // Lowest price first
+      expect((result[0].totalAmount as any).toNumber()).toBe(100); // Lowest price first
     });
 
     it('should throw error for less than 2 quotations', async () => {
@@ -538,17 +537,21 @@ describe('SuppliersService', () => {
         companyId: mockCompanyId,
         supplierId: mockSupplierId,
         totalAmount: new Decimal(1000),
-        paymentsMade: 0,
-        deductedAmount: 0,
-      } as PurchaseOrder;
+        paymentsMade: new Decimal(0),
+        deductedAmount: new Decimal(0),
+      };
 
-      jest.spyOn(poRepo, 'findOne').mockResolvedValue(po);
-      jest.spyOn(paymentRepo, 'create').mockReturnValue({ id: 'payment-1' } as any);
-      jest.spyOn(paymentRepo, 'save').mockResolvedValue({
-        id: 'payment-1',
-        amount: new Decimal(500),
-      } as Payment);
-      jest.spyOn(poRepo, 'save').mockResolvedValue(po);
+      jest.spyOn(prisma.purchaseOrder, 'findFirst').mockResolvedValue(po as any);
+      jest.spyOn(prisma, '$transaction' as any).mockImplementation(async (callback: any) => {
+        return callback({
+          payment: {
+            create: jest.fn().mockResolvedValue({ id: 'payment-1', amount: new Decimal(500) }),
+          },
+          purchaseOrder: {
+            update: jest.fn().mockResolvedValue(po),
+          },
+        });
+      });
 
       const result = await service.recordPayment(
         mockCompanyId,
@@ -559,7 +562,6 @@ describe('SuppliersService', () => {
       );
 
       expect(result.amount).toEqual(new Decimal(500));
-      expect(paymentRepo.save).toHaveBeenCalled();
     });
 
     it('should throw error for payment exceeding balance', async () => {
@@ -567,11 +569,11 @@ describe('SuppliersService', () => {
         id: mockPoId,
         companyId: mockCompanyId,
         totalAmount: new Decimal(1000),
-        paymentsMade: 900,
-        deductedAmount: 0,
-      } as PurchaseOrder;
+        paymentsMade: new Decimal(900),
+        deductedAmount: new Decimal(0),
+      };
 
-      jest.spyOn(poRepo, 'findOne').mockResolvedValue(po);
+      jest.spyOn(prisma.purchaseOrder, 'findFirst').mockResolvedValue(po as any);
 
       await expect(
         service.recordPayment(
@@ -585,8 +587,8 @@ describe('SuppliersService', () => {
     });
 
     it('should throw error for invalid payment type', async () => {
-      const po = { id: mockPoId, companyId: mockCompanyId } as PurchaseOrder;
-      jest.spyOn(poRepo, 'findOne').mockResolvedValue(po);
+      const po = { id: mockPoId, companyId: mockCompanyId };
+      jest.spyOn(prisma.purchaseOrder, 'findFirst').mockResolvedValue(po as any);
 
       await expect(
         service.recordPayment(
@@ -603,16 +605,20 @@ describe('SuppliersService', () => {
   describe('getPaymentHistory', () => {
     it('should return payment history for supplier', async () => {
       const payments = [
-        { id: 'pay-1', amount: new Decimal(500) } as Payment,
-        { id: 'pay-2', amount: new Decimal(300) } as Payment,
+        { id: 'pay-1', amount: new Decimal(500) },
+        { id: 'pay-2', amount: new Decimal(300) },
       ];
 
-      jest.spyOn(paymentRepo, 'find').mockResolvedValue(payments);
+      jest.spyOn(prisma.payment, 'findMany').mockResolvedValue(payments as any);
 
       const result = await service.getPaymentHistory(mockCompanyId, mockSupplierId);
 
       expect(result).toEqual(payments);
       expect(result.length).toBe(2);
+      expect(prisma.payment.findMany).toHaveBeenCalledWith({
+        where: { companyId: mockCompanyId, supplierId: mockSupplierId },
+        orderBy: { recordedAt: 'desc' },
+      });
     });
   });
 
@@ -620,7 +626,7 @@ describe('SuppliersService', () => {
 
   describe('getSupplierMetrics', () => {
     it('should calculate supplier metrics', async () => {
-      const supplier = { id: mockSupplierId, rating: new Decimal(4.5) } as Supplier;
+      const supplier = { id: mockSupplierId, rating: new Decimal(4.5) };
       const pos = [
         {
           id: 'po-1',
@@ -628,11 +634,11 @@ describe('SuppliersService', () => {
           totalAmount: new Decimal(1000),
           createdAt: new Date(Date.now() - 14 * 86400000),
           deliveryDate: new Date(Date.now() - 7 * 86400000),
-        } as PurchaseOrder,
+        },
       ];
 
-      jest.spyOn(supplierRepo, 'findOne').mockResolvedValue(supplier);
-      jest.spyOn(poRepo, 'find').mockResolvedValue(pos);
+      jest.spyOn(prisma.supplier, 'findFirst').mockResolvedValue(supplier as any);
+      jest.spyOn(prisma.purchaseOrder, 'findMany').mockResolvedValue(pos as any);
 
       const result = await service.getSupplierMetrics(mockCompanyId, mockSupplierId);
 
@@ -645,27 +651,27 @@ describe('SuppliersService', () => {
   describe('getTopSuppliers', () => {
     it('should return top suppliers by rating', async () => {
       const suppliers = [
-        { id: 'sup-1', rating: new Decimal(5), isActive: true } as Supplier,
-        { id: 'sup-2', rating: new Decimal(4), isActive: true } as Supplier,
-        { id: 'sup-3', rating: new Decimal(3), isActive: true } as Supplier,
+        { id: 'sup-1', rating: new Decimal(5), isActive: true },
+        { id: 'sup-2', rating: new Decimal(4), isActive: true },
+        { id: 'sup-3', rating: new Decimal(3), isActive: true },
       ];
 
-      jest.spyOn(supplierRepo, 'find').mockResolvedValue(suppliers);
+      jest.spyOn(prisma.supplier, 'findMany').mockResolvedValue(suppliers as any);
 
       const result = await service.getTopSuppliers(mockCompanyId, 'rating', 2);
 
       expect(result.length).toBe(2);
-      expect(result[0].rating.toNumber()).toBe(5);
+      expect((result[0].rating as any).toNumber()).toBe(5);
     });
 
     it('should return top suppliers by frequency', async () => {
       const suppliers = [
-        { id: 'sup-1', isActive: true } as Supplier,
-        { id: 'sup-2', isActive: true } as Supplier,
+        { id: 'sup-1', isActive: true },
+        { id: 'sup-2', isActive: true },
       ];
 
-      jest.spyOn(supplierRepo, 'find').mockResolvedValue(suppliers);
-      jest.spyOn(poRepo, 'find').mockResolvedValue([{ id: 'po-1' } as PurchaseOrder]);
+      jest.spyOn(prisma.supplier, 'findMany').mockResolvedValue(suppliers as any);
+      jest.spyOn(prisma.purchaseOrder, 'findMany').mockResolvedValue([{ id: 'po-1' }] as any);
 
       const result = await service.getTopSuppliers(mockCompanyId, 'frequency', 10);
 
@@ -677,11 +683,11 @@ describe('SuppliersService', () => {
     it('should calculate correct outstanding balance', () => {
       const po = {
         totalAmount: new Decimal(1000),
-        paymentsMade: 600,
-        deductedAmount: 100,
-      } as PurchaseOrder;
+        paymentsMade: new Decimal(600),
+        deductedAmount: new Decimal(100),
+      };
 
-      const balance = service.calculateOutstandingBalance(po);
+      const balance = service.calculateOutstandingBalance(po as any);
 
       expect(balance.toNumber()).toBe(300); // 1000 - 600 - 100
     });
@@ -689,11 +695,11 @@ describe('SuppliersService', () => {
     it('should handle zero balance', () => {
       const po = {
         totalAmount: new Decimal(1000),
-        paymentsMade: 1000,
-        deductedAmount: 0,
-      } as PurchaseOrder;
+        paymentsMade: new Decimal(1000),
+        deductedAmount: new Decimal(0),
+      };
 
-      const balance = service.calculateOutstandingBalance(po);
+      const balance = service.calculateOutstandingBalance(po as any);
 
       expect(balance.toNumber()).toBe(0);
     });
