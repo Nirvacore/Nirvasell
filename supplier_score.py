@@ -60,7 +60,7 @@ def score_all() -> list[dict]:
         results.append({
             "id": sid,
             "name": name,
-            "contact": sd.get("contact_info") or "",
+            "contact": sd.get("contact") or "",
             "lead_days": sd.get("lead_days") or 0,
             "price_score": round(price_score, 0),
             "delivery_score": round(delivery_score, 0),
@@ -78,7 +78,7 @@ def _price_score(supplier_id: int) -> float:
     """Price competitiveness: how often is this supplier the cheapest?"""
     with db.conn() as c:
         prices = c.execute(
-            "SELECT sku, price FROM supplier_prices WHERE supplier_id=?",
+            "SELECT sku, unit_cost AS price FROM supplier_prices WHERE supplier_id=?",
             (supplier_id,),
         ).fetchall()
 
@@ -92,7 +92,7 @@ def _price_score(supplier_id: int) -> float:
         my_price = p["price"]
         with db.conn() as c:
             best = c.execute(
-                "SELECT MIN(price) AS best FROM supplier_prices WHERE sku=?",
+                "SELECT MIN(unit_cost) AS best FROM supplier_prices WHERE sku=?",
                 (sku,),
             ).fetchone()
 
@@ -108,7 +108,7 @@ def _delivery_score(supplier_id: int) -> tuple[float, float]:
     """Delivery reliability from PO data."""
     with db.conn() as c:
         pos = c.execute(
-            "SELECT * FROM purchase_orders WHERE supplier_id=? AND status='received'",
+            "SELECT * FROM supplier_orders WHERE supplier_id=? AND status='received'",
             (supplier_id,),
         ).fetchall()
 
@@ -118,8 +118,9 @@ def _delivery_score(supplier_id: int) -> tuple[float, float]:
     on_time = 0
     total_lead = 0
     for po in pos:
-        expected = po.get("expected_date")
-        received = po.get("received_date") or po.get("created_at")
+        po = dict(po)
+        expected = po.get("expected_date") or po.get("order_date")
+        received = po.get("received_date") or po.get("received_at") or po.get("created_at")
         if expected and received:
             try:
                 exp_dt = datetime.strptime(str(expected)[:10], "%Y-%m-%d")

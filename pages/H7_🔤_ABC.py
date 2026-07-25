@@ -20,18 +20,20 @@ CLASS_COLORS = {"A":"#4d6c5c","B":"#c5963d","C":"#9a9485"}
 CLASS_ICONS  = {"A":"⭐","B":"🔵","C":"⚫"}
 
 c1, c2, c3 = st.columns(3)
+total_rev = sum((summary.get(k) or {}).get("revenue", 0) for k in ("A", "B", "C")) or 1
 for col, cls in zip([c1, c2, c3], ["A","B","C"]):
-    info = summary.get(cls, {})
+    info = summary.get(cls) or {}
+    rev_pct = info.get("revenue", 0) / total_rev * 100
     col.metric(
         CLASS_ICONS[cls] + " " + t("abcx.class_" + cls),
         str(info.get("count",0)) + t("abcx.skus"),
-        delta=t("abcx.revenue") + ": " + str(round(info.get("revenue_pct",0),1)) + "%",
+        delta=t("abcx.revenue") + ": " + str(round(rev_pct,1)) + "%",
         delta_color="off"
     )
 
 invest = abc.investment_advice()
-if invest:
-    st.info("💡 " + str(invest) if isinstance(invest, str) else "💡 " + invest.get("advice",""))
+for adv in invest[:3]:
+    st.info("💡 " + adv.get("sku","") + " — " + adv.get("action","").replace("_", " "))
 
 st.divider()
 tab_all, tab_a, tab_b, tab_c = st.tabs([

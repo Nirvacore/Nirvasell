@@ -166,6 +166,11 @@ for order in active:
         unsafe_allow_html=True,
     )
 
+    if order["status"] == "draft":
+        if st.button(t("po.send_btn"), key="b3send_" + str(order["id"])):
+            po.send(order["id"])
+            st.rerun()
+
     if order["status"] in ("sent", "partial"):
         with st.expander(t("po.receive_title") + " — " + order["po_number"]):
             details = po.get(order["id"])

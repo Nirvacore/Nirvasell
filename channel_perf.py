@@ -19,11 +19,10 @@ def platform_comparison(days: int = 30) -> list[dict]:
                 o.platform,
                 COUNT(DISTINCT o.order_id) AS orders,
                 COUNT(DISTINCT COALESCE(o.buyer_phone, o.buyer_name)) AS customers,
-                COALESCE(SUM(o.total_amount), 0) AS revenue,
-                COALESCE(SUM(oi.qty), 0) AS items_sold,
-                AVG(o.total_amount) AS aov
+                COALESCE(SUM(o.total_price), 0) AS revenue,
+                COALESCE(SUM(o.qty), 0) AS items_sold,
+                AVG(o.total_price) AS aov
             FROM orders o
-            LEFT JOIN order_items oi ON oi.order_id = o.order_id
             WHERE o.order_date >= ?
             GROUP BY o.platform
             ORDER BY revenue DESC
@@ -42,10 +41,9 @@ def platform_comparison(days: int = 30) -> list[dict]:
         # Get COGS for this platform
         with db.conn() as c2:
             cogs_row = c2.execute("""
-                SELECT COALESCE(SUM(oi.qty * p.cost_price), 0) AS cogs
-                FROM order_items oi
-                JOIN orders o ON o.order_id = oi.order_id
-                LEFT JOIN products p ON p.sku = oi.sku
+                SELECT COALESCE(SUM(o.qty * p.cost_price), 0) AS cogs
+                FROM orders o
+                LEFT JOIN products p ON p.sku = o.sku
                 WHERE o.platform = ? AND o.order_date >= ?
             """, (d["platform"], cutoff)).fetchall()
 
@@ -87,7 +85,7 @@ def growth_by_platform(months: int = 3) -> list[dict]:
 
         with db.conn() as c:
             rows = c.execute("""
-                SELECT platform, COALESCE(SUM(total_amount), 0) AS revenue
+                SELECT platform, COALESCE(SUM(total_price), 0) AS revenue
                 FROM orders WHERE order_date >= ? AND order_date < ?
                 GROUP BY platform
             """, (ms, me)).fetchall()

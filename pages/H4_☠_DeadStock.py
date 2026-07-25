@@ -20,14 +20,14 @@ days = st.segmented_control(t("dead.period"), [30, 60, 90], default=60,
 summary = ds.summary(days=int(days or 60))
 
 c1, c2, c3 = st.columns(3)
-c1.metric(t("dead.kpi_dead"), summary.get("dead_count",0),
-          delta_color="inverse" if summary.get("dead_count",0) > 0 else "off")
-c2.metric(t("dead.kpi_slow"), summary.get("slow_count",0))
-c3.metric(t("dead.kpi_value"), "฿{:,.0f}".format(summary.get("dead_stock_value",0)),
-          delta_color="inverse" if summary.get("dead_stock_value",0) > 0 else "off")
+c1.metric(t("dead.kpi_dead"), summary.get("dead",0),
+          delta_color="inverse" if summary.get("dead",0) > 0 else "off")
+c2.metric(t("dead.kpi_slow"), summary.get("slow",0))
+c3.metric(t("dead.kpi_value"), "฿{:,.0f}".format(summary.get("dead_trapped",0)),
+          delta_color="inverse" if summary.get("dead_trapped",0) > 0 else "off")
 
-if summary.get("dead_stock_value",0) > 0:
-    st.warning("⚠️ " + t("dead.capital_warning") + " ฿{:,.0f}".format(summary.get("dead_stock_value",0)))
+if summary.get("dead_trapped",0) > 0:
+    st.warning("⚠️ " + t("dead.capital_warning") + " ฿{:,.0f}".format(summary.get("dead_trapped",0)))
 
 st.divider()
 items = ds.detect(days=int(days or 60))
@@ -41,9 +41,9 @@ else:
         sku   = item.get("sku","?")
         name  = item.get("name") or sku
         stock = item.get("stock",0)
-        val   = item.get("stock_value",0)
-        age   = item.get("days_no_sale",0)
-        status= item.get("status","slow")
+        val   = item.get("trapped_cash",0)
+        age   = item.get("days_since_sale",0)
+        status= item.get("severity","slow")
         color = "#c54c4c" if status == "dead" else "#c5963d"
         label = ("☠️" if status=="dead" else "🐌") + " **" + name + "**" + \
                 " · " + sku + " · " + str(stock) + t("dead.pcs") + \

@@ -19,7 +19,7 @@ import knowledge_hub as kh
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from _components import friendly_error
+from _components import friendly_error, page_header
 from i18n import t
 from i18n_inline import policy_source_label
 

@@ -34,7 +34,7 @@ def calculate(days: int = 30) -> list:
         sales = c.execute("""
             SELECT sku,
                    SUM(qty) AS total_qty,
-                   SUM(total_amount) AS total_revenue
+                   SUM(total_price) AS total_revenue
             FROM orders
             WHERE order_date >= date('now', ? || ' days')
               AND status NOT IN ('cancelled', 'returned')

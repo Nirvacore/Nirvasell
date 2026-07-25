@@ -117,13 +117,14 @@ def from_order(order_id_str: str, style: str = "full") -> str:
             ).fetchone()
             if not row:
                 return t("lbl.order_not_found", id=order_id_str)
+            row = dict(row)
             items_rows = c.execute(
-                "SELECT sku, quantity qty, unit_price price "
-                "FROM order_items WHERE order_id=?",
-                (row["id"],),
+                "SELECT sku, qty, unit_price price "
+                "FROM orders WHERE order_id=?",
+                (row["order_id"],),
             ).fetchall()
             items = [dict(r) for r in items_rows]
-            cod = row["total_price"] if row.get("payment_method") == "cod" else 0
+            cod = row["total_price"] if (row.get("status") or "").lower() == "cod" else 0
             return generate_label(
                 order_id=str(row["id"]),
                 buyer_name=row.get("buyer_name") or "",

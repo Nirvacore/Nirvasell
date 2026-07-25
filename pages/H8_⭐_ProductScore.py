@@ -19,7 +19,7 @@ days = st.segmented_control(t("pscore.period"), [7, 30, 90], default=30,
     format_func=lambda d: str(d) + t("pscore.days"))
 summary = ps.summary()
 c1, c2, c3 = st.columns(3)
-c1.metric(t("pscore.kpi_stars"), summary.get("star_count",0))
+c1.metric(t("pscore.kpi_stars"), summary.get("quadrants",{}).get("star",0))
 c2.metric(t("pscore.kpi_avg_score"), str(summary.get("avg_score",0)) + "/100")
 c3.metric(t("pscore.kpi_total"), summary.get("total_skus",0))
 
@@ -51,14 +51,14 @@ def _render_scored(items):
         score = item.get("score",0)
         rev   = item.get("revenue",0)
         margin= item.get("margin_pct",0)
-        rating= item.get("avg_rating",0)
+        velocity = item.get("velocity",0)
         label = _score_color(score) and "**" + name + "** · score " + str(score)
         with st.expander("**" + name + "** · " + str(score) + "/100"):
             st.html(_score_bar(score))
             c1, c2, c3 = st.columns(3)
             c1.metric(t("pscore.revenue"), "฿{:,.0f}".format(rev))
             c2.metric(t("pscore.margin"), str(margin) + "%")
-            c3.metric(t("pscore.rating"), str(rating) + "⭐" if rating else "—")
+            c3.metric(t("pscore.kpi_avg_score"), str(item.get("velocity",0)))
 
 with tab_top:
     top = ps.top_performers(n=10)
@@ -72,7 +72,7 @@ with tab_quad:
     st.subheader(t("pscore.quad_title"))
     QUADS = [
         ("star", "⭐ " + t("pscore.q_star"), "#4d6c5c"),
-        ("question_mark", "❓ " + t("pscore.q_question"), "#c5963d"),
+        ("question", "❓ " + t("pscore.q_question"), "#c5963d"),
         ("cash_cow", "🐄 " + t("pscore.q_cow"), "#3a5a8c"),
         ("dog", "🐕 " + t("pscore.q_dog"), "#c54c4c"),
     ]

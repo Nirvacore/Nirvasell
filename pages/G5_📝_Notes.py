@@ -19,7 +19,7 @@ st.caption(t("note.caption"))
 stats = nt.stats()
 c1, c2, c3 = st.columns(3)
 c1.metric(t("note.kpi_total"), stats.get("total",0))
-c2.metric(t("note.kpi_open"), stats.get("open",0))
+c2.metric(t("note.kpi_open"), stats.get("total",0) )
 c3.metric(t("note.kpi_pinned"), stats.get("pinned",0))
 
 pinned = nt.pinned()
@@ -77,8 +77,7 @@ with tab_add:
         pin_it    = st.checkbox(t("note.f_pin"))
         if st.form_submit_button(t("note.add_btn")):
             if title.strip():
-                nt.add(title.strip(), body=body, note_type=note_type, ref_key=ref_key)
-                if pin_it:
-                    pass  # notes.py pin handled via update if supported
+                nt.add(title.strip(), body=body, note_type=note_type,
+                       ref_key=ref_key, pinned=pin_it)
                 st.success(t("note.added"))
                 st.rerun()

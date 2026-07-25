@@ -34,8 +34,8 @@ with tab_pending:
         oid_display = str(o.get("order_id") or o.get("id","?"))
         label = ("📦 **" + oid_display + "**"
                  + " · " + (o.get("platform") or "—")
-                 + " · " + (o.get("customer_name") or "—")
-                 + " · ฿{:,.0f}".format(o.get("total",0)))
+                 + " · " + (o.get("buyer_name") or "—")
+                 + " · ฿{:,.0f}".format(o.get("total_price") or 0))
         with st.expander(label):
             with st.form("ship_" + oid_display):
                 col1, col2 = st.columns(2)
@@ -43,12 +43,11 @@ with tab_pending:
                 carrier  = col2.selectbox(t("ful.f_carrier"),
                     list(ff.CARRIERS.keys()),
                     format_func=lambda c: c)
-                notes    = st.text_input(t("ful.f_notes"))
                 if st.form_submit_button(t("ful.ship_btn")):
                     if tracking.strip():
                         db_id = o.get("id") or o.get("order_id_db")
                         ff.mark_shipped(db_id, tracking_number=tracking.strip(),
-                                        carrier=carrier, notes=notes)
+                                        carrier=carrier)
                         st.success(t("ful.shipped"))
                         st.rerun()
                     else:

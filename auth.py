@@ -431,3 +431,12 @@ def user_db_path() -> Path:
     if u:
         return DATA / "users" / f"{u['id']}.db"
     return DATA / "listo.db"
+
+
+# ---- Compat re-export ------------------------------------------------------
+# 48 pages import `require_auth` from this module; the implementation lives in
+# _auth_gate (which imports auth, so a top-level import here would be circular).
+
+def require_auth() -> dict:
+    from _auth_gate import require_auth as _require_auth
+    return _require_auth()

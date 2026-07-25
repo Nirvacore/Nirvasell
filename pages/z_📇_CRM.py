@@ -85,7 +85,7 @@ with db.conn() as c:
     all_custs = c.execute("""
         SELECT COALESCE(buyer_phone, buyer_name) AS ckey,
                buyer_name, buyer_phone,
-               COUNT(*) AS orders, SUM(total_amount) AS total,
+               COUNT(*) AS orders, SUM(total_price) AS total,
                MAX(order_date) AS last_order
         FROM orders
         WHERE buyer_name IS NOT NULL AND buyer_name != ''

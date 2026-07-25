@@ -41,7 +41,7 @@ def init():
             )
         """)
         c.execute("""
-            CREATE TABLE IF NOT EXISTS purchase_orders (
+            CREATE TABLE IF NOT EXISTS supplier_orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 supplier_id INTEGER NOT NULL,
                 order_date TEXT DEFAULT (date('now','localtime')),
@@ -94,7 +94,7 @@ def update_supplier(sup_id: int, **kwargs):
 def delete_supplier(sup_id: int):
     with db.conn() as c:
         c.execute("DELETE FROM supplier_prices WHERE supplier_id=?", (sup_id,))
-        c.execute("DELETE FROM purchase_orders WHERE supplier_id=?", (sup_id,))
+        c.execute("DELETE FROM supplier_orders WHERE supplier_id=?", (sup_id,))
         c.execute("DELETE FROM supplier_contacts WHERE id=?", (sup_id,))
 
 
@@ -103,7 +103,7 @@ def all_suppliers() -> list[dict]:
         rows = c.execute(
             "SELECT s.*, "
             "(SELECT COUNT(*) FROM supplier_prices WHERE supplier_id=s.id) as sku_count, "
-            "(SELECT COUNT(*) FROM purchase_orders WHERE supplier_id=s.id) as order_count "
+            "(SELECT COUNT(*) FROM supplier_orders WHERE supplier_id=s.id) as order_count "
             "FROM supplier_contacts s ORDER BY s.name"
         ).fetchall()
     return [dict(r) for r in rows]
@@ -184,7 +184,7 @@ def add_order(supplier_id: int, total_amount: float,
               items_count: int = 0, note: str = "") -> int:
     with db.conn() as c:
         c.execute(
-            "INSERT INTO purchase_orders "
+            "INSERT INTO supplier_orders "
             "(supplier_id, total_amount, items_count, note) VALUES (?,?,?,?)",
             (supplier_id, total_amount, items_count, note),
         )
@@ -194,7 +194,7 @@ def add_order(supplier_id: int, total_amount: float,
 def supplier_order_history(supplier_id: int) -> list[dict]:
     with db.conn() as c:
         rows = c.execute(
-            "SELECT * FROM purchase_orders WHERE supplier_id=? "
+            "SELECT * FROM supplier_orders WHERE supplier_id=? "
             "ORDER BY order_date DESC LIMIT 50",
             (supplier_id,),
         ).fetchall()
@@ -205,6 +205,6 @@ def total_spend() -> dict:
     with db.conn() as c:
         r = c.execute(
             "SELECT COALESCE(SUM(total_amount),0) as total, "
-            "COUNT(*) as order_count FROM purchase_orders"
+            "COUNT(*) as order_count FROM supplier_orders"
         ).fetchone()
     return {"total_spent": float(r["total"]), "total_orders": r["order_count"]}

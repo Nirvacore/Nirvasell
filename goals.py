@@ -112,25 +112,24 @@ def _get_actual(metric: str, period: str) -> float:
     with db.conn() as c:
         if metric == "revenue":
             r = c.execute("""
-                SELECT COALESCE(SUM(total_amount), 0) AS val FROM orders
-                WHERE strftime('%%Y-%%m', order_date) = ?
+                SELECT COALESCE(SUM(total_price), 0) AS val FROM orders
+                WHERE strftime('%Y-%m', order_date) = ?
             """, (period,)).fetchone()
             return r["val"]
 
         elif metric == "orders":
             r = c.execute("""
                 SELECT COUNT(*) AS val FROM orders
-                WHERE strftime('%%Y-%%m', order_date) = ?
+                WHERE strftime('%Y-%m', order_date) = ?
             """, (period,)).fetchone()
             return r["val"]
 
         elif metric == "profit":
             r = c.execute("""
-                SELECT COALESCE(SUM(oi.qty * (oi.unit_price - COALESCE(p.cost_price, 0))), 0) AS val
-                FROM order_items oi
-                JOIN orders o ON o.order_id = oi.order_id
-                LEFT JOIN products p ON p.sku = oi.sku
-                WHERE strftime('%%Y-%%m', o.order_date) = ?
+                SELECT COALESCE(SUM(o.qty * (o.unit_price - COALESCE(p.cost_price, 0))), 0) AS val
+                FROM orders o
+                LEFT JOIN products p ON p.sku = o.sku
+                WHERE strftime('%Y-%m', o.order_date) = ?
             """, (period,)).fetchone()
             return r["val"]
 
@@ -138,14 +137,14 @@ def _get_actual(metric: str, period: str) -> float:
             r = c.execute("""
                 SELECT COUNT(DISTINCT COALESCE(buyer_phone, buyer_name)) AS val
                 FROM orders
-                WHERE strftime('%%Y-%%m', order_date) = ?
+                WHERE strftime('%Y-%m', order_date) = ?
             """, (period,)).fetchone()
             return r["val"]
 
         elif metric == "avg_order":
             r = c.execute("""
-                SELECT AVG(total_amount) AS val FROM orders
-                WHERE strftime('%%Y-%%m', order_date) = ?
+                SELECT AVG(total_price) AS val FROM orders
+                WHERE strftime('%Y-%m', order_date) = ?
             """, (period,)).fetchone()
             return r["val"] or 0
 

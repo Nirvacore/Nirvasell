@@ -33,6 +33,7 @@ def init() -> None:
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 customer_key TEXT NOT NULL,
                 note        TEXT NOT NULL,
+                note_type   TEXT DEFAULT 'general',
                 created_at  TEXT DEFAULT (datetime('now','localtime'))
             )
         """)

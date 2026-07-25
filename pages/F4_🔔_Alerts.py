@@ -24,7 +24,7 @@ with st.spinner(t("alert.loading")):
 c1, c2 = st.columns(2)
 c1.metric(t("alert.kpi_active"), len(active_alerts),
           delta_color="inverse" if active_alerts else "off")
-c2.metric(t("alert.kpi_dismissed_today"), alert_stats.get("dismissed_today", 0))
+c2.metric(t("alert.kpi_dismissed_today"), alert_stats.get("critical", 0))
 
 st.divider()
 

@@ -13,7 +13,7 @@ import fees as fees_mod
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from _components import empty_state
+from _components import empty_state, page_header
 from i18n import t
 
 db.init()

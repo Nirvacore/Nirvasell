@@ -17,11 +17,10 @@ def daily_profits(days: int = 90) -> list[dict]:
         rows = c.execute("""
             SELECT
                 o.order_date AS day,
-                COALESCE(SUM(oi.qty * oi.unit_price), 0) AS revenue,
-                COALESCE(SUM(oi.qty * p.cost_price), 0) AS cogs
+                COALESCE(SUM(o.qty * o.unit_price), 0) AS revenue,
+                COALESCE(SUM(o.qty * p.cost_price), 0) AS cogs
             FROM orders o
-            JOIN order_items oi ON oi.order_id = o.order_id
-            LEFT JOIN products p ON p.sku = oi.sku
+            LEFT JOIN products p ON p.sku = o.sku
             WHERE o.order_date >= ?
             GROUP BY o.order_date
             ORDER BY o.order_date

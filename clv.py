@@ -20,8 +20,8 @@ def calculate_clv() -> list[dict]:
                 o.buyer_name,
                 o.buyer_phone,
                 COUNT(DISTINCT o.order_id) AS order_count,
-                SUM(o.total_amount) AS total_spent,
-                AVG(o.total_amount) AS avg_order_value,
+                SUM(o.total_price) AS total_spent,
+                AVG(o.total_price) AS avg_order_value,
                 MIN(o.order_date) AS first_order,
                 MAX(o.order_date) AS last_order,
                 julianday('now','localtime') - julianday(MIN(o.order_date)) AS tenure_days

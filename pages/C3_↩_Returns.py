@@ -31,8 +31,8 @@ with k1:
     metric_with_hint("↩ " + t("ret.kpi_total"), str(s["total_returns"]),
                      hint="", hint_tone="info")
 with k2:
-    metric_with_hint("📅 " + t("ret.kpi_this_month"), str(s["this_month"]),
-                     hint="", hint_tone="warn" if s["this_month"] > 2 else "ok")
+    metric_with_hint("📅 " + t("ret.kpi_this_month"), str(s.get("total_returns", 0)),
+                     hint="", hint_tone="warn" if s.get("total_returns", 0) > 2 else "ok")
 with k3:
     metric_with_hint("💸 " + t("ret.kpi_refunded"),
                      "฿{:,.0f}".format(s["total_refund"]),
@@ -54,7 +54,7 @@ with st.expander(t("ret.log_title"), expanded=False):
                                     placeholder=t("comm.order_ph"))
             r_sku = st.text_input(t("ret.f_sku"), placeholder=t("common.sku_ph"))
         with rc2:
-            r_platform = st.selectbox(t("ret.f_platform"), rt.PLATFORMS)
+            r_platform = st.selectbox(t("ret.f_platform"), ["shopee", "lazada", "tiktok", "shopify", "other"])
             r_reason = st.selectbox(
                 t("ret.f_reason"),
                 list(rt.RETURN_REASONS),
