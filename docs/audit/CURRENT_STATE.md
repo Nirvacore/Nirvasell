@@ -20,6 +20,8 @@ Only executable source, schemas, manifests, tests, workflows, and deployment def
 | Audited source branch | main |
 | Documentation branch | agent/phase-0-source-audit-20260819 |
 | Audited commit | 80eb422fa6630fb2134b4c597bf6051245be02cc |
+| Package manager | pip |
+| Repository shape | modular Python/Streamlit application |
 | Strategic role | legacy commerce reference to reconcile into platform |
 | Classification | REFERENCE_PORT_MISSING_ARCHIVE |
 | Stack | Python, Streamlit, SQLite, Anthropic SDK, Docker |

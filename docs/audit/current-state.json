@@ -5,6 +5,8 @@
   "auditedCommit": "80eb422fa6630fb2134b4c597bf6051245be02cc",
   "auditedSourceBranch": "main",
   "documentationBranch": "agent/phase-0-source-audit-20260819",
+  "packageManager": "pip",
+  "repositoryShape": "modular Python/Streamlit application",
   "classification": "REFERENCE_PORT_MISSING_ARCHIVE",
   "strategicRole": "legacy commerce reference to reconcile into platform",
   "evidenceRule": "source-backed; documentation alone is not implementation proof",
