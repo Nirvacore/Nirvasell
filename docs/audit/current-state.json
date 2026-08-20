@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "repository": "Nirvacore/Nirvasell",
+  "auditedAt": "2026-08-19",
+  "auditedCommit": "80eb422fa6630fb2134b4c597bf6051245be02cc",
+  "auditedSourceBranch": "main",
+  "documentationBranch": "agent/phase-0-source-audit-20260819",
+  "packageManager": "pip",
+  "repositoryShape": "modular Python/Streamlit application",
+  "classification": "REFERENCE_PORT_MISSING_ARCHIVE",
+  "strategicRole": "legacy commerce reference to reconcile into platform",
+  "evidenceRule": "source-backed; documentation alone is not implementation proof",
+  "safety": {
+    "businessCodeChanged": false,
+    "schemaMigrated": false,
+    "codeDeleted": false,
+    "secretsRotated": false,
+    "productionConfigurationChanged": false
+  },
+  "evidence": [
+    {
+      "path": "app.py",
+      "finding": "Streamlit entry point."
+    },
+    {
+      "path": "pages",
+      "finding": "Primary application pages."
+    },
+    {
+      "path": "db.py",
+      "finding": "SQLite persistence."
+    },
+    {
+      "path": "_ai_helpers.py",
+      "finding": "AI helper integration."
+    },
+    {
+      "path": "exporters",
+      "finding": "Marketplace export adapters."
+    },
+    {
+      "path": "NIRVACORE_V1_PLAN.md",
+      "finding": "Repository itself records TypeScript platform convergence intent; treated as plan, not proof."
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Commerce operating UI",
+      "status": "implemented",
+      "finding": "Products, orders, inventory, finance, marketing, CRM, purchasing, and operations pages exist."
+    },
+    {
+      "name": "Persistence",
+      "status": "implemented",
+      "finding": "Per-user SQLite model exists, separate from platform tenancy."
+    },
+    {
+      "name": "AI helpers",
+      "status": "partial",
+      "finding": "Anthropic-powered helpers exist but are BYOK/product-local."
+    },
+    {
+      "name": "Events",
+      "status": "prototype",
+      "finding": "A local events.py module exists; no durable event bus/outbox was found."
+    }
+  ],
+  "gaps": [
+    "Python/Streamlit and per-user SQLite duplicate commerce, identity, finance, and CRM truth now present in platform.",
+    "Broad feature count does not establish production integration quality or data migration readiness.",
+    "Tenant, RBAC, audit, and approval controls differ from platform conventions.",
+    "Local AI helpers lack shared governance, citations, and evaluations."
+  ]
+}
