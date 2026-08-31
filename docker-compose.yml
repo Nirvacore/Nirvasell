@@ -1,7 +1,7 @@
 # nirva.sell — single-host production compose
 #
-# Defaults assume a small VPS (1-2 GB RAM). For multi-host or large traffic,
-# put nginx + a load balancer in front and scale `app` horizontally.
+# Traefik routes sell.nirva.one → host:8502 → this container:8501
+# UFW blocks port 8502 from internet; Docker bridge (172.17.x.x) still reaches it.
 #
 # Quick start:
 #   cp .env.example .env       # fill in values
@@ -17,8 +17,9 @@ services:
     container_name: nirva-sell
     restart: unless-stopped
     ports:
-      # Expose only on localhost — reverse-proxy with nginx in production
-      - "127.0.0.1:8501:8501"
+      # Exposed on all interfaces so Traefik (Docker bridge 172.17.x.x) can reach it.
+      # UFW blocks 8502 from the internet — only Traefik proxy traffic passes.
+      - "8502:8501"
     env_file:
       - .env
     volumes:
