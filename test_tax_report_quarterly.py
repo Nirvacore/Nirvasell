@@ -60,16 +60,125 @@ import tax_report as tr  # noqa: E402
 @contextmanager
 def isolated_db():
     """Point db.conn() at a throw-away SQLite file for the duration of the
-    block, then restore the original path. Never touches real user data."""
+    block, then restore the original resolver — even if the block raises.
+    Never touches real user data. Yields the temp directory Path.
+
+    Patches db._resolve_path directly — the function db.conn() actually
+    calls — rather than db.DATA/db.DB_PATH. db._resolve_path() tries
+    `from auth import user_db_path` first and only falls back to
+    db.DB_PATH if that import or call raises (db.py:20-26). Patching only
+    DATA/DB_PATH is isolated by accident, on any environment where `auth`
+    (which hard-imports streamlit) fails to import; the moment auth is
+    importable and user_db_path() returns cleanly, db.conn() would route
+    to auth.py's own DATA/"listo.db" — a real, shared, per-user path —
+    ignoring the patched DATA/DB_PATH entirely. See
+    test_isolated_db_never_calls_available_auth_resolver below."""
     tmpdir = Path(tempfile.mkdtemp(prefix="nirvasell_tax_report_test_"))
-    orig_data, orig_path = db.DATA, db.DB_PATH
-    db.DATA, db.DB_PATH = tmpdir, tmpdir / "test.db"
+    db_path = tmpdir / "test.db"
+    original_resolve_path = db._resolve_path
+    db._resolve_path = lambda: db_path
     try:
         db.init()
-        yield
+        yield tmpdir
     finally:
-        db.DATA, db.DB_PATH = orig_data, orig_path
+        db._resolve_path = original_resolve_path
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+# ---- isolated_db() harness self-check --------------------------------------
+# These protect the test HARNESS itself, not tax_report.py. db.conn() does
+# not read db.DATA/db.DB_PATH directly — it calls db._resolve_path(), which
+# tries `from auth import user_db_path` first and only falls back to
+# db.DB_PATH if that import or call raises (see db.py:20-26, auth.py:426-433).
+# A DATA/DB_PATH-only patch is isolated only by the accident of `auth`
+# (which hard-imports streamlit) failing to import in whatever environment
+# runs this file — it silently stops isolating the moment auth becomes
+# importable and user_db_path() returns cleanly, which can route db.conn()
+# to auth.py's own DATA/"listo.db" (a real, shared, per-user path).
+#
+# Each check below installs a synthetic stand-in `auth` module — never the
+# real one, never real data — so the guarantee holds regardless of whether
+# streamlit happens to be installed here. If anything below did reach the
+# fake resolver, it would only ever touch a clearly-marked OS-temp sentinel
+# file, cleaned up immediately after — never production or shared data.
+
+def _install_fake_auth_resolver():
+    """Install a spying stand-in for the `auth` module. Returns (calls,
+    restore): `calls` records every invocation of the fake user_db_path();
+    restore() puts sys.modules['auth'] back exactly as found and deletes
+    the synthetic sentinel file if it was ever created."""
+    calls = []
+    sentinel = Path(tempfile.gettempdir()) / "nirvasell_test_SHOULD_NEVER_BE_USED.db"
+
+    def _fake_user_db_path():
+        calls.append(1)
+        return sentinel
+
+    fake_auth = types.ModuleType("auth")
+    fake_auth.user_db_path = _fake_user_db_path
+    had_auth = "auth" in sys.modules
+    orig_auth = sys.modules.get("auth")
+    sys.modules["auth"] = fake_auth
+
+    def _restore():
+        if had_auth:
+            sys.modules["auth"] = orig_auth
+        else:
+            sys.modules.pop("auth", None)
+        if sentinel.exists():
+            sentinel.unlink()
+
+    return calls, _restore
+
+
+def test_isolated_db_never_calls_available_auth_resolver():
+    calls, restore = _install_fake_auth_resolver()
+    try:
+        with isolated_db():
+            with db.conn():
+                pass
+        assert calls == [], (
+            "db.conn() reached auth.user_db_path() while isolated_db() was "
+            "active — the fixture must patch db._resolve_path itself, not "
+            "just db.DATA/db.DB_PATH"
+        )
+    finally:
+        restore()
+
+
+def test_isolated_db_sqlite_main_file_is_inside_tempdir():
+    calls, restore = _install_fake_auth_resolver()
+    try:
+        with isolated_db() as tmpdir:
+            with db.conn() as c:
+                main_file = Path(c.execute("PRAGMA database_list").fetchone()["file"]).resolve()
+            assert main_file.parent == Path(tmpdir).resolve(), (
+                f"sqlite main file {main_file} is not inside the isolated "
+                f"temp dir {tmpdir}"
+            )
+    finally:
+        restore()
+
+
+def test_isolated_db_restores_resolver_after_normal_exit():
+    original = db._resolve_path
+    with isolated_db():
+        assert db._resolve_path is not original
+    assert db._resolve_path is original
+
+
+def test_isolated_db_restores_resolver_after_exceptional_exit():
+    original = db._resolve_path
+
+    class _SyntheticFailure(Exception):
+        pass
+
+    try:
+        with isolated_db():
+            raise _SyntheticFailure("synthetic failure inside isolated_db() block")
+    except _SyntheticFailure:
+        pass
+    assert db._resolve_path is original
 
 
 # ---- synthetic fixtures ----------------------------------------------------
@@ -195,11 +304,12 @@ def test_stats_wraps_vat_check_for_current_year():
         assert result["vat_required"] is False, result
 
 
-# ---- quarterly() / annual(): characterizes the CURRENT (broken) state -----
-# Every case below is deterministic and data-independent: the failure comes
-# from table/column shape, not from the quarter number or the row contents.
-# Reproduced 2026-09-05 against synthetic data with the real returns.py /
-# expenses.py schema (see _init_returns_table / _init_expenses_table above).
+# ---- quarterly() / annual(): DB-state coverage -----------------------------
+# The two missing-table cases below remain deterministic, data-independent
+# failures — the table simply doesn't exist yet, regardless of quarter or
+# row contents — and are intentionally left untouched (out of ME-02 scope).
+# The real-schema case further down now asserts correct computed totals,
+# since the expense_date -> date column fix landed in tax_report.py.
 
 VALID_QUARTERS = (1, 2, 3, 4)
 
