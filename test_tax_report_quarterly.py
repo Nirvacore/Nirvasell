@@ -256,10 +256,9 @@ def _insert_expense(date, category, amount):
         )
 
 
-# ---- vat_check() / stats(): the entry points that currently work ----------
-# quarterly()/annual() never reach a `return` in any reachable DB state (see
-# below) — vat_check() only touches `orders`, whose real columns match its
-# query, so it is characterized here as correct, working current behavior.
+# ---- vat_check() / stats(): existing behavior preserved -------------------
+# These queries use the orders table. The initialized quarterly/annual
+# success cases and separate missing-table cases are covered below.
 
 def test_vat_check_sums_only_non_cancelled_non_returned_orders():
     with isolated_db():
