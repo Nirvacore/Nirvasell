@@ -10,12 +10,18 @@ Nirvasell issue #22 ("DRAFT: tax_report quarterly invalid-quarter policy").
 That issue is explicitly non-binding pending an owner decision (A/B/C) and
 is out of scope here.
 
-It also does NOT fix the expenses-table defect this harness discovered
-(see test_quarterly_with_real_expenses_schema_raises_missing_expense_date_
-column below) — that is a separate, previously undocumented correctness
-bug, unrelated to #22, and fixing it is a behavior change outside this
-slice's authorization. The tests below characterize it as-is so a future
-intentional fix has a baseline to diff against.
+A follow-up slice fixed one narrow, orthogonal defect this harness first
+discovered: tax_report.py's expense query referenced a column
+(`expense_date`) that has never existed on the `expenses` table (the real
+column is `date`, per expenses.py). That mismatch was unrelated to #22 (it
+fired for every valid quarter regardless of data) and did not touch tax
+rates, filing rules, or invalid-quarter behavior, so it was corrected here
+and the corresponding tests below now assert correct computed totals
+instead of the OperationalError they originally locked in. Missing-table
+scenarios (returns/expenses tables not yet created) remain characterized
+as-is and untouched — see test_quarterly_fresh_db_raises_missing_returns_
+table and test_quarterly_without_expenses_table_raises_missing_expenses_
+table below.
 
 Runs with the plain interpreter (no pytest required)::
 
@@ -116,12 +122,18 @@ def _insert_order(order_id, sku, platform, unit_price, qty, total, order_date, s
         )
 
 
-def _insert_return(order_id, sku, platform, refund_amount, return_date):
+def _insert_return(order_id, sku, platform, refund_amount, created_at, return_date=None):
+    # tax_report.py buckets returns by `created_at`, not `return_date` (a
+    # separate, out-of-scope semantic question — see module docstring), so
+    # tests that need deterministic quarter placement must set created_at
+    # explicitly rather than rely on its `datetime('now')` default.
+    if return_date is None:
+        return_date = created_at[:10]
     with db.conn() as c:
         c.execute(
             "INSERT INTO returns (order_id, sku, platform, reason, refund_amount, "
-            "shipping_cost, note, return_date) VALUES (?,?,?,?,?,0,'',?)",
-            (order_id, sku, platform, "other", refund_amount, return_date),
+            "shipping_cost, note, return_date, created_at) VALUES (?,?,?,?,?,0,'',?,?)",
+            (order_id, sku, platform, "other", refund_amount, return_date, created_at),
         )
 
 
@@ -223,46 +235,103 @@ def test_quarterly_without_expenses_table_raises_missing_expenses_table():
                 assert "no such table: expenses" in str(e), (q, e)
 
 
-def test_quarterly_with_real_expenses_schema_raises_missing_expense_date_column():
+def _seed_full_year(year=2026):
+    """One synthetic order/return/expense per quarter, chosen so every
+    quarter has a distinct, hand-computed expected result (see comments in
+    the two tests below for the arithmetic)."""
+    _init_returns_table()
+    _init_expenses_table()
+
+    # Q1 (Jan-Mar): two counted orders + one cancelled (excluded)
+    _insert_order("O1", "SKU1", "shopee", 1000, 1, 1000, f"{year}-01-15", "paid")
+    _insert_order("O2", "SKU2", "lazada", 500, 1, 500, f"{year}-02-10", "shipped")
+    _insert_order("O3", "SKU3", "shopee", 300, 1, 300, f"{year}-03-05", "cancelled")
+    _insert_return("O1", "SKU1", "shopee", 50, f"{year}-01-20 10:00:00")
+    _insert_expense(f"{year}-01-05", "shipping", 30)
+    _insert_expense(f"{year}-01-25", "packaging", 20)
+
+    # Q2 (Apr-Jun): one counted order, no returns
+    _insert_order("O4", "SKU4", "tiktok", 800, 1, 800, f"{year}-04-20", "paid")
+    _insert_expense(f"{year}-04-10", "advertising", 50)
+
+    # Q3 (Jul-Sep): one counted order + one returned-status order (excluded)
+    _insert_order("O5", "SKU5", "shopee", 1200, 1, 1200, f"{year}-07-01", "paid")
+    _insert_order("O6", "SKU6", "lazada", 400, 1, 400, f"{year}-08-15", "returned")
+    _insert_return("O5", "SKU5", "shopee", 100, f"{year}-07-15 10:00:00")
+    _insert_expense(f"{year}-07-20", "shipping", 40)
+
+    # Q4 (Oct-Dec): two counted orders, no returns, two expense categories
+    _insert_order("O7", "SKU7", "shopee", 2000, 1, 2000, f"{year}-10-10", "paid")
+    _insert_order("O8", "SKU8", "tiktok", 300, 1, 300, f"{year}-11-11", "paid")
+    _insert_expense(f"{year}-10-05", "platform_fee", 60)
+    _insert_expense(f"{year}-10-15", "shipping", 25)
+
+
+# Hand-computed from _seed_full_year(): revenue/returns/expenses per quarter,
+# then net_revenue = revenue - returns, total_expenses = sum(expenses),
+# gross_profit = net_revenue - total_expenses,
+# std_deduction = round(net_revenue * 0.6, 2),
+# taxable_income_std/actual = max(0, net_revenue - std_deduction/total_expenses).
+EXPECTED_QUARTERS = {
+    1: dict(revenue=1500.0, returns=50.0, net_revenue=1450.0,
+            expenses={"shipping": 30.0, "packaging": 20.0}, total_expenses=50.0,
+            gross_profit=1400.0, standard_deduction=870.0,
+            taxable_income_std=580.0, taxable_income_actual=1400.0, orders=2),
+    2: dict(revenue=800.0, returns=0.0, net_revenue=800.0,
+            expenses={"advertising": 50.0}, total_expenses=50.0,
+            gross_profit=750.0, standard_deduction=480.0,
+            taxable_income_std=320.0, taxable_income_actual=750.0, orders=1),
+    3: dict(revenue=1200.0, returns=100.0, net_revenue=1100.0,
+            expenses={"shipping": 40.0}, total_expenses=40.0,
+            gross_profit=1060.0, standard_deduction=660.0,
+            taxable_income_std=440.0, taxable_income_actual=1060.0, orders=1),
+    4: dict(revenue=2300.0, returns=0.0, net_revenue=2300.0,
+            expenses={"platform_fee": 60.0, "shipping": 25.0}, total_expenses=85.0,
+            gross_profit=2215.0, standard_deduction=1380.0,
+            taxable_income_std=920.0, taxable_income_actual=2215.0, orders=2),
+}
+
+
+def test_quarterly_computes_correct_totals_for_each_valid_quarter_with_real_schema():
     # Realistic steady state: returns AND expenses tables both exist with the
-    # actual production schema. expenses.py's `expenses` table has column
-    # `date`; tax_report.py's expense query filters on `expense_date`, which
-    # has never existed on this table (confirmed back to the commit that
-    # introduced both tax_report.py and expenses.py together). This branch
-    # fires for EVERY valid quarter and any year, regardless of data —
-    # quarterly()/annual() have no reachable success path once a seller has
-    # ever used the Expenses page.
+    # actual production schema (expenses.py's `expenses.date` column — see
+    # the fixed `expense_date` -> `date` reference in tax_report.py). Proves
+    # quarterly() now reaches its `return` and computes correct totals for
+    # every valid quarter, with quarter-boundary month selection verified by
+    # data landing in the expected quarter only.
     with isolated_db():
-        _init_returns_table()
-        _init_expenses_table()
-        _insert_order("O1", "SKU1", "shopee", 500, 1, 500, "2026-02-14")
-        _insert_return("O1", "SKU1", "shopee", 50, "2026-02-20")
-        _insert_expense("2026-02-01", "shipping", 30)
+        _seed_full_year(2026)
         for q in VALID_QUARTERS:
-            try:
-                tr.quarterly(2026, q)
-                raise AssertionError(f"quarter {q}: expected OperationalError, got a result")
-            except AssertionError:
-                raise
-            except Exception as e:
-                assert type(e).__name__ == "OperationalError", (q, e)
-                assert "no such column: expense_date" in str(e), (q, e)
+            expected = EXPECTED_QUARTERS[q]
+            result = tr.quarterly(2026, q)
+            assert result["year"] == 2026, (q, result)
+            assert result["quarter"] == q, (q, result)
+            for key, value in expected.items():
+                assert result[key] == value, (q, key, result)
 
 
-def test_annual_inherits_first_quarter_failure():
-    # annual() calls quarterly(year, 1..4) in a loop with no error handling,
-    # so it fails identically to quarterly(year, 1) — nothing is returned.
+def test_annual_aggregates_all_four_quarters_with_real_schema():
     with isolated_db():
-        _init_returns_table()
-        _init_expenses_table()
-        try:
-            tr.annual(2026)
-            raise AssertionError("expected OperationalError, got a result")
-        except AssertionError:
-            raise
-        except Exception as e:
-            assert type(e).__name__ == "OperationalError", e
-            assert "no such column: expense_date" in str(e), e
+        _seed_full_year(2026)
+        result = tr.annual(2026)
+        assert result["revenue"] == 5800.0, result
+        assert result["net_revenue"] == 5650.0, result
+        assert result["total_expenses"] == 225.0, result
+        assert result["gross_profit"] == 5425.0, result
+        assert result["standard_deduction"] == 3390.0, result
+        assert result["taxable_income_std"] == 2260.0, result
+        assert result["taxable_income_actual"] == 5425.0, result
+        assert result["orders"] == 6, result
+        assert result["vat_required"] is False, result
+        assert result["expenses"] == {
+            "shipping": 95.0, "packaging": 20.0,
+            "advertising": 50.0, "platform_fee": 60.0,
+        }, result
+        assert [q["quarter"] for q in result["by_quarter"]] == [1, 2, 3, 4], result
+        for q_report in result["by_quarter"]:
+            expected = EXPECTED_QUARTERS[q_report["quarter"]]
+            for key, value in expected.items():
+                assert q_report[key] == value, (q_report["quarter"], key, q_report)
 
 
 # ---- runner -----------------------------------------------------------------

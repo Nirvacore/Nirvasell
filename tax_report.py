@@ -44,13 +44,13 @@ def quarterly(year: int, quarter: int) -> dict:
         ).fetchone()
 
         exp_cond_m = " OR ".join(
-            "strftime('%m',expense_date)='" + m + "'" for m in months
+            "strftime('%m',date)='" + m + "'" for m in months
         )
         expense_rows = c.execute(
             "SELECT category, COALESCE(SUM(amount),0) total "
             "FROM expenses "
             "WHERE (" + exp_cond_m + ") "
-            "AND strftime('%Y',expense_date)='" + str(year) + "' "
+            "AND strftime('%Y',date)='" + str(year) + "' "
             "GROUP BY category"
         ).fetchall()
 
