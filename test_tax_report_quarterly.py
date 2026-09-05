@@ -99,16 +99,19 @@ def isolated_db():
 # Each check below installs a synthetic stand-in `auth` module — never the
 # real one, never real data — so the guarantee holds regardless of whether
 # streamlit happens to be installed here. If anything below did reach the
-# fake resolver, it would only ever touch a clearly-marked OS-temp sentinel
-# file, cleaned up immediately after — never production or shared data.
+# fake resolver, it would only ever touch a sentinel file inside a temp
+# directory this call uniquely owns (own mkdtemp, not a fixed/shared name),
+# so concurrent test runs can't collide and restore() can never delete a
+# preexisting file — the whole owned directory is removed, nothing else.
 
 def _install_fake_auth_resolver():
     """Install a spying stand-in for the `auth` module. Returns (calls,
     restore): `calls` records every invocation of the fake user_db_path();
-    restore() puts sys.modules['auth'] back exactly as found and deletes
-    the synthetic sentinel file if it was ever created."""
+    restore() puts sys.modules['auth'] back exactly as found and removes
+    only the uniquely-owned sentinel directory this call created."""
     calls = []
-    sentinel = Path(tempfile.gettempdir()) / "nirvasell_test_SHOULD_NEVER_BE_USED.db"
+    sentinel_dir = Path(tempfile.mkdtemp(prefix="nirvasell_test_fake_auth_"))
+    sentinel = sentinel_dir / "SHOULD_NEVER_BE_USED.db"
 
     def _fake_user_db_path():
         calls.append(1)
@@ -125,8 +128,7 @@ def _install_fake_auth_resolver():
             sys.modules["auth"] = orig_auth
         else:
             sys.modules.pop("auth", None)
-        if sentinel.exists():
-            sentinel.unlink()
+        shutil.rmtree(sentinel_dir, ignore_errors=True)
 
     return calls, _restore
 
