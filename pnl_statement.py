@@ -21,7 +21,7 @@ def _fetch_period(year: int, month: int | None = None) -> dict:
 
     with db.conn() as c:
         rev_row = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS revenue,
+            SELECT COALESCE(SUM(total_price), 0) AS revenue,
                    COALESCE(SUM(qty), 0) AS units
             FROM orders
             WHERE order_date BETWEEN ? AND ?
@@ -45,7 +45,7 @@ def _fetch_period(year: int, month: int | None = None) -> dict:
         """, (date_from, date_to)).fetchall()
 
         returns_row = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS total
+            SELECT COALESCE(SUM(total_price), 0) AS total
             FROM orders
             WHERE order_date BETWEEN ? AND ?
               AND status = 'returned'
@@ -97,7 +97,7 @@ def quarterly(year: int, quarter: int) -> dict:
 
     with db.conn() as c:
         rev_row = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS revenue,
+            SELECT COALESCE(SUM(total_price), 0) AS revenue,
                    COALESCE(SUM(qty), 0) AS units
             FROM orders
             WHERE strftime('%Y', order_date) = ?
@@ -123,7 +123,7 @@ def quarterly(year: int, quarter: int) -> dict:
         """, (str(year), start_month, end_month)).fetchall()
 
         returns_row = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS total
+            SELECT COALESCE(SUM(total_price), 0) AS total
             FROM orders
             WHERE strftime('%Y', order_date) = ?
               AND CAST(strftime('%m', order_date) AS INTEGER) BETWEEN ? AND ?
