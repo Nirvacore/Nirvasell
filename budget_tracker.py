@@ -79,7 +79,7 @@ def budget_vs_actual(month: str = "") -> list[dict]:
         rows = c.execute("""
             SELECT category, COALESCE(SUM(amount), 0) AS spent
             FROM expenses
-            WHERE strftime('%%Y-%%m', expense_date) = ?
+            WHERE strftime('%Y-%m', date) = ?
             GROUP BY category
         """, (month,)).fetchall()
 

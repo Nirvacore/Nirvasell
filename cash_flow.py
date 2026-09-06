@@ -16,10 +16,10 @@ def daily(days: int = 30) -> list[dict]:
             (days,),
         ).fetchall()
         expenses = c.execute(
-            "SELECT date(expense_date) day, "
+            "SELECT date(date) day, "
             "  COALESCE(SUM(amount),0) amount "
             "FROM expenses "
-            "WHERE date(expense_date) >= date('now','-' || ? || ' days','localtime') "
+            "WHERE date(date) >= date('now','-' || ? || ' days','localtime') "
             "GROUP BY day",
             (days,),
         ).fetchall()
@@ -57,10 +57,10 @@ def monthly(months: int = 6) -> list[dict]:
             (months,),
         ).fetchall()
         expenses = c.execute(
-            "SELECT strftime('%Y-%m', expense_date) month, "
+            "SELECT strftime('%Y-%m', date) month, "
             "  COALESCE(SUM(amount),0) amount "
             "FROM expenses "
-            "WHERE date(expense_date) >= date('now','-' || ? || ' months','localtime') "
+            "WHERE date(date) >= date('now','-' || ? || ' months','localtime') "
             "GROUP BY month",
             (months,),
         ).fetchall()
@@ -102,7 +102,7 @@ def current_month_forecast() -> dict:
         this_exp = c.execute(
             "SELECT COALESCE(SUM(amount),0) amt "
             "FROM expenses "
-            "WHERE strftime('%Y-%m',expense_date)=strftime('%Y-%m','now','localtime')"
+            "WHERE strftime('%Y-%m',date)=strftime('%Y-%m','now','localtime')"
         ).fetchone()
 
     days_elapsed = this_m["days_elapsed"] or 1
