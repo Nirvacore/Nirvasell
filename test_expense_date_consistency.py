@@ -21,6 +21,7 @@ import expenses
 import budget_tracker
 import cash_flow
 import biz_health
+import kpi_scorecard
 
 
 def test_reporting_modules_read_the_real_expense_date_column() -> None:
@@ -38,10 +39,24 @@ def test_reporting_modules_read_the_real_expense_date_column() -> None:
                 # biz_health uses the legacy total_amount order alias; provide
                 # only that fixture column without changing production schema.
                 connection.execute("ALTER TABLE orders ADD COLUMN total_amount REAL")
+                connection.execute("ALTER TABLE orders ADD COLUMN buyer_name TEXT")
+                connection.execute("ALTER TABLE orders ADD COLUMN buyer_phone TEXT")
                 connection.execute(
                     "INSERT INTO orders (order_id, sku, total_price, total_amount, order_date, status) "
                     "VALUES (?,?,?,?,?,?)",
                     ("order-1", "SKU-1", 100.0, 100.0, today, "paid"),
+                )
+                connection.execute(
+                    "CREATE TABLE order_items (order_id INTEGER, sku TEXT, quantity INTEGER)"
+                )
+                connection.execute(
+                    "CREATE TABLE reviews (rating REAL, status TEXT)"
+                )
+                connection.execute(
+                    "INSERT INTO reviews (rating, status) VALUES (?, ?)", (5.0, "answered")
+                )
+                connection.execute(
+                    "CREATE TABLE cod_orders (amount REAL, status TEXT, payment_type TEXT)"
                 )
             inserted_id = expenses.add(date=today, category="shipping", amount=25.0)
             assert inserted_id == 1
@@ -60,6 +75,9 @@ def test_reporting_modules_read_the_real_expense_date_column() -> None:
 
             score = biz_health._expense_score()
             assert score < 100
+
+            kpis = kpi_scorecard.all_kpis(days=30)
+            assert kpis["expenses"] == 25.0
         finally:
             db._resolve_path = original_resolver
 

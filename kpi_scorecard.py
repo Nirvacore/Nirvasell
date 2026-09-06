@@ -72,7 +72,7 @@ def all_kpis(days: int = 30) -> dict:
         # Expenses
         exp_row = _safe(lambda: c.execute(
             "SELECT COALESCE(SUM(amount),0) total FROM expenses "
-            "WHERE date(expense_date) >= date('now','-' || ? || ' days','localtime')",
+            "WHERE date(date) >= date('now','-' || ? || ' days','localtime')",
             (days,),
         ).fetchone())
         expenses = exp_row["total"] if exp_row else 0
