@@ -74,12 +74,12 @@ def _revenue_score() -> float:
     """Score based on whether revenue is growing."""
     with db.conn() as c:
         this_month = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS rev
+            SELECT COALESCE(SUM(total_price), 0) AS rev
             FROM orders WHERE order_date >= date('now','start of month')
         """).fetchone()["rev"]
 
         last_month = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) AS rev
+            SELECT COALESCE(SUM(total_price), 0) AS rev
             FROM orders WHERE order_date >= date('now','start of month','-1 month')
               AND order_date < date('now','start of month')
         """).fetchone()["rev"]
@@ -209,7 +209,7 @@ def _expense_score() -> float:
     """Score based on expense-to-revenue ratio."""
     with db.conn() as c:
         rev = c.execute("""
-            SELECT COALESCE(SUM(total_amount), 0) FROM orders
+            SELECT COALESCE(SUM(total_price), 0) FROM orders
             WHERE order_date >= date('now','-30 day')
         """).fetchone()[0]
 
