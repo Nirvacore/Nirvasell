@@ -215,7 +215,7 @@ def _expense_score() -> float:
 
         exp = c.execute("""
             SELECT COALESCE(SUM(amount), 0) FROM expenses
-            WHERE expense_date >= date('now','-30 day')
+            WHERE date >= date('now','-30 day')
         """).fetchone()[0]
 
     if rev <= 0:
