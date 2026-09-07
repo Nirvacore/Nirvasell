@@ -28,7 +28,7 @@ def generate() -> dict:
 def _yesterday_summary(yesterday: str) -> dict:
     with db.conn() as c:
         orders = c.execute(
-            "SELECT COUNT(*) AS cnt, COALESCE(SUM(total_amount), 0) AS rev "
+            "SELECT COUNT(*) AS cnt, COALESCE(SUM(total_price), 0) AS rev "
             "FROM orders WHERE order_date = ?", (yesterday,)
         ).fetchone()
 
@@ -181,7 +181,7 @@ def _quick_stats() -> dict:
     month_start = date.today().replace(day=1).strftime("%Y-%m-%d")
     with db.conn() as c:
         mtd = c.execute("""
-            SELECT COUNT(*) AS orders, COALESCE(SUM(total_amount), 0) AS revenue
+            SELECT COUNT(*) AS orders, COALESCE(SUM(total_price), 0) AS revenue
             FROM orders WHERE order_date >= ?
         """, (month_start,)).fetchone()
 
