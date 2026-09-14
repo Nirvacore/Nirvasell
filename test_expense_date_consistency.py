@@ -39,8 +39,6 @@ def test_reporting_modules_read_the_real_expense_date_column() -> None:
                 # biz_health uses the legacy total_amount order alias; provide
                 # only that fixture column without changing production schema.
                 connection.execute("ALTER TABLE orders ADD COLUMN total_amount REAL")
-                connection.execute("ALTER TABLE orders ADD COLUMN buyer_name TEXT")
-                connection.execute("ALTER TABLE orders ADD COLUMN buyer_phone TEXT")
                 connection.execute(
                     "INSERT INTO orders (order_id, sku, total_price, total_amount, order_date, status) "
                     "VALUES (?,?,?,?,?,?)",
