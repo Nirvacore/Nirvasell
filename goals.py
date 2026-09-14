@@ -126,7 +126,7 @@ def _get_actual(metric: str, period: str) -> float:
 
         elif metric == "profit":
             r = c.execute("""
-                SELECT COALESCE(SUM(o.qty * (o.unit_price - COALESCE(p.cost_price, 0))), 0) AS val
+                SELECT COALESCE(SUM(o.total_price - o.qty * COALESCE(p.cost_price, 0)), 0) AS val
                 FROM orders o
                 LEFT JOIN products p ON p.sku = o.sku
                 WHERE strftime('%Y-%m', o.order_date) = ?
