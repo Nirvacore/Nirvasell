@@ -30,7 +30,7 @@ def search(query: str, limit: int = 50) -> dict:
         """, (q, q, q, q, limit)).fetchall()
 
         orders = c.execute("""
-            SELECT order_id, sku, platform, qty, total_price AS total_amount,
+            SELECT order_id, sku, platform, qty, total_price,
                    order_date, status, buyer_name, buyer_phone
             FROM orders
             WHERE order_id LIKE ? OR sku LIKE ? OR buyer_name LIKE ?

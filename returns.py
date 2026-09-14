@@ -63,13 +63,13 @@ def add(*, order_id: str = "", sku: str = "", platform: str = "",
     if not return_date:
         return_date = datetime.now().strftime("%Y-%m-%d")
     with db.conn() as c:
-        c.execute(
+        cur = c.execute(
             "INSERT INTO returns (order_id, sku, platform, reason, refund_amount, "
             "shipping_cost, note, return_date) VALUES (?,?,?,?,?,?,?,?)",
             (order_id, sku, platform, r, abs(refund_amount),
              abs(shipping_cost), note, return_date),
         )
-        return c.lastrowid
+        return cur.lastrowid
 
 
 def delete(return_id: int):

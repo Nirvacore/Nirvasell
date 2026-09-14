@@ -54,11 +54,11 @@ def add(*, date: str, category: str, amount: float,
         note: str = "", platform: str = "") -> int:
     cat = category if category in CATEGORIES else "other"
     with db.conn() as c:
-        c.execute(
+        cur = c.execute(
             "INSERT INTO expenses (date, category, amount, note, platform) VALUES (?,?,?,?,?)",
             (date, cat, abs(amount), note.strip(), platform.strip()),
         )
-        return c.lastrowid
+        return cur.lastrowid
 
 
 def update(expense_id: int, **fields):
