@@ -115,6 +115,18 @@ PRODUCTS_MIGRATIONS = [
     ("group_id", "INTEGER REFERENCES product_groups(id)"),
 ]
 
+# Keep order import, pick/pack, and fulfillment on one canonical schema. These
+# additions are intentionally idempotent so an existing per-user SQLite file is
+# upgraded without rewriting or deleting historical orders.
+ORDERS_MIGRATIONS = [
+    ("tracking_number", "TEXT"),
+    ("carrier", "TEXT"),
+    ("shipped_at", "TEXT"),
+    ("buyer_name", "TEXT"),
+    ("buyer_address", "TEXT"),
+    ("buyer_phone", "TEXT"),
+]
+
 
 @contextmanager
 def conn():
@@ -135,6 +147,10 @@ def init():
         for col, coltype in PRODUCTS_MIGRATIONS:
             if col not in existing_cols:
                 c.execute(f"ALTER TABLE products ADD COLUMN {col} {coltype}")
+        order_cols = {r["name"] for r in c.execute("PRAGMA table_info(orders)")}
+        for col, coltype in ORDERS_MIGRATIONS:
+            if col not in order_cols:
+                c.execute(f"ALTER TABLE orders ADD COLUMN {col} {coltype}")
 
 
 # ---- Batches ---------------------------------------------------------------
