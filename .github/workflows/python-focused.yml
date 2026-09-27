@@ -28,6 +28,7 @@ on:
       - "pages/A2_🔎_Search.py"
       - "pages/C9_🎯_Goals.py"
       - "pages/D9_🌟_Influencers.py"
+      - "pages/E0_⚡_FlashSale.py"
       - "pages/F_📈_Dashboard.py"
       - "pages/b_🏭_Suppliers.py"
       - "test_expense_date_consistency.py"
@@ -43,6 +44,7 @@ on:
       - "test_export_orders_schema.py"
       - "test_export_expenses_schema.py"
       - "test_influencer_page_commission_options.py"
+      - "test_flashsale_page_discount_options.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -80,6 +82,7 @@ jobs:
           python test_export_orders_schema.py
           python test_export_expenses_schema.py
           python test_influencer_page_commission_options.py
+          python test_flashsale_page_discount_options.py
 
       - name: Compile changed Python entry points
         env:
@@ -105,6 +108,7 @@ jobs:
             "pages/A2_🔎_Search.py" \
             "pages/C9_🎯_Goals.py" \
             "pages/D9_🌟_Influencers.py" \
+            "pages/E0_⚡_FlashSale.py" \
             "pages/F_📈_Dashboard.py" \
             "pages/b_🏭_Suppliers.py" \
             test_order_import_schema_extraction.py \
@@ -120,4 +124,5 @@ jobs:
             test_clv_order_schema.py \
             test_export_orders_schema.py \
             test_export_expenses_schema.py \
-            test_influencer_page_commission_options.py
+            test_influencer_page_commission_options.py \
+            test_flashsale_page_discount_options.py
