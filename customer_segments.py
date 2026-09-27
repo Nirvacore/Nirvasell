@@ -33,9 +33,18 @@ def init() -> None:
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 customer_key TEXT NOT NULL,
                 note        TEXT NOT NULL,
+                note_type   TEXT DEFAULT 'general',
                 created_at  TEXT DEFAULT (datetime('now','localtime'))
             )
         """)
+        note_columns = {
+            row["name"] for row in c.execute("PRAGMA table_info(customer_notes)")
+        }
+        if "note_type" not in note_columns:
+            c.execute(
+                "ALTER TABLE customer_notes "
+                "ADD COLUMN note_type TEXT DEFAULT 'general'"
+            )
 
 
 def _rfm_score(recency_days: int, frequency: int, monetary: float) -> str:
