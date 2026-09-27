@@ -98,7 +98,7 @@ with tab_create:
         title      = st.text_input(t("flash.f_title"), placeholder=t("flash.title_ph"))
         col1, col2 = st.columns(2)
         disc_type  = col1.selectbox(t("flash.f_discount_type"),
-                                     list(fs.DISCOUNT_TYPES.keys()),
+                                     list(fs.DISCOUNT_TYPES),
                                      format_func=flash_discount_label)
         disc_val   = col2.number_input(t("flash.f_discount_value"), min_value=0.0, step=5.0)
         col3, col4 = st.columns(2)
