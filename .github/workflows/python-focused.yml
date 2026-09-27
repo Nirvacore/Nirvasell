@@ -9,6 +9,7 @@ on:
       - "budget_tracker.py"
       - "cash_flow.py"
       - "biz_health.py"
+      - "alerts.py"
       - "kpi_scorecard.py"
       - "customers.py"
       - "shop_settings.py"
@@ -27,6 +28,7 @@ on:
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
+      - "test_alerts_product_schema.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -56,6 +58,7 @@ jobs:
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
+          python test_alerts_product_schema.py
 
       - name: Compile changed Python entry points
         env:
@@ -71,6 +74,7 @@ jobs:
             purchase_orders.py \
             tax_report.py \
             supplier_score.py \
+            alerts.py \
             order_import.py \
             pick_pack.py \
             "pages/F_📈_Dashboard.py" \
@@ -80,4 +84,5 @@ jobs:
             test_customer_helper_rowid.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
-            test_supplier_score_logic.py
+            test_supplier_score_logic.py \
+            test_alerts_product_schema.py
