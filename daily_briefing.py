@@ -26,16 +26,19 @@ def generate() -> dict:
 
 
 def _yesterday_summary(yesterday: str) -> dict:
+    import customers as customer_store
+
+    customer_store.init()
     with db.conn() as c:
         orders = c.execute(
             "SELECT COUNT(*) AS cnt, COALESCE(SUM(total_price), 0) AS rev "
             "FROM orders WHERE order_date = ?", (yesterday,)
         ).fetchone()
 
-        new_customers = c.execute("""
-            SELECT COUNT(DISTINCT COALESCE(buyer_phone, buyer_name)) AS cnt
-            FROM orders WHERE order_date = ?
-        """, (yesterday,)).fetchone()
+        new_customers = c.execute(
+            "SELECT COUNT(*) AS cnt FROM customers WHERE first_order = ?",
+            (yesterday,),
+        ).fetchone()
 
     return {
         "orders": orders["cnt"] if orders else 0,
