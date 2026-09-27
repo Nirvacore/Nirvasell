@@ -149,7 +149,7 @@ if advice:
             "<div style='padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
             + p_icon + " <strong>" + a["sku"] + "</strong>"
             " — " + (a["name"] or "")[:25] +
-            + t("abc.advice_stock", n=str(a["stock"])) +
+            " " + t("abc.advice_stock", n=str(a["stock"])) +
             " · <span style='color:#4d6c5c'>" + a_label + "</span></div>",
             unsafe_allow_html=True,
         )
