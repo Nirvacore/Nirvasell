@@ -36,6 +36,9 @@ period = st.selectbox(
 )
 
 s = ds.summary(period)
+if not s.get("evidence_complete", False):
+    st.warning("⚠️ ข้อมูลสต็อก ยอดขาย หรือต้นทุนไม่ครบ · Dead-stock metrics unavailable")
+    st.stop()
 
 # ---- KPIs -------------------------------------------------------------------
 
@@ -89,7 +92,7 @@ if s["total_items"] > 0:
 
 # ---- Item list ---------------------------------------------------------------
 
-items = ds.detect(period)
+items = s["items"]
 if items:
     st.divider()
     st.markdown("### " + t("dead.list_title"))
@@ -137,7 +140,7 @@ if items:
 
 # ---- Action suggestions -----------------------------------------------------
 
-suggestions = ds.suggest_actions(items if items else None)
+suggestions = ds.suggest_actions(items)
 if suggestions:
     st.divider()
     st.markdown("### " + t("dead.suggest_title"))
