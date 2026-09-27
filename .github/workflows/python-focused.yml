@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/python-focused.yml"
       - "db.py"
+      - "i18n_inline.py"
       - "expenses.py"
       - "budget_tracker.py"
       - "cash_flow.py"
@@ -41,6 +42,7 @@ on:
       - "pages/z_📇_CRM.py"
       - "pages/a_🚚_Shipping.py"
       - "pages/G5_📝_Notes.py"
+      - "pages/A5_🎖_Loyalty.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -48,6 +50,7 @@ on:
       - "test_shipping_page_carrier_names.py"
       - "test_notes_page_open_kpi.py"
       - "test_notes_page_pinned_create.py"
+      - "test_loyalty_page_reward_names.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -96,6 +99,7 @@ jobs:
           python test_shipping_page_carrier_names.py
           python test_notes_page_open_kpi.py
           python test_notes_page_pinned_create.py
+          python test_loyalty_page_reward_names.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -120,6 +124,7 @@ jobs:
         run: |
           python -m py_compile \
             db.py \
+            i18n_inline.py \
             customers.py \
             customer_crm.py \
             customer_segments.py \
@@ -151,6 +156,7 @@ jobs:
             "pages/z_📇_CRM.py" \
             "pages/a_🚚_Shipping.py" \
             "pages/G5_📝_Notes.py" \
+            "pages/A5_🎖_Loyalty.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -159,6 +165,7 @@ jobs:
             test_shipping_page_carrier_names.py \
             test_notes_page_open_kpi.py \
             test_notes_page_pinned_create.py \
+            test_loyalty_page_reward_names.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
