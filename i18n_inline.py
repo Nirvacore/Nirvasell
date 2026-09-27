@@ -178,7 +178,10 @@ def promo_status_label(status: str) -> str:
 
 
 def loyalty_reward_name(reward_id: str) -> str:
-    return _lookup("loy.reward", reward_id)
+    key = f"loy.reward_{reward_id}"
+    if key in STRINGS:
+        return t(key)
+    return reward_id.replace("_", " ").title()
 
 
 def peng_type_label(promo_type: str) -> str:
