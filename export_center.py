@@ -37,7 +37,7 @@ def export_orders(days: int = 90) -> str:
                    o.order_date, o.status,
                    COALESCE(o.buyer_name, '') AS buyer_name,
                    COALESCE(o.buyer_phone, '') AS buyer_phone,
-                   COALESCE(o.total_amount, o.total_price) AS total_amount
+                   o.total_price AS total_amount
             FROM orders o
             LEFT JOIN products p ON o.sku = p.sku
             WHERE o.order_date >= date('now', ? || ' days')
