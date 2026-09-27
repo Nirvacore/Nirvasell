@@ -92,7 +92,7 @@ def export_customers(days: int = 180) -> str:
 def export_expenses(months: int = 3) -> str:
     with db.conn() as c:
         rows = c.execute("""
-            SELECT date, category, amount, description, created_at
+            SELECT date, category, amount, note, created_at
             FROM expenses
             WHERE date >= date('now', ? || ' months')
             ORDER BY date DESC
@@ -104,7 +104,7 @@ def export_expenses(months: int = 3) -> str:
     w.writerow(["วันที่", "หมวดหมู่", "จำนวนเงิน", "รายละเอียด"])
     for r in rows:
         w.writerow([(r["date"] or "")[:10], r["category"],
-                    r["amount"], r["description"]])
+                    r["amount"], r["note"]])
     return buf.getvalue()
 
 
