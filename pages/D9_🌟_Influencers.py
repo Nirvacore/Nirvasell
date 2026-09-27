@@ -82,7 +82,7 @@ with tab_add:
         niche     = col1.text_input(t("inf.f_niche"), placeholder=t("inf.niche_ph"))
         contact   = col2.text_input(t("inf.f_contact"), placeholder=t("inf.contact_ph"))
         comm_type = col1.selectbox(t("inf.f_comm_type"),
-                                    list(it.COMMISSION_TYPES.keys()),
+                                    list(it.COMMISSION_TYPES),
                                     format_func=inf_commission_label)
         comm_rate = col2.number_input(t("inf.f_comm_rate"), min_value=0.0, step=1.0, value=10.0)
         promo_code = col1.text_input(t("inf.f_promo_code"))
