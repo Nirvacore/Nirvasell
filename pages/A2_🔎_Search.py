@@ -112,7 +112,7 @@ if query and len(query.strip()) >= 2:
                 + (o.get("platform") or "") + "</span>"
                 "</div>"
                 "<div style='display:flex;gap:12px;font-size:13px'>"
-                "<span>฿" + "{:,.0f}".format(o.get("total_amount") or 0) + "</span>"
+                "<span>฿" + "{:,.0f}".format(o.get("total_price") or 0) + "</span>"
                 "<span style='color:#9a9485'>" +
                 (o.get("buyer_name") or "") + "</span>"
                 "<span style='font-size:11px;color:#7a7569'>" +
