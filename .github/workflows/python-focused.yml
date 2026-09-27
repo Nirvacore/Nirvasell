@@ -39,10 +39,12 @@ on:
       - "pages/F_📈_Dashboard.py"
       - "pages/b_🏭_Suppliers.py"
       - "pages/z_📇_CRM.py"
+      - "pages/a_🚚_Shipping.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
       - "test_crm_page_order_total.py"
+      - "test_shipping_page_carrier_names.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -88,6 +90,7 @@ jobs:
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
           python test_crm_page_order_total.py
+          python test_shipping_page_carrier_names.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -141,11 +144,13 @@ jobs:
             "pages/F_📈_Dashboard.py" \
             "pages/b_🏭_Suppliers.py" \
             "pages/z_📇_CRM.py" \
+            "pages/a_🚚_Shipping.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \
             test_crm_page_order_total.py \
+            test_shipping_page_carrier_names.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
