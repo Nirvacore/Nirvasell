@@ -64,6 +64,17 @@ if not goal_list:
     st.stop()
 
 s = goals.summary(current_period)
+missing_evidence_rows = sum(
+    g.get("missing_evidence_rows", 0)
+    for g in goal_list
+    if not g.get("evidence_complete", True)
+)
+if s.get("unavailable", 0):
+    st.warning(
+        "Actual goal evidence is incomplete for "
+        + str(missing_evidence_rows)
+        + " row(s); exact progress is unavailable."
+    )
 
 # KPIs
 k1, k2, k3, k4 = st.columns(4)
@@ -85,15 +96,22 @@ st.divider()
 # Goal cards with progress bars
 for g in goal_list:
     status = g["status"]
-    s_icon = {"achieved": "🏆", "on_track": "✅", "behind": "⚠️", "at_risk": "🔴"}.get(status, "?")
+    s_icon = {"achieved": "🏆", "on_track": "✅", "behind": "⚠️",
+              "at_risk": "🔴", "unavailable": "⚪"}.get(status, "?")
     s_color = {"achieved": "#4d6c5c", "on_track": "#4a7ab5",
-               "behind": "#c5963d", "at_risk": "#c54c4c"}.get(status, "#7a7569")
+               "behind": "#c5963d", "at_risk": "#c54c4c",
+               "unavailable": "#7a7569"}.get(status, "#7a7569")
 
     unit = g["unit"]
-    actual_str = unit + "{:,.0f}".format(g["actual"]) if unit else "{:,.0f}".format(g["actual"])
+    actual_str = (
+        (unit + "—" if unit else "—")
+        if g["actual"] is None
+        else (unit + "{:,.0f}".format(g["actual"]) if unit
+              else "{:,.0f}".format(g["actual"]))
+    )
     target_str = unit + "{:,.0f}".format(g["target"]) if unit else "{:,.0f}".format(g["target"])
-    pct_str = str(min(g["pct"], 100)) + "%"
-    bar_width = min(g["pct"], 100)
+    pct_str = "Unavailable" if g["pct"] is None else str(min(g["pct"], 100)) + "%"
+    bar_width = 0 if g["pct"] is None else min(g["pct"], 100)
 
     # Pace indicator
     pace_bar = g["pace_pct"]
