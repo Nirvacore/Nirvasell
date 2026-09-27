@@ -92,12 +92,12 @@ def find_or_create(*, name: str, phone: str = "", email: str = "",
                               (",".join(sorted(plats)), cid))
             return cid
 
-        c.execute(
+        cursor = c.execute(
             "INSERT INTO customers (name, phone, email, platforms) VALUES (?,?,?,?)",
             (name.strip() or "(unknown)", phone.strip(), email.strip(),
              platform.lower() if platform else ""),
         )
-        return c.lastrowid
+        return cursor.lastrowid
 
 
 def record_order(*, customer_id: int, order_id: str = "",

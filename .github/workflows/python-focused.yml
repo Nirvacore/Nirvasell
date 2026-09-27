@@ -10,10 +10,12 @@ on:
       - "cash_flow.py"
       - "biz_health.py"
       - "kpi_scorecard.py"
+      - "customers.py"
       - "order_import.py"
       - "pick_pack.py"
       - "pages/F_📈_Dashboard.py"
       - "test_expense_date_consistency.py"
+      - "test_customer_helper_rowid.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -39,6 +41,7 @@ jobs:
         run: |
           python test_order_import_schema_extraction.py
           python test_expense_date_consistency.py
+          python test_customer_helper_rowid.py
 
       - name: Compile changed Python entry points
         env:
@@ -46,8 +49,10 @@ jobs:
         run: |
           python -m py_compile \
             db.py \
+            customers.py \
             order_import.py \
             pick_pack.py \
             "pages/F_📈_Dashboard.py" \
             test_order_import_schema_extraction.py \
-            test_expense_date_consistency.py
+            test_expense_date_consistency.py \
+            test_customer_helper_rowid.py
