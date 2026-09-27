@@ -16,18 +16,29 @@ def calculate_clv() -> list[dict]:
     """Calculate CLV for all customers with purchase history."""
     with db.conn() as c:
         rows = c.execute("""
+            WITH customer_orders AS (
+                SELECT
+                    o.buyer_name,
+                    o.buyer_phone,
+                    o.platform,
+                    o.order_id,
+                    SUM(o.total_price) AS order_total,
+                    MIN(o.order_date) AS order_date
+                FROM orders o
+                WHERE o.buyer_name IS NOT NULL AND o.buyer_name != ''
+                GROUP BY o.buyer_name, o.buyer_phone, o.platform, o.order_id
+            )
             SELECT
-                o.buyer_name,
-                o.buyer_phone,
-                COUNT(DISTINCT o.order_id) AS order_count,
-                SUM(o.total_amount) AS total_spent,
-                AVG(o.total_amount) AS avg_order_value,
-                MIN(o.order_date) AS first_order,
-                MAX(o.order_date) AS last_order,
-                julianday('now','localtime') - julianday(MIN(o.order_date)) AS tenure_days
-            FROM orders o
-            WHERE o.buyer_name IS NOT NULL AND o.buyer_name != ''
-            GROUP BY COALESCE(o.buyer_phone, o.buyer_name)
+                buyer_name,
+                buyer_phone,
+                COUNT(*) AS order_count,
+                SUM(order_total) AS total_spent,
+                AVG(order_total) AS avg_order_value,
+                MIN(order_date) AS first_order,
+                MAX(order_date) AS last_order,
+                julianday('now','localtime') - julianday(MIN(order_date)) AS tenure_days
+            FROM customer_orders
+            GROUP BY COALESCE(buyer_phone, buyer_name)
             HAVING order_count >= 1
             ORDER BY total_spent DESC
         """).fetchall()

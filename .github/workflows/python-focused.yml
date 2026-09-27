@@ -23,6 +23,7 @@ on:
       - "pick_pack.py"
       - "global_search.py"
       - "goal_tracker.py"
+      - "clv.py"
       - "pages/A2_🔎_Search.py"
       - "pages/C9_🎯_Goals.py"
       - "pages/F_📈_Dashboard.py"
@@ -36,6 +37,7 @@ on:
       - "test_global_search_order_schema.py"
       - "test_search_page_order_total.py"
       - "test_goals_page_period_options.py"
+      - "test_clv_order_schema.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -69,6 +71,7 @@ jobs:
           python test_global_search_order_schema.py
           python test_search_page_order_total.py
           python test_goals_page_period_options.py
+          python test_clv_order_schema.py
 
       - name: Compile changed Python entry points
         env:
@@ -89,6 +92,7 @@ jobs:
             pick_pack.py \
             global_search.py \
             goal_tracker.py \
+            clv.py \
             "pages/A2_🔎_Search.py" \
             "pages/C9_🎯_Goals.py" \
             "pages/F_📈_Dashboard.py" \
@@ -102,4 +106,5 @@ jobs:
             test_alerts_product_schema.py \
             test_global_search_order_schema.py \
             test_search_page_order_total.py \
-            test_goals_page_period_options.py
+            test_goals_page_period_options.py \
+            test_clv_order_schema.py
