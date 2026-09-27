@@ -27,6 +27,7 @@ on:
       - "export_center.py"
       - "pages/A2_🔎_Search.py"
       - "pages/C9_🎯_Goals.py"
+      - "pages/D9_🌟_Influencers.py"
       - "pages/F_📈_Dashboard.py"
       - "pages/b_🏭_Suppliers.py"
       - "test_expense_date_consistency.py"
@@ -41,6 +42,7 @@ on:
       - "test_clv_order_schema.py"
       - "test_export_orders_schema.py"
       - "test_export_expenses_schema.py"
+      - "test_influencer_page_commission_options.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -77,6 +79,7 @@ jobs:
           python test_clv_order_schema.py
           python test_export_orders_schema.py
           python test_export_expenses_schema.py
+          python test_influencer_page_commission_options.py
 
       - name: Compile changed Python entry points
         env:
@@ -101,6 +104,7 @@ jobs:
             export_center.py \
             "pages/A2_🔎_Search.py" \
             "pages/C9_🎯_Goals.py" \
+            "pages/D9_🌟_Influencers.py" \
             "pages/F_📈_Dashboard.py" \
             "pages/b_🏭_Suppliers.py" \
             test_order_import_schema_extraction.py \
@@ -115,4 +119,5 @@ jobs:
             test_goals_page_period_options.py \
             test_clv_order_schema.py \
             test_export_orders_schema.py \
-            test_export_expenses_schema.py
+            test_export_expenses_schema.py \
+            test_influencer_page_commission_options.py
