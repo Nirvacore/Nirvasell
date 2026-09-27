@@ -49,6 +49,7 @@ on:
       - "pages/F2_🔮_Forecast.py"
       - "pages/G7_🌅_DailyBriefing.py"
       - "pages/E2_🏆_KPIs.py"
+      - "pages/v_🏥_BizHealth.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -79,6 +80,8 @@ on:
       - "test_sourcing_page_header.py"
       - "test_policies_page_header.py"
       - "test_start_page_header.py"
+      - "test_biz_health_margin_evidence.py"
+      - "test_biz_health_page_incomplete_margin.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -133,6 +136,8 @@ jobs:
           python test_sourcing_page_header.py
           python test_policies_page_header.py
           python test_start_page_header.py
+          python test_biz_health_margin_evidence.py
+          python test_biz_health_page_incomplete_margin.py
 
       - name: Compile changed Python entry points
         env:
@@ -142,6 +147,7 @@ jobs:
             db.py \
             i18n_inline.py \
             daily_briefing.py \
+            biz_health.py \
             kpi_scorecard.py \
             abc_analysis.py \
             customers.py \
@@ -180,6 +186,7 @@ jobs:
             "pages/F2_🔮_Forecast.py" \
             "pages/G7_🌅_DailyBriefing.py" \
             "pages/E2_🏆_KPIs.py" \
+            "pages/v_🏥_BizHealth.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -210,4 +217,6 @@ jobs:
             test_abc_page_advice_render.py \
             test_sourcing_page_header.py \
             test_policies_page_header.py \
-            test_start_page_header.py
+            test_start_page_header.py \
+            test_biz_health_margin_evidence.py \
+            test_biz_health_page_incomplete_margin.py
