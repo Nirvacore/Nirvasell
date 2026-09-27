@@ -15,11 +15,11 @@ def classify() -> list[dict]:
     with db.conn() as c:
         rows = c.execute("""
             SELECT p.sku, p.name, p.stock, p.cost_price, p.sell_price,
-                   COALESCE(SUM(oi.qty), 0) AS total_qty,
-                   COALESCE(SUM(oi.qty * oi.unit_price), 0) AS total_revenue
+                   COALESCE(SUM(o.qty), 0) AS total_qty,
+                   COALESCE(SUM(o.total_price), 0) AS total_revenue
             FROM products p
-            LEFT JOIN order_items oi ON oi.sku = p.sku
-            LEFT JOIN orders o ON o.order_id = oi.order_id
+            LEFT JOIN orders o ON o.sku = p.sku
+                AND o.status NOT IN ('cancelled','returned')
             GROUP BY p.sku
             ORDER BY total_revenue DESC
         """).fetchall()
