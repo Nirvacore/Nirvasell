@@ -47,6 +47,7 @@ on:
       - "pages/E3_👥_Customers.py"
       - "pages/F2_🔮_Forecast.py"
       - "pages/G7_🌅_DailyBriefing.py"
+      - "pages/E2_🏆_KPIs.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -58,6 +59,7 @@ on:
       - "test_customers_page_kpis.py"
       - "test_forecast_page_contract.py"
       - "test_daily_briefing_page_new_customers.py"
+      - "test_kpi_scorecard_canonical_cogs.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -110,6 +112,7 @@ jobs:
           python test_customers_page_kpis.py
           python test_forecast_page_contract.py
           python test_daily_briefing_page_new_customers.py
+          python test_kpi_scorecard_canonical_cogs.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -136,6 +139,7 @@ jobs:
             db.py \
             i18n_inline.py \
             daily_briefing.py \
+            kpi_scorecard.py \
             customers.py \
             customer_crm.py \
             customer_segments.py \
@@ -171,6 +175,7 @@ jobs:
             "pages/E3_👥_Customers.py" \
             "pages/F2_🔮_Forecast.py" \
             "pages/G7_🌅_DailyBriefing.py" \
+            "pages/E2_🏆_KPIs.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -183,6 +188,7 @@ jobs:
             test_customers_page_kpis.py \
             test_forecast_page_contract.py \
             test_daily_briefing_page_new_customers.py \
+            test_kpi_scorecard_canonical_cogs.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \

@@ -13,10 +13,12 @@ def _safe(fn):
 def health_score(metrics: dict) -> int:
     """0-100 overall business health score."""
     score = 50
-    if metrics.get("margin_pct", 0) > 30:
-        score += 10
-    elif metrics.get("margin_pct", 0) < 10:
-        score -= 10
+    margin_pct = metrics.get("margin_pct")
+    if margin_pct is not None:
+        if margin_pct > 30:
+            score += 10
+        elif margin_pct < 10:
+            score -= 10
     if metrics.get("repeat_rate", 0) > 30:
         score += 10
     elif metrics.get("repeat_rate", 0) < 10:
@@ -57,17 +59,24 @@ def all_kpis(days: int = 30) -> dict:
 
         # COGS and margin
         cogs_row = _safe(lambda: c.execute(
-            "SELECT COALESCE(SUM(oi.quantity * p.cost_price),0) cogs "
-            "FROM order_items oi "
-            "JOIN orders o ON oi.order_id=o.id "
-            "JOIN products p ON oi.sku=p.sku "
+            "SELECT COALESCE(SUM(CASE WHEN p.cost_price IS NOT NULL "
+            "                         THEN o.qty * p.cost_price ELSE 0 END),0) cogs, "
+            "       COALESCE(SUM(CASE WHEN p.sku IS NULL OR p.cost_price IS NULL "
+            "                         THEN 1 ELSE 0 END),0) missing_cost_rows "
+            "FROM orders o "
+            "LEFT JOIN products p ON o.sku=p.sku "
             "WHERE date(o.order_date) >= date('now','-' || ? || ' days','localtime') "
             "  AND o.status NOT IN ('cancelled','returned')",
             (days,),
         ).fetchone())
-        cogs = cogs_row["cogs"] if cogs_row else 0
-        gross_profit = revenue - cogs
-        margin_pct = round(gross_profit / revenue * 100, 1) if revenue > 0 else 0
+        missing_cost_rows = cogs_row["missing_cost_rows"] if cogs_row else 0
+        cogs_complete = cogs_row is not None and missing_cost_rows == 0
+        cogs = cogs_row["cogs"] if cogs_complete else None
+        gross_profit = revenue - cogs if cogs_complete else None
+        margin_pct = (
+            round(gross_profit / revenue * 100, 1)
+            if cogs_complete and revenue > 0 else (0 if cogs_complete else None)
+        )
 
         # Expenses
         exp_row = _safe(lambda: c.execute(
@@ -76,7 +85,7 @@ def all_kpis(days: int = 30) -> dict:
             (days,),
         ).fetchone())
         expenses = exp_row["total"] if exp_row else 0
-        net_profit = gross_profit - expenses
+        net_profit = gross_profit - expenses if cogs_complete else None
 
         # Stock
         stock_row = _safe(lambda: c.execute(
@@ -122,11 +131,13 @@ def all_kpis(days: int = 30) -> dict:
         "revenue": round(revenue, 2),
         "orders": orders,
         "aov": aov,
-        "cogs": round(cogs, 2),
-        "gross_profit": round(gross_profit, 2),
+        "cogs": round(cogs, 2) if cogs is not None else None,
+        "cogs_complete": cogs_complete,
+        "missing_cost_rows": missing_cost_rows,
+        "gross_profit": round(gross_profit, 2) if gross_profit is not None else None,
         "margin_pct": margin_pct,
         "expenses": round(expenses, 2),
-        "net_profit": round(net_profit, 2),
+        "net_profit": round(net_profit, 2) if net_profit is not None else None,
         "low_stock_count": low_stock,
         "out_of_stock": out_stock,
         "avg_rating": avg_rating,

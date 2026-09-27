@@ -49,14 +49,19 @@ try:
 
     # Profit section
     st.subheader(t("kpi.profit_title"))
+    profit_complete = data.get("cogs_complete", False)
+    if not profit_complete:
+        st.warning("⚠️ ข้อมูลต้นทุนไม่ครบ · Profit metrics unavailable")
     p1, p2, p3, p4 = st.columns(4)
-    p1.metric(t("kpi.gross_profit"), "฿{:,.0f}".format(data["gross_profit"]))
-    margin_color = "normal" if data["margin_pct"] > 20 else "inverse"
-    p2.metric(t("kpi.margin"), str(data["margin_pct"]) + "%",
+    p1.metric(t("kpi.gross_profit"),
+              "฿{:,.0f}".format(data["gross_profit"]) if profit_complete else "—")
+    margin_color = ("normal" if data["margin_pct"] > 20 else "inverse") if profit_complete else "off"
+    p2.metric(t("kpi.margin"), str(data["margin_pct"]) + "%" if profit_complete else "—",
               delta_color=margin_color)
     p3.metric(t("kpi.expenses"), "฿{:,.0f}".format(data["expenses"]))
-    net_color = "normal" if data["net_profit"] > 0 else "inverse"
-    p4.metric(t("kpi.net_profit"), "฿{:,.0f}".format(data["net_profit"]),
+    net_color = ("normal" if data["net_profit"] > 0 else "inverse") if profit_complete else "off"
+    p4.metric(t("kpi.net_profit"),
+              "฿{:,.0f}".format(data["net_profit"]) if profit_complete else "—",
               delta_color=net_color)
 
     # Operations section
@@ -81,7 +86,7 @@ try:
     st.divider()
     st.subheader(t("kpi.insights_title"))
     insights = []
-    if data["margin_pct"] < 10:
+    if profit_complete and data["margin_pct"] < 10:
         insights.append(t("kpi.insight_low_margin"))
     if data["low_stock_count"] > 3:
         insights.append(t("kpi.insight_low_stock"))
@@ -89,9 +94,9 @@ try:
         insights.append(t("kpi.insight_reviews"))
     if data["cod_return_rate"] > 15:
         insights.append(t("kpi.insight_cod_return"))
-    if data["net_profit"] < 0:
+    if profit_complete and data["net_profit"] < 0:
         insights.append(t("kpi.insight_loss"))
-    if not insights:
+    if not insights and profit_complete:
         insights.append(t("kpi.insight_good"))
     for ins in insights:
         st.write("• " + ins)
