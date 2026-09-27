@@ -14,6 +14,7 @@ on:
       - "alerts.py"
       - "kpi_scorecard.py"
       - "channel_perf.py"
+      - "channel_performance.py"
       - "abc_analysis.py"
       - "customers.py"
       - "customer_crm.py"
@@ -53,6 +54,7 @@ on:
       - "pages/v_🏥_BizHealth.py"
       - "pages/w_🌐_Channels.py"
       - "pages/G0_📡_ChannelPerf.py"
+      - "pages/C5_📊_Channels.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -66,6 +68,7 @@ on:
       - "test_daily_briefing_page_new_customers.py"
       - "test_kpi_scorecard_canonical_cogs.py"
       - "test_channel_perf_canonical_totals.py"
+      - "test_channel_performance_top_skus.py"
       - "test_abc_canonical_order_schema.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
@@ -123,6 +126,7 @@ jobs:
           python test_daily_briefing_page_new_customers.py
           python test_kpi_scorecard_canonical_cogs.py
           python test_channel_perf_canonical_totals.py
+          python test_channel_performance_top_skus.py
           python test_abc_canonical_order_schema.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
@@ -155,6 +159,7 @@ jobs:
             biz_health.py \
             kpi_scorecard.py \
             channel_perf.py \
+            channel_performance.py \
             abc_analysis.py \
             customers.py \
             customer_crm.py \
@@ -195,6 +200,7 @@ jobs:
             "pages/v_🏥_BizHealth.py" \
             "pages/w_🌐_Channels.py" \
             "pages/G0_📡_ChannelPerf.py" \
+            "pages/C5_📊_Channels.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -209,6 +215,7 @@ jobs:
             test_daily_briefing_page_new_customers.py \
             test_kpi_scorecard_canonical_cogs.py \
             test_channel_perf_canonical_totals.py \
+            test_channel_performance_top_skus.py \
             test_abc_canonical_order_schema.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \

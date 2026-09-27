@@ -85,20 +85,48 @@ def channel_trend(channel: str, weeks: int = 8) -> list[dict]:
 
 
 def top_skus_by_channel(channel: str, days: int = 30,
-                         limit: int = 5) -> list[dict]:
+                         limit: int = 5) -> list[dict] | None:
+    """Return ranked SKUs, or None when eligible line evidence is incomplete."""
     with db.conn() as c:
         rows = c.execute(
-            "SELECT oi.sku, SUM(oi.quantity) total_qty, "
-            "  SUM(oi.quantity*oi.unit_price) revenue "
-            "FROM order_items oi "
-            "JOIN orders o ON oi.order_id=o.id "
-            "WHERE COALESCE(o.platform,'direct')=? "
-            "  AND date(o.order_date) >= date('now','-' || ? || ' days','localtime') "
-            "  AND o.status NOT IN ('cancelled','returned') "
-            "GROUP BY oi.sku ORDER BY revenue DESC LIMIT ?",
+            "WITH eligible AS ("
+            "  SELECT o.sku, o.qty, o.total_price FROM orders o "
+            "  WHERE COALESCE(o.platform,'direct')=? "
+            "    AND date(o.order_date) >= date('now','-' || ? || ' days','localtime') "
+            "    AND LOWER(o.status) NOT IN ('cancelled','returned')"
+            "), evidence AS ("
+            "  SELECT COUNT(*) source_rows, "
+            "    COALESCE(SUM(CASE WHEN sku IS NULL OR TRIM(sku)='' THEN 1 ELSE 0 END),0) missing_sku_rows, "
+            "    COALESCE(SUM(CASE WHEN qty IS NULL THEN 1 ELSE 0 END),0) missing_qty_rows, "
+            "    COALESCE(SUM(CASE WHEN total_price IS NULL THEN 1 ELSE 0 END),0) missing_total_rows "
+            "  FROM eligible"
+            "), ranked AS ("
+            "  SELECT sku, SUM(qty) total_qty, SUM(total_price) revenue "
+            "  FROM eligible WHERE sku IS NOT NULL AND TRIM(sku)<>'' "
+            "  GROUP BY sku ORDER BY revenue DESC, sku ASC LIMIT ?"
+            ") SELECT e.source_rows, e.missing_sku_rows, e.missing_qty_rows, "
+            "  e.missing_total_rows, r.sku, r.total_qty, r.revenue "
+            "FROM evidence e LEFT JOIN ranked r ON 1=1 "
+            "ORDER BY r.revenue DESC, r.sku ASC",
             (channel, days, limit),
         ).fetchall()
-        return [dict(r) for r in rows]
+    evidence = dict(rows[0])
+    if evidence["source_rows"] == 0:
+        return []
+    if any(
+        evidence[field] > 0
+        for field in ("missing_sku_rows", "missing_qty_rows", "missing_total_rows")
+    ):
+        return None
+    return [
+        {
+            "sku": row["sku"],
+            "total_qty": row["total_qty"],
+            "revenue": row["revenue"],
+        }
+        for row in rows
+        if row["sku"] is not None
+    ]
 
 
 def summary(days: int = 30) -> dict:
