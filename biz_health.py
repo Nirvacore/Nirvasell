@@ -17,8 +17,9 @@ def calculate() -> dict:
     # 1. Revenue trend (0-100)
     scores["revenue"] = _revenue_score()
 
-    # 2. Profit margin (0-100)
-    scores["margin"] = _margin_score()
+    # 2. Profit margin (0-100, unavailable when cost evidence is incomplete)
+    margin_evidence = _margin_evidence()
+    scores["margin"] = margin_evidence["score"]
 
     # 3. Stock health (0-100)
     scores["stock"] = _stock_score()
@@ -45,10 +46,16 @@ def calculate() -> dict:
         "expenses": 0.10, "channels": 0.05,
     }
 
-    overall = sum(scores[k] * weights[k] for k in weights)
+    if margin_evidence["complete"]:
+        overall = sum(scores[k] * weights[k] for k in weights)
+    else:
+        overall = None
 
     # Grade
-    if overall >= 80:
+    if overall is None:
+        grade = "—"
+        status = "incomplete"
+    elif overall >= 80:
         grade = "A"
         status = "excellent"
     elif overall >= 60:
@@ -62,11 +69,17 @@ def calculate() -> dict:
         status = "critical"
 
     return {
-        "overall": round(overall, 0),
+        "overall": round(overall, 0) if overall is not None else None,
         "grade": grade,
         "status": status,
         "dimensions": scores,
         "weights": weights,
+        "evidence": {
+            "margin": {
+                "complete": margin_evidence["complete"],
+                "missing_evidence_rows": margin_evidence["missing_evidence_rows"],
+            },
+        },
     }
 
 
@@ -96,32 +109,59 @@ def _revenue_score() -> float:
         return max(0, 60 + growth)
 
 
-def _margin_score() -> float:
-    """Score based on average profit margin."""
+def _margin_evidence() -> dict:
+    """Return a margin score only when every included order has cost evidence."""
     with db.conn() as c:
         rows = c.execute("""
-            SELECT COALESCE(SUM(oi.qty * oi.unit_price), 0) AS rev,
-                   COALESCE(SUM(oi.qty * p.cost_price), 0) AS cogs
-            FROM order_items oi
-            LEFT JOIN products p ON p.sku = oi.sku
-            JOIN orders o ON o.order_id = oi.order_id
+            SELECT COALESCE(SUM(o.total_price), 0) AS rev,
+                   COALESCE(SUM(o.qty * p.cost_price), 0) AS cogs,
+                   COALESCE(SUM(CASE
+                       WHEN o.sku IS NULL
+                         OR p.sku IS NULL
+                         OR p.cost_price IS NULL
+                         OR o.qty IS NULL
+                         OR o.total_price IS NULL
+                       THEN 1 ELSE 0 END
+                   ), 0) AS missing_evidence_rows
+            FROM orders o
+            LEFT JOIN products p ON p.sku = o.sku
             WHERE o.order_date >= date('now','-30 day')
+              AND o.status NOT IN ('cancelled','returned')
         """).fetchone()
 
     rev = rows["rev"] or 0
     cogs = rows["cogs"] or 0
-    if rev <= 0:
-        return 0
+    missing_evidence_rows = int(rows["missing_evidence_rows"] or 0)
+    if missing_evidence_rows:
+        return {
+            "score": None,
+            "complete": False,
+            "missing_evidence_rows": missing_evidence_rows,
+        }
 
-    margin = (rev - cogs) / rev * 100
-    if margin >= 30:
-        return 100
-    elif margin >= 15:
-        return 50 + (margin - 15) / 15 * 50
-    elif margin >= 0:
-        return margin / 15 * 50
+    if rev <= 0:
+        score = 0
     else:
-        return 0
+        margin = (rev - cogs) / rev * 100
+        if margin >= 30:
+            score = 100
+        elif margin >= 15:
+            score = 50 + (margin - 15) / 15 * 50
+        elif margin >= 0:
+            score = margin / 15 * 50
+        else:
+            score = 0
+
+    return {
+        "score": score,
+        "complete": True,
+        "missing_evidence_rows": 0,
+    }
+
+
+def _margin_score() -> float | None:
+    """Compatibility wrapper for the margin dimension score."""
+    return _margin_evidence()["score"]
 
 
 def _stock_score() -> float:
@@ -275,7 +315,9 @@ def dimension_details() -> list[dict]:
 
     for d in details:
         s = d["score"]
-        if s >= 80:
+        if s is None:
+            d["status"] = "unavailable"
+        elif s >= 80:
             d["status"] = "excellent"
         elif s >= 60:
             d["status"] = "good"
@@ -284,4 +326,7 @@ def dimension_details() -> list[dict]:
         else:
             d["status"] = "critical"
 
-    return sorted(details, key=lambda x: x["score"])
+    return sorted(
+        details,
+        key=lambda x: (-1 if x["score"] is None else x["score"]),
+    )

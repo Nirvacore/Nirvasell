@@ -28,18 +28,23 @@ result = bh.calculate()
 score = result["overall"]
 grade = result["grade"]
 status = result["status"]
+margin_evidence = result.get("evidence", {}).get("margin", {})
+health_complete = score is not None and margin_evidence.get("complete", True)
 
 
 # ---- Hero score -------------------------------------------------------------
 
 grade_color = {"A": "#4d6c5c", "B": "#4a7ab5", "C": "#c5963d", "D": "#c54c4c"}.get(grade, "#7a7569")
-status_label = t("bh.status_" + status)
+status_label = (t("bh.status_" + status) if health_complete
+                else "ข้อมูลไม่ครบ · Incomplete evidence")
+if not health_complete:
+    st.warning("⚠️ ข้อมูลยอดขายหรือต้นทุนไม่ครบ · Business health score unavailable")
 
 st.markdown(
     "<div style='text-align:center;padding:32px;background:rgba(77,108,92,0.04);"
     "border-radius:16px;margin-bottom:20px'>"
     "<div style='font-size:4rem;font-weight:700;color:" + grade_color + "'>"
-    + str(int(score)) + "</div>"
+    + (str(int(score)) if health_complete else "—") + "</div>"
     "<div style='font-size:1.5rem;font-weight:600;color:" + grade_color + "'>"
     + t("bh.grade_label", grade=grade) + "</div>"
     "<div style='color:#7a7569;font-size:14px;margin-top:6px'>"
@@ -58,10 +63,17 @@ details = bh.dimension_details()
 # Show weakest first (already sorted by score ascending)
 for d in details:
     ds = d["score"]
-    d_color = "#4d6c5c" if ds >= 80 else ("#4a7ab5" if ds >= 60 else ("#c5963d" if ds >= 40 else "#c54c4c"))
-    status_icon = {"excellent": "🟢", "good": "🔵", "needs_work": "🟡", "critical": "🔴"}.get(d["status"], "?")
-
-    bar_width = max(ds, 2)
+    dimension_complete = ds is not None
+    if dimension_complete:
+        d_color = "#4d6c5c" if ds >= 80 else ("#4a7ab5" if ds >= 60 else ("#c5963d" if ds >= 40 else "#c54c4c"))
+        status_icon = {"excellent": "🟢", "good": "🔵", "needs_work": "🟡", "critical": "🔴"}.get(d["status"], "?")
+        bar_width = max(ds, 2)
+        score_text = str(int(ds))
+    else:
+        d_color = "#7a7569"
+        status_icon = "⚪"
+        bar_width = 2
+        score_text = "—"
     weight_str = str(d["weight"]) + "%"
 
     st.markdown(
@@ -74,7 +86,7 @@ for d in details:
         t("bh.dim_" + d["key"]) + "</strong>"
         " <span style='color:#9a9485;font-size:11px'>(" + weight_str + ")</span></span>"
         "<span style='font-size:1.2rem;font-weight:600;color:" + d_color + "'>"
-        + str(int(ds)) + "/100</span></div>"
+        + score_text + "/100</span></div>"
         "<div style='background:rgba(40,30,20,0.06);border-radius:4px;height:8px;"
         "overflow:hidden'>"
         "<div style='width:" + str(int(bar_width)) + "%;height:100%;background:" + d_color + ";"
@@ -86,7 +98,7 @@ for d in details:
 
 # ---- Action items (weakest dimensions) --------------------------------------
 
-weak = [d for d in details if d["score"] < 60]
+weak = [d for d in details if d["score"] is not None and d["score"] < 60]
 if weak:
     st.divider()
     st.markdown("### 🎯 " + t("bh.action_title"))
