@@ -9,7 +9,7 @@ Dimensions:
 Thai resellers juggle 5-20 suppliers. This tells you who's good."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import db
 
@@ -40,7 +40,9 @@ def score_all() -> list[dict]:
         price_score = _price_score(sid)
 
         # --- Delivery (from PO data) ---
-        delivery_score, avg_lead = _delivery_score(sid)
+        delivery_score, avg_lead = _delivery_score(
+            sid, sd.get("lead_days") or 0
+        )
 
         # --- Volume (total PO value) ---
         volume = _po_volume(sid)
@@ -60,7 +62,7 @@ def score_all() -> list[dict]:
         results.append({
             "id": sid,
             "name": name,
-            "contact": sd.get("contact_info") or "",
+            "contact": sd.get("contact") or "",
             "lead_days": sd.get("lead_days") or 0,
             "price_score": round(price_score, 0),
             "delivery_score": round(delivery_score, 0),
@@ -78,7 +80,7 @@ def _price_score(supplier_id: int) -> float:
     """Price competitiveness: how often is this supplier the cheapest?"""
     with db.conn() as c:
         prices = c.execute(
-            "SELECT sku, price FROM supplier_prices WHERE supplier_id=?",
+            "SELECT sku, unit_cost AS price FROM supplier_prices WHERE supplier_id=?",
             (supplier_id,),
         ).fetchall()
 
@@ -92,7 +94,7 @@ def _price_score(supplier_id: int) -> float:
         my_price = p["price"]
         with db.conn() as c:
             best = c.execute(
-                "SELECT MIN(price) AS best FROM supplier_prices WHERE sku=?",
+                "SELECT MIN(unit_cost) AS best FROM supplier_prices WHERE sku=?",
                 (sku,),
             ).fetchone()
 
@@ -104,11 +106,11 @@ def _price_score(supplier_id: int) -> float:
     return (wins / total * 100) if total > 0 else 50
 
 
-def _delivery_score(supplier_id: int) -> tuple[float, float]:
+def _delivery_score(supplier_id: int, lead_days: int = 0) -> tuple[float, float]:
     """Delivery reliability from PO data."""
     with db.conn() as c:
         pos = c.execute(
-            "SELECT * FROM purchase_orders WHERE supplier_id=? AND status='received'",
+            "SELECT * FROM supplier_orders WHERE supplier_id=? AND status='received'",
             (supplier_id,),
         ).fetchall()
 
@@ -118,16 +120,30 @@ def _delivery_score(supplier_id: int) -> tuple[float, float]:
     on_time = 0
     total_lead = 0
     for po in pos:
+        po = dict(po)
+        order_date = po.get("order_date")
         expected = po.get("expected_date")
-        received = po.get("received_date") or po.get("created_at")
-        if expected and received:
+        received = (
+            po.get("received_date")
+            or po.get("received_at")
+            or po.get("created_at")
+        )
+        if received and (expected or order_date):
             try:
-                exp_dt = datetime.strptime(str(expected)[:10], "%Y-%m-%d")
+                order_dt = (
+                    datetime.strptime(str(order_date)[:10], "%Y-%m-%d")
+                    if order_date else None
+                )
+                exp_dt = (
+                    datetime.strptime(str(expected)[:10], "%Y-%m-%d")
+                    if expected else order_dt + timedelta(days=lead_days)
+                )
                 rec_dt = datetime.strptime(str(received)[:10], "%Y-%m-%d")
                 diff = (rec_dt - exp_dt).days
                 if diff <= 1:  # on time or early
                     on_time += 1
-                total_lead += max(diff, 0)
+                actual_lead = (rec_dt - order_dt).days if order_dt else diff
+                total_lead += max(actual_lead, 0)
             except Exception:
                 pass
 
@@ -140,7 +156,7 @@ def _po_volume(supplier_id: int) -> float:
     with db.conn() as c:
         r = c.execute(
             "SELECT COALESCE(SUM(total_amount), 0) AS vol "
-            "FROM purchase_orders WHERE supplier_id=?",
+            "FROM supplier_orders WHERE supplier_id=?",
             (supplier_id,),
         ).fetchone()
     return r["vol"] if r else 0
