@@ -27,10 +27,10 @@ with st.spinner(t("fcast.loading")):
     forecasts = df.forecast_all(horizon_days=int(horizon or 30), limit=50)
 
 c1, c2, c3, c4 = st.columns(4)
-c1.metric(t("fcast.kpi_skus"), summary.get("total_skus_with_data", len(forecasts)))
-c2.metric(t("fcast.kpi_rising"), summary.get("rising", 0))
-c3.metric(t("fcast.kpi_declining"), summary.get("declining", 0),
-          delta_color="inverse" if summary.get("declining", 0) > 0 else "off")
+c1.metric(t("fcast.kpi_skus"), summary.get("skus_forecasted", len(forecasts)))
+c2.metric(t("fcast.kpi_rising"), summary.get("rising_skus", 0))
+c3.metric(t("fcast.kpi_declining"), summary.get("declining_skus", 0),
+          delta_color="inverse" if summary.get("declining_skus", 0) > 0 else "off")
 c4.metric(t("fcast.kpi_stockout"), len(risks),
           delta_color="inverse" if risks else "off")
 
@@ -64,7 +64,7 @@ with tab_forecast:
             table_html += "<td style='padding:4px 8px'>" + trend_icon + " " + f["trend"] + "</td>"
             table_html += "<td style='padding:4px 8px'>" + str(int(f["forecast_qty"])) + t("fcast.units") + "</td>"
             table_html += "<td style='padding:4px 8px'>฿{:,.0f}".format(f["forecast_revenue"]) + "</td>"
-            table_html += "<td style='padding:4px 8px;color:#9a9485'>" + str(round(f["weekly_avg"],1)) + t("fcast.per_week") + "</td>"
+            table_html += "<td style='padding:4px 8px;color:#9a9485'>" + str(round(f["avg_weekly_recent"],1)) + t("fcast.per_week") + "</td>"
             table_html += "<td style='padding:4px 8px;color:" + conf_color + "'>" + f["confidence"] + "</td>"
             table_html += "</tr>"
         table_html += "</table>"
