@@ -16,6 +16,7 @@ from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
 from _components import page_header
 from i18n import t
+from i18n_inline import carrier_name
 
 st.set_page_config(page_title="nirva.sell · Shipping",
                    page_icon="🚚", layout="wide")
@@ -122,7 +123,7 @@ for key, info in sc.CARRIERS.items():
     st.markdown(
         "<div style='display:flex;justify-content:space-between;align-items:center;"
         "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
-        "<div>" + info["icon"] + " " + info["name"] +
+        "<div>" + info["icon"] + " " + carrier_name(key) +
         " <span style='color:#9a9485;font-size:11px'>" + ship_detail + "</span></div>"
         "<div style='display:flex;gap:18px;align-items:center'>"
         "<span style='font-variant-numeric:tabular-nums'>" +
@@ -142,6 +143,6 @@ with st.expander(t("ship.rate_table"), expanded=False):
     weight_tiers = [0.5, 1, 2, 3, 5, 10, 15, 20]
     data = {}
     for key, info in sc.CARRIERS.items():
-        data[info["name"]] = [sc.shipping_cost(key, w) for w in weight_tiers]
+        data[carrier_name(key)] = [sc.shipping_cost(key, w) for w in weight_tiers]
     df = pd.DataFrame(data, index=[str(w) + " kg" for w in weight_tiers])
     st.dataframe(df, width="stretch")
