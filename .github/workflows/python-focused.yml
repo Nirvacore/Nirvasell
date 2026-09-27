@@ -15,6 +15,7 @@ on:
       - "kpi_scorecard.py"
       - "channel_perf.py"
       - "channel_performance.py"
+      - "dead_stock.py"
       - "abc_analysis.py"
       - "customers.py"
       - "customer_crm.py"
@@ -55,6 +56,8 @@ on:
       - "pages/w_🌐_Channels.py"
       - "pages/G0_📡_ChannelPerf.py"
       - "pages/C5_📊_Channels.py"
+      - "pages/H4_☠_DeadStock.py"
+      - "pages/m_💀_DeadStock.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -89,6 +92,8 @@ on:
       - "test_start_page_header.py"
       - "test_biz_health_margin_evidence.py"
       - "test_biz_health_page_incomplete_margin.py"
+      - "test_dead_stock_canonical_evidence.py"
+      - "test_dead_stock_page_contract.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -147,6 +152,8 @@ jobs:
           python test_start_page_header.py
           python test_biz_health_margin_evidence.py
           python test_biz_health_page_incomplete_margin.py
+          python test_dead_stock_canonical_evidence.py
+          python test_dead_stock_page_contract.py
 
       - name: Compile changed Python entry points
         env:
@@ -160,6 +167,7 @@ jobs:
             kpi_scorecard.py \
             channel_perf.py \
             channel_performance.py \
+            dead_stock.py \
             abc_analysis.py \
             customers.py \
             customer_crm.py \
@@ -201,6 +209,8 @@ jobs:
             "pages/w_🌐_Channels.py" \
             "pages/G0_📡_ChannelPerf.py" \
             "pages/C5_📊_Channels.py" \
+            "pages/H4_☠_DeadStock.py" \
+            "pages/m_💀_DeadStock.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -235,4 +245,6 @@ jobs:
             test_policies_page_header.py \
             test_start_page_header.py \
             test_biz_health_margin_evidence.py \
-            test_biz_health_page_incomplete_margin.py
+            test_biz_health_page_incomplete_margin.py \
+            test_dead_stock_canonical_evidence.py \
+            test_dead_stock_page_contract.py

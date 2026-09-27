@@ -12,22 +12,61 @@ import db
 
 def detect(days: int = 30) -> list[dict]:
     """Find products with no sales in the last N days."""
+    return _analysis(days)["items"]
+
+
+def _analysis(days: int = 30) -> dict:
+    """Return dead-stock items only when order and product evidence is complete."""
     cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
 
     with db.conn() as c:
-        # Products with stock but no recent sales
+        missing_order_evidence_rows = c.execute("""
+            SELECT COUNT(*) AS count
+            FROM orders o
+            LEFT JOIN products p ON p.sku = o.sku
+            WHERE LOWER(COALESCE(o.status, '')) NOT IN ('cancelled', 'returned')
+              AND (
+                  o.status IS NULL
+                  OR TRIM(o.status) = ''
+                  OR o.sku IS NULL
+                  OR TRIM(o.sku) = ''
+                  OR p.sku IS NULL
+                  OR TRIM(p.sku) = ''
+                  OR p.cost_price IS NULL
+                  OR o.qty IS NULL
+                  OR o.order_date IS NULL
+                  OR date(o.order_date) IS NULL
+                  OR o.total_price IS NULL
+              )
+        """).fetchone()["count"]
+        missing_product_evidence_rows = c.execute("""
+            SELECT COUNT(*) AS count
+            FROM products
+            WHERE stock > 0
+              AND (sku IS NULL OR TRIM(sku) = '' OR cost_price IS NULL)
+        """).fetchone()["count"]
+
+        if missing_order_evidence_rows or missing_product_evidence_rows:
+            return {
+                "evidence_complete": False,
+                "missing_order_evidence_rows": missing_order_evidence_rows,
+                "missing_product_evidence_rows": missing_product_evidence_rows,
+                "items": [],
+            }
+
+        # LEFT JOIN preserves products that genuinely have no sale rows.
         rows = c.execute("""
             SELECT p.sku, p.name, p.stock, p.cost_price, p.sell_price,
-                   (SELECT MAX(o.order_date) FROM order_items oi
-                    JOIN orders o ON o.order_id = oi.order_id
-                    WHERE oi.sku = p.sku) AS last_sale_date,
-                   (SELECT COALESCE(SUM(oi.qty), 0) FROM order_items oi
-                    JOIN orders o ON o.order_id = oi.order_id
-                    WHERE oi.sku = p.sku AND o.order_date >= ?) AS recent_qty,
-                   (SELECT COALESCE(SUM(oi.qty), 0) FROM order_items oi
-                    WHERE oi.sku = p.sku) AS total_qty
+                   MAX(o.order_date) AS last_sale_date,
+                   COALESCE(SUM(CASE WHEN o.order_date >= ? THEN o.qty ELSE 0 END), 0)
+                       AS recent_qty,
+                   COALESCE(SUM(o.qty), 0) AS total_qty
             FROM products p
+            LEFT JOIN orders o
+              ON o.sku = p.sku
+             AND LOWER(o.status) NOT IN ('cancelled', 'returned')
             WHERE p.stock > 0
+            GROUP BY p.id, p.sku, p.name, p.stock, p.cost_price, p.sell_price
             ORDER BY recent_qty ASC, p.stock DESC
         """, (cutoff,)).fetchall()
 
@@ -53,7 +92,12 @@ def detect(days: int = 30) -> list[dict]:
         if d["severity"] != "ok":
             items.append(d)
 
-    return items
+    return {
+        "evidence_complete": True,
+        "missing_order_evidence_rows": 0,
+        "missing_product_evidence_rows": 0,
+        "items": items,
+    }
 
 
 def _days_since(date_str: str | None) -> int:
@@ -68,13 +112,34 @@ def _days_since(date_str: str | None) -> int:
 
 def summary(days: int = 30) -> dict:
     """Summary of dead stock situation."""
-    items = detect(days)
+    analysis = _analysis(days)
+    if not analysis["evidence_complete"]:
+        return {
+            "evidence_complete": False,
+            "missing_order_evidence_rows": analysis["missing_order_evidence_rows"],
+            "missing_product_evidence_rows": analysis["missing_product_evidence_rows"],
+            "items": [],
+            "total_items": None,
+            "dead": None,
+            "stale": None,
+            "slow": None,
+            "trapped_cash": None,
+            "dead_trapped": None,
+            "stale_trapped": None,
+            "slow_trapped": None,
+        }
+
+    items = analysis["items"]
     total_trapped = sum(i["trapped_cash"] for i in items)
     dead = [i for i in items if i["severity"] == "dead"]
     stale = [i for i in items if i["severity"] == "stale"]
     slow = [i for i in items if i["severity"] == "slow"]
 
     return {
+        "evidence_complete": True,
+        "missing_order_evidence_rows": 0,
+        "missing_product_evidence_rows": 0,
+        "items": items,
         "total_items": len(items),
         "dead": len(dead),
         "stale": len(stale),
