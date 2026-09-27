@@ -17,13 +17,16 @@ on:
       - "supplier_directory.py"
       - "purchase_orders.py"
       - "tax_report.py"
+      - "supplier_score.py"
       - "order_import.py"
       - "pick_pack.py"
       - "pages/F_📈_Dashboard.py"
+      - "pages/b_🏭_Suppliers.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
+      - "test_supplier_score_logic.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -52,6 +55,7 @@ jobs:
           python test_customer_helper_rowid.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
+          python test_supplier_score_logic.py
 
       - name: Compile changed Python entry points
         env:
@@ -66,11 +70,14 @@ jobs:
             supplier_directory.py \
             purchase_orders.py \
             tax_report.py \
+            supplier_score.py \
             order_import.py \
             pick_pack.py \
             "pages/F_📈_Dashboard.py" \
+            "pages/b_🏭_Suppliers.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_settings_supplier_schema_migrations.py \
-            test_tax_report_quarterly.py
+            test_tax_report_quarterly.py \
+            test_supplier_score_logic.py

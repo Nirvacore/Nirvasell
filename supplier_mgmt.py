@@ -229,6 +229,53 @@ def add_order(supplier_id: int, total_amount: float,
         return c.execute("SELECT last_insert_rowid()").fetchone()[0]
 
 
+def receive_order(order_id: int, received_at: str | None = None) -> None:
+    """Mark one ordered supplier order received on a validated local date."""
+    if isinstance(order_id, bool) or not isinstance(order_id, int) or order_id <= 0:
+        raise ValueError("order_id must be a positive integer")
+
+    today = datetime.now().date()
+    if received_at is None:
+        received_date = today
+    elif not isinstance(received_at, str) or not received_at:
+        raise ValueError("received_at must be a YYYY-MM-DD date")
+    else:
+        try:
+            received_date = datetime.strptime(received_at, "%Y-%m-%d").date()
+        except ValueError as exc:
+            raise ValueError("received_at must be a YYYY-MM-DD date") from exc
+        if received_date.isoformat() != received_at:
+            raise ValueError("received_at must be a YYYY-MM-DD date")
+    if received_date > today:
+        raise ValueError("received_at cannot be in the future")
+
+    with db.conn() as c:
+        order = c.execute(
+            "SELECT order_date, status FROM supplier_orders WHERE id=?",
+            (order_id,),
+        ).fetchone()
+        if not order:
+            raise ValueError("supplier order not found")
+        if order["status"] != "ordered":
+            raise ValueError("supplier order is not awaiting receipt")
+        try:
+            order_date = datetime.strptime(
+                str(order["order_date"])[:10], "%Y-%m-%d"
+            ).date()
+        except (TypeError, ValueError) as exc:
+            raise ValueError("supplier order has an invalid order_date") from exc
+        if received_date < order_date:
+            raise ValueError("received_at cannot precede order_date")
+
+        updated = c.execute(
+            "UPDATE supplier_orders SET status='received', received_at=? "
+            "WHERE id=? AND status='ordered'",
+            (received_date.isoformat(), order_id),
+        )
+        if updated.rowcount != 1:
+            raise RuntimeError("supplier order receipt was not recorded")
+
+
 def supplier_order_history(supplier_id: int) -> list[dict]:
     with db.conn() as c:
         rows = c.execute(

@@ -220,6 +220,12 @@ if po_sup_id:
                     "</div>",
                     unsafe_allow_html=True,
                 )
+                if po.get("status") == "ordered" and st.button(
+                    t("po.receive_btn"), key="_recv_so_" + str(po["id"])
+                ):
+                    sm.receive_order(po["id"])
+                    toast(t("po.received_msg"), icon="✅")
+                    st.rerun()
 
         # Add PO form
         with st.form("add_po_" + str(po_sup_id)):
