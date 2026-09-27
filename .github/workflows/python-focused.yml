@@ -11,11 +11,17 @@ on:
       - "biz_health.py"
       - "kpi_scorecard.py"
       - "customers.py"
+      - "shop_settings.py"
+      - "user_settings.py"
+      - "supplier_mgmt.py"
+      - "supplier_directory.py"
+      - "purchase_orders.py"
       - "order_import.py"
       - "pick_pack.py"
       - "pages/F_📈_Dashboard.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
+      - "test_settings_supplier_schema_migrations.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -42,6 +48,7 @@ jobs:
           python test_order_import_schema_extraction.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
+          python test_settings_supplier_schema_migrations.py
 
       - name: Compile changed Python entry points
         env:
@@ -50,9 +57,15 @@ jobs:
           python -m py_compile \
             db.py \
             customers.py \
+            shop_settings.py \
+            user_settings.py \
+            supplier_mgmt.py \
+            supplier_directory.py \
+            purchase_orders.py \
             order_import.py \
             pick_pack.py \
             "pages/F_📈_Dashboard.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
-            test_customer_helper_rowid.py
+            test_customer_helper_rowid.py \
+            test_settings_supplier_schema_migrations.py

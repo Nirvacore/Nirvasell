@@ -10,6 +10,56 @@ from datetime import datetime
 import db
 
 
+SUPPLIER_ORDER_COLUMNS = {
+    "id", "supplier_id", "order_date", "total_amount", "items_count",
+    "status", "received_at", "note",
+}
+
+
+def _table_columns(connection, table: str) -> set[str]:
+    return {
+        row["name"] for row in connection.execute(f"PRAGMA table_info({table})")
+    }
+
+
+def _migrate_supplier_orders(connection) -> None:
+    legacy_columns = _table_columns(connection, "purchase_orders")
+    target_columns = _table_columns(connection, "supplier_orders")
+    if target_columns and not SUPPLIER_ORDER_COLUMNS <= target_columns:
+        raise RuntimeError("supplier_orders has an incompatible schema")
+    if SUPPLIER_ORDER_COLUMNS <= legacy_columns:
+        if target_columns:
+            raise RuntimeError(
+                "cannot migrate supplier orders while both legacy and target tables exist"
+            )
+        item_columns = _table_columns(connection, "po_items")
+        if item_columns:
+            item_count = connection.execute(
+                "SELECT COUNT(*) FROM po_items"
+            ).fetchone()[0]
+            if item_count:
+                raise RuntimeError(
+                    "cannot migrate supplier orders because po_items contains data"
+                )
+            connection.execute("DROP TABLE po_items")
+        connection.execute("DROP INDEX IF EXISTS idx_po_status")
+        connection.execute("ALTER TABLE purchase_orders RENAME TO supplier_orders")
+
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS supplier_orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            supplier_id INTEGER NOT NULL,
+            order_date TEXT DEFAULT (date('now','localtime')),
+            total_amount REAL DEFAULT 0,
+            items_count INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'ordered',
+            received_at TEXT,
+            note TEXT DEFAULT '',
+            FOREIGN KEY (supplier_id) REFERENCES supplier_contacts(id)
+        )
+    """)
+
+
 def init():
     with db.conn() as c:
         c.execute("""
@@ -40,19 +90,7 @@ def init():
                 FOREIGN KEY (supplier_id) REFERENCES supplier_contacts(id)
             )
         """)
-        c.execute("""
-            CREATE TABLE IF NOT EXISTS purchase_orders (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                supplier_id INTEGER NOT NULL,
-                order_date TEXT DEFAULT (date('now','localtime')),
-                total_amount REAL DEFAULT 0,
-                items_count INTEGER DEFAULT 0,
-                status TEXT DEFAULT 'ordered',
-                received_at TEXT,
-                note TEXT DEFAULT '',
-                FOREIGN KEY (supplier_id) REFERENCES supplier_contacts(id)
-            )
-        """)
+        _migrate_supplier_orders(c)
 
 
 def add_supplier(name: str, **kwargs) -> int:
@@ -94,7 +132,7 @@ def update_supplier(sup_id: int, **kwargs):
 def delete_supplier(sup_id: int):
     with db.conn() as c:
         c.execute("DELETE FROM supplier_prices WHERE supplier_id=?", (sup_id,))
-        c.execute("DELETE FROM purchase_orders WHERE supplier_id=?", (sup_id,))
+        c.execute("DELETE FROM supplier_orders WHERE supplier_id=?", (sup_id,))
         c.execute("DELETE FROM supplier_contacts WHERE id=?", (sup_id,))
 
 
@@ -103,7 +141,7 @@ def all_suppliers() -> list[dict]:
         rows = c.execute(
             "SELECT s.*, "
             "(SELECT COUNT(*) FROM supplier_prices WHERE supplier_id=s.id) as sku_count, "
-            "(SELECT COUNT(*) FROM purchase_orders WHERE supplier_id=s.id) as order_count "
+            "(SELECT COUNT(*) FROM supplier_orders WHERE supplier_id=s.id) as order_count "
             "FROM supplier_contacts s ORDER BY s.name"
         ).fetchall()
     return [dict(r) for r in rows]
@@ -184,7 +222,7 @@ def add_order(supplier_id: int, total_amount: float,
               items_count: int = 0, note: str = "") -> int:
     with db.conn() as c:
         c.execute(
-            "INSERT INTO purchase_orders "
+            "INSERT INTO supplier_orders "
             "(supplier_id, total_amount, items_count, note) VALUES (?,?,?,?)",
             (supplier_id, total_amount, items_count, note),
         )
@@ -194,7 +232,7 @@ def add_order(supplier_id: int, total_amount: float,
 def supplier_order_history(supplier_id: int) -> list[dict]:
     with db.conn() as c:
         rows = c.execute(
-            "SELECT * FROM purchase_orders WHERE supplier_id=? "
+            "SELECT * FROM supplier_orders WHERE supplier_id=? "
             "ORDER BY order_date DESC LIMIT 50",
             (supplier_id,),
         ).fetchall()
@@ -205,6 +243,6 @@ def total_spend() -> dict:
     with db.conn() as c:
         r = c.execute(
             "SELECT COALESCE(SUM(total_amount),0) as total, "
-            "COUNT(*) as order_count FROM purchase_orders"
+            "COUNT(*) as order_count FROM supplier_orders"
         ).fetchone()
     return {"total_spent": float(r["total"]), "total_orders": r["order_count"]}

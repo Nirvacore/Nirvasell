@@ -94,6 +94,10 @@ def get_skus(supplier_id: int) -> list[dict]:
 
 
 def all_suppliers(active_only: bool = True) -> list[dict]:
+    import supplier_mgmt as _supplier_mgmt
+    import purchase_orders as _purchase_orders
+    _supplier_mgmt.init()
+    _purchase_orders.init()
     with db.conn() as c:
         if active_only:
             rows = c.execute(
