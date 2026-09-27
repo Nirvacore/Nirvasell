@@ -201,7 +201,7 @@ def dormant_customers(days: int = 30) -> list[dict]:
     cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
     with db.conn() as c:
         rows = c.execute(
-            "SELECT * FROM customers WHERE last_order < ? AND last_order != '' "
+            "SELECT * FROM customers WHERE last_order <= ? AND last_order != '' "
             "ORDER BY last_order ASC",
             (cutoff,)
         ).fetchall()

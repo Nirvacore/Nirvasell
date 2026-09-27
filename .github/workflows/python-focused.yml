@@ -43,6 +43,7 @@ on:
       - "pages/a_🚚_Shipping.py"
       - "pages/G5_📝_Notes.py"
       - "pages/A5_🎖_Loyalty.py"
+      - "pages/E3_👥_Customers.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -51,6 +52,7 @@ on:
       - "test_notes_page_open_kpi.py"
       - "test_notes_page_pinned_create.py"
       - "test_loyalty_page_reward_names.py"
+      - "test_customers_page_kpis.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -100,6 +102,7 @@ jobs:
           python test_notes_page_open_kpi.py
           python test_notes_page_pinned_create.py
           python test_loyalty_page_reward_names.py
+          python test_customers_page_kpis.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -157,6 +160,7 @@ jobs:
             "pages/a_🚚_Shipping.py" \
             "pages/G5_📝_Notes.py" \
             "pages/A5_🎖_Loyalty.py" \
+            "pages/E3_👥_Customers.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -166,6 +170,7 @@ jobs:
             test_notes_page_open_kpi.py \
             test_notes_page_pinned_create.py \
             test_loyalty_page_reward_names.py \
+            test_customers_page_kpis.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
