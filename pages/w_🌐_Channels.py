@@ -57,10 +57,20 @@ with k2:
         hint=t("chan.top_hint"), hint_tone="ok",
     )
 with k3:
+    best_margin_pct = s.get("best_margin_pct")
+    best_margin = (
+        s.get("best_margin", "—") + " (" + str(best_margin_pct) + "%)"
+        if best_margin_pct is not None else "—"
+    )
     metric_with_hint(
         t("chan.kpi_best_margin"),
-        s.get("best_margin", "—") + " (" + str(s.get("best_margin_pct", 0)) + "%)",
+        best_margin,
         hint=t("chan.margin_hint"), hint_tone="ok",
+    )
+
+if not s.get("evidence_complete", False):
+    st.warning(
+        "⚠️ ข้อมูลยอดขาย/ต้นทุนไม่ครบ · Revenue and profit metrics unavailable"
     )
 
 
@@ -75,21 +85,30 @@ plat_icons = {
     "website": "🌐",
 }
 
-total_rev = sum(p["revenue"] for p in platforms)
+total_rev = sum(p["revenue"] or 0 for p in platforms)
 
 for p in platforms:
     icon = plat_icons.get(p["platform"], "📦")
-    rev_str = "{:,.0f}".format(p["revenue"])
-    profit_str = "{:,.0f}".format(p["gross_profit"])
-    margin_str = str(p["margin"]) + "%"
-    aov_str = "{:,.0f}".format(p["aov"])
+    rev_str = "{:,.0f}".format(p["revenue"]) if p["revenue"] is not None else "—"
+    profit_str = (
+        "{:,.0f}".format(p["gross_profit"])
+        if p["gross_profit"] is not None else "—"
+    )
+    margin_str = str(p["margin"]) + "%" if p["margin"] is not None else "—"
+    aov_str = "{:,.0f}".format(p["aov"]) if p["aov"] is not None else "—"
     orders_str = str(p["orders"])
     cust_str = str(p["customers"])
     ret_str = str(p["return_rate"]) + "%"
-    share_str = str(p["revenue_pct"]) + "%"
+    share_str = (
+        str(p["revenue_pct"]) + "%" if p["revenue_pct"] is not None else "—"
+    )
 
-    margin_color = "#4d6c5c" if p["margin"] >= 20 else ("#c5963d" if p["margin"] >= 10 else "#c54c4c")
-    bar_width = p["revenue_pct"] if total_rev > 0 else 0
+    margin_color = (
+        "#4d6c5c" if p["margin"] is not None and p["margin"] >= 20
+        else ("#c5963d" if p["margin"] is not None and p["margin"] >= 10
+              else ("#c54c4c" if p["margin"] is not None else "#9a9485"))
+    )
+    bar_width = p["revenue_pct"] if p["revenue_pct"] is not None else 0
 
     st.markdown(
         "<div style='background:white;border:0.5px solid rgba(40,30,20,0.07);"
@@ -128,9 +147,18 @@ if growth:
     for g in growth:
         icon = plat_icons.get(g["platform"], "📦")
         chg = g["growth_pct"]
-        chg_color = "#4d6c5c" if chg >= 0 else "#c54c4c"
-        chg_icon = "📈" if chg >= 0 else "📉"
-        chg_str = ("+" if chg >= 0 else "") + str(chg) + "%"
+        chg_color = (
+            "#4d6c5c" if chg is not None and chg >= 0
+            else ("#c54c4c" if chg is not None else "#9a9485")
+        )
+        chg_icon = (
+            "📈" if chg is not None and chg >= 0
+            else ("📉" if chg is not None else "⚠️")
+        )
+        chg_str = (
+            ("+" if chg >= 0 else "") + str(chg) + "%"
+            if chg is not None else "—"
+        )
 
         st.markdown(
             "<div style='display:flex;justify-content:space-between;align-items:center;"
