@@ -31,6 +31,7 @@ on:
       - "pages/E0_⚡_FlashSale.py"
       - "pages/E8_🎯_RFM.py"
       - "pages/D_🔀_Sourcing.py"
+      - "pages/E_📋_Policies.py"
       - "pages/l_🔤_ABC.py"
       - "pages/F_📈_Dashboard.py"
       - "pages/b_🏭_Suppliers.py"
@@ -51,6 +52,7 @@ on:
       - "test_rfm_page_average_spent.py"
       - "test_abc_page_advice_render.py"
       - "test_sourcing_page_header.py"
+      - "test_policies_page_header.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -92,6 +94,7 @@ jobs:
           python test_rfm_page_average_spent.py
           python test_abc_page_advice_render.py
           python test_sourcing_page_header.py
+          python test_policies_page_header.py
 
       - name: Compile changed Python entry points
         env:
@@ -120,6 +123,7 @@ jobs:
             "pages/E0_⚡_FlashSale.py" \
             "pages/E8_🎯_RFM.py" \
             "pages/D_🔀_Sourcing.py" \
+            "pages/E_📋_Policies.py" \
             "pages/l_🔤_ABC.py" \
             "pages/F_📈_Dashboard.py" \
             "pages/b_🏭_Suppliers.py" \
@@ -140,4 +144,5 @@ jobs:
             test_flashsale_page_discount_options.py \
             test_rfm_page_average_spent.py \
             test_abc_page_advice_render.py \
-            test_sourcing_page_header.py
+            test_sourcing_page_header.py \
+            test_policies_page_header.py
