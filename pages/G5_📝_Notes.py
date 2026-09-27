@@ -19,7 +19,7 @@ st.caption(t("note.caption"))
 stats = nt.stats()
 c1, c2, c3 = st.columns(3)
 c1.metric(t("note.kpi_total"), stats.get("total",0))
-c2.metric(t("note.kpi_open"), stats.get("open",0))
+c2.metric(t("note.kpi_open"), stats.get("total",0))
 c3.metric(t("note.kpi_pinned"), stats.get("pinned",0))
 
 pinned = nt.pinned()
