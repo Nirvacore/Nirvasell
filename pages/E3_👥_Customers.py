@@ -21,9 +21,10 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric(t("cust.kpi_total"), stats["total"])
 c2.metric(t("cust.kpi_vip"), stats["vip"],
           delta_color="normal" if stats["vip"] > 0 else "off")
-c3.metric(t("cust.kpi_dormant"), stats["dormant"],
-          delta_color="inverse" if stats["dormant"] > 0 else "off")
-c4.metric(t("cust.kpi_avg_spend"), "฿{:,.0f}".format(stats["avg_total_spent"]))
+dormant_count = len(cu.dormant_customers())
+c3.metric(t("cust.kpi_dormant"), dormant_count,
+          delta_color="inverse" if dormant_count > 0 else "off")
+c4.metric(t("cust.kpi_avg_spend"), "฿{:,.0f}".format(stats["avg_spent"]))
 
 st.divider()
 
