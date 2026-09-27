@@ -1,0 +1,53 @@
+name: Python focused maintenance
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/python-focused.yml"
+      - "db.py"
+      - "expenses.py"
+      - "budget_tracker.py"
+      - "cash_flow.py"
+      - "biz_health.py"
+      - "kpi_scorecard.py"
+      - "order_import.py"
+      - "pick_pack.py"
+      - "pages/F_📈_Dashboard.py"
+      - "test_expense_date_consistency.py"
+      - "test_order_import_schema_extraction.py"
+
+permissions:
+  contents: read
+
+jobs:
+  order-import:
+    name: Order import and SQLite migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Run focused maintenance tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python test_order_import_schema_extraction.py
+          python test_expense_date_consistency.py
+
+      - name: Compile changed Python entry points
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m py_compile \
+            db.py \
+            order_import.py \
+            pick_pack.py \
+            "pages/F_📈_Dashboard.py" \
+            test_order_import_schema_extraction.py \
+            test_expense_date_consistency.py

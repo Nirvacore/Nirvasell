@@ -65,9 +65,26 @@ with st.expander(t("dashboard.upload_title"), expanded=True):
             )
 
             if st.button(t("dashboard.save_btn", n=len(normalized)), type="primary"):
-                n = oi.save_orders(normalized)
-                st.success(t("dashboard.saved", n=n))
-                st.rerun()
+                result = oi.save_orders_report(normalized)
+                st.success(t("dashboard.saved", n=result.inserted))
+                if result.import_errors:
+                    st.warning(f"{len(result.import_errors)} row(s) could not be imported")
+                    st.dataframe(
+                        [error.as_dict() for error in result.import_errors],
+                        width="stretch",
+                        hide_index=True,
+                    )
+                if result.warnings:
+                    st.warning(
+                        f"{len(result.warnings)} order(s) were saved, but customer sync needs retry"
+                    )
+                    st.dataframe(
+                        [warning.as_dict() for warning in result.warnings],
+                        width="stretch",
+                        hide_index=True,
+                    )
+                if not result.errors:
+                    st.rerun()
 
 
 # ---- Aggregate metrics ---------------------------------------------------

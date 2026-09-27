@@ -12,12 +12,14 @@ import db
 
 def pending_orders() -> list[dict]:
     """Get all orders not yet fulfilled."""
+    db.init()
     with db.conn() as c:
         rows = c.execute(
             "SELECT o.*, p.name as product_name, p.brand, "
             "p.image_url, p.category "
             "FROM orders o LEFT JOIN products p ON p.id = o.product_id "
-            "WHERE o.status IS NULL OR o.status IN ('new','pending','confirmed') "
+            "WHERE (o.status IS NULL OR o.status IN ('new','pending','confirmed','paid')) "
+            "AND (o.tracking_number IS NULL OR o.tracking_number = '') "
             "ORDER BY o.order_date DESC"
         ).fetchall()
     return [dict(r) for r in rows]

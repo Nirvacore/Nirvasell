@@ -7,9 +7,13 @@ Canonical fields: order_id, sku, qty, unit_price, total_price, currency,
                   order_date, status, platform"""
 from __future__ import annotations
 import io
+import math
 import re
+import sqlite3
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -28,6 +32,7 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "status":      ["order status", "สถานะ"],
         "buyer_name":  ["ชื่อผู้ซื้อ", "buyer name", "recipient name", "ชื่อผู้รับ"],
         "buyer_phone": ["เบอร์โทรผู้ซื้อ", "buyer phone", "phone"],
+        "buyer_address": ["ที่อยู่ผู้ซื้อ", "buyer address", "recipient address", "ที่อยู่ผู้รับ"],
         "product_name": ["ชื่อสินค้า", "product name", "item name"],
     },
     "lazada": {
@@ -40,6 +45,7 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "status":      ["status", "order status"],
         "buyer_name":  ["customer name", "buyer name", "customer first name"],
         "buyer_phone": ["phone", "customer phone"],
+        "buyer_address": ["shipping address", "billing address", "customer address"],
         "product_name": ["item name", "product name"],
     },
     "tiktok": {
@@ -52,6 +58,7 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "status":      ["order status"],
         "buyer_name":  ["buyer name", "recipient name", "recipient"],
         "buyer_phone": ["buyer phone", "phone number"],
+        "buyer_address": ["buyer address", "recipient address", "shipping address"],
         "product_name": ["product name", "sku name"],
     },
     "shopify": {
@@ -64,6 +71,7 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "status":      ["financial status", "fulfillment status"],
         "buyer_name":  ["shipping name", "billing name", "customer name"],
         "buyer_phone": ["shipping phone", "billing phone", "phone"],
+        "buyer_address": ["shipping address", "billing address", "address"],
         "product_name": ["lineitem name"],
     },
     "amazon": {
@@ -76,6 +84,7 @@ SCHEMAS: dict[str, dict[str, list[str]]] = {
         "status":      ["order-status"],
         "buyer_name":  ["buyer-name", "recipient-name"],
         "buyer_phone": ["buyer-phone-number", "ship-phone-number"],
+        "buyer_address": ["ship-address-1", "shipping-address", "buyer-address"],
         "product_name": ["product-name", "item-name"],
     },
 }
@@ -140,18 +149,9 @@ def normalize(df: pd.DataFrame, platform: str,
               mapping: dict[str, str | None] | None = None) -> pd.DataFrame:
     """Project the raw DataFrame onto canonical fields."""
     mapping = mapping or map_columns(list(df.columns), platform)
-    out = pd.DataFrame()
+    out = pd.DataFrame(index=df.index)
     for canonical, src in mapping.items():
         out[canonical] = df[src] if src and src in df.columns else None
-
-    # Clean numeric fields
-    for col in ("qty", "unit_price", "total_price"):
-        if col in out.columns:
-            out[col] = (
-                out[col].astype(str)
-                .str.replace(r"[฿$,\s]", "", regex=True)
-                .pipe(pd.to_numeric, errors="coerce")
-            )
 
     # Parse date — best-effort
     if "order_date" in out.columns:
@@ -160,15 +160,92 @@ def normalize(df: pd.DataFrame, platform: str,
     out["platform"] = platform
     out["currency"] = "THB" if platform in ("shopee", "lazada", "tiktok") else "USD"
 
-    # Required: order_id + sku
-    out = out[out["order_id"].notna() & out["sku"].notna()].reset_index(drop=True)
+    # Keep invalid rows and their original indexes. save_orders_report() owns
+    # validation so every rejected source row receives a structured error.
     return out
 
 
-def save_orders(df: pd.DataFrame) -> int:
-    """Insert normalized orders into DB. Idempotent via UNIQUE constraint."""
+@dataclass(frozen=True)
+class OrderImportError:
+    row_index: Any
+    order_id: str
+    sku: str
+    code: str
+    message: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class OrderImportResult:
+    inserted: int
+    skipped: int
+    errors: tuple[OrderImportError, ...]
+
+    @property
+    def import_errors(self) -> tuple[OrderImportError, ...]:
+        return tuple(error for error in self.errors if error.code != "customer_sync_error")
+
+    @property
+    def warnings(self) -> tuple[OrderImportError, ...]:
+        return tuple(error for error in self.errors if error.code == "customer_sync_error")
+
+
+class OrderImportRowsError(ValueError):
+    def __init__(self, errors: tuple[OrderImportError, ...]):
+        self.errors = errors
+        super().__init__(f"{len(errors)} order row(s) could not be imported")
+
+
+def _is_blank(value: Any) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str) and not value.strip():
+        return True
+    try:
+        return bool(pd.isna(value))
+    except (TypeError, ValueError):
+        return False
+
+
+def _text(value: Any, default: str = "") -> str:
+    if _is_blank(value):
+        return default
+    normalized = str(value).strip()
+    return normalized or default
+
+
+def _positive_whole_number(value: Any, default: int) -> int:
+    if _is_blank(value):
+        return default
+    try:
+        number = float(re.sub(r"[฿$,\s]", "", str(value)))
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError("qty must be a positive whole number") from None
+    if not math.isfinite(number) or number <= 0 or not number.is_integer():
+        raise ValueError("qty must be a positive whole number")
+    return int(number)
+
+
+def _finite_non_negative(value: Any, default: float, field: str) -> float:
+    if _is_blank(value):
+        return default
+    try:
+        number = float(re.sub(r"[฿$,\s]", "", str(value)))
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError(f"{field} must be a finite non-negative number") from None
+    if not math.isfinite(number) or number < 0:
+        raise ValueError(f"{field} must be a finite non-negative number")
+    return number
+
+
+def save_orders_report(df: pd.DataFrame) -> OrderImportResult:
+    """Insert orders and return deterministic per-row outcomes."""
     if df.empty:
-        return 0
+        return OrderImportResult(inserted=0, skipped=0, errors=())
+
+    db.init()
 
     # Map sku → product_id where it exists
     with db.conn() as c:
@@ -178,21 +255,46 @@ def save_orders(df: pd.DataFrame) -> int:
         }
 
     n_inserted = 0
+    n_skipped = 0
+    errors: list[OrderImportError] = []
+    inserted_rows: list[tuple[Any, dict[str, Any]]] = []
+    customer_sync_rows: list[tuple[Any, dict[str, Any]]] = []
     with db.conn() as c:
-        for _, r in df.iterrows():
-            product_id = sku_to_id.get(r["sku"])
+        for row_index, r in df.iterrows():
+            order_id = _text(r.get("order_id"))
+            sku = _text(r.get("sku"))
+            platform = _text(r.get("platform"))
+            missing = next(
+                (name for name, value in (("order_id", order_id), ("sku", sku), ("platform", platform)) if not value),
+                None,
+            )
+            if missing:
+                errors.append(OrderImportError(
+                    row_index=row_index,
+                    order_id=order_id,
+                    sku=sku,
+                    code="missing_required",
+                    message=f"{missing} is required",
+                ))
+                continue
+
             try:
-                qty = int(r.get("qty") or 1)
-            except (TypeError, ValueError):
-                qty = 1
-            try:
-                unit = float(r.get("unit_price") or 0)
-            except (TypeError, ValueError):
-                unit = 0
-            try:
-                total = float(r.get("total_price") or unit * qty)
-            except (TypeError, ValueError):
-                total = unit * qty
+                qty = _positive_whole_number(r.get("qty"), 1)
+                unit = _finite_non_negative(r.get("unit_price"), 0, "unit_price")
+                total = _finite_non_negative(
+                    r.get("total_price"), unit * qty, "total_price"
+                )
+            except ValueError as exc:
+                errors.append(OrderImportError(
+                    row_index=row_index,
+                    order_id=order_id,
+                    sku=sku,
+                    code="invalid_numeric",
+                    message=str(exc),
+                ))
+                continue
+
+            product_id = sku_to_id.get(sku)
 
             date_val = r.get("order_date")
             order_date = ""
@@ -202,68 +304,108 @@ def save_orders(df: pd.DataFrame) -> int:
                 except Exception:
                     order_date = str(date_val)
 
+            canonical = {
+                "order_id": order_id,
+                "sku": sku,
+                "platform": platform,
+                "qty": qty,
+                "unit_price": unit,
+                "total_price": total,
+                "currency": _text(r.get("currency"), "THB"),
+                "order_date": order_date,
+                "status": _text(r.get("status"), "paid"),
+                "buyer_name": _text(r.get("buyer_name")),
+                "buyer_phone": _text(r.get("buyer_phone")),
+                "buyer_address": _text(r.get("buyer_address")),
+                "product_name": _text(r.get("product_name"), sku),
+            }
+
+            c.execute("SAVEPOINT order_import_row")
             try:
-                # Track total_changes before/after to know if this row was new
-                before = c.total_changes
-                c.execute(
+                cursor = c.execute(
                     """
                     INSERT OR IGNORE INTO orders
                     (order_id, sku, product_id, platform, qty, unit_price, total_price,
-                     currency, order_date, status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     currency, order_date, status, buyer_name, buyer_phone, buyer_address)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
-                        str(r["order_id"]), str(r["sku"]), product_id,
-                        r["platform"], qty, unit, total,
-                        r.get("currency", "THB"),
-                        order_date,
-                        str(r.get("status") or "paid"),
+                        canonical["order_id"], canonical["sku"], product_id,
+                        canonical["platform"], canonical["qty"],
+                        canonical["unit_price"], canonical["total_price"],
+                        canonical["currency"], canonical["order_date"],
+                        canonical["status"], canonical["buyer_name"],
+                        canonical["buyer_phone"], canonical["buyer_address"],
                     ),
                 )
-                if c.total_changes > before:
-                    n_inserted += 1
+                if cursor.rowcount:
                     # Decrement stock on the matched product (only on NEW
                     # rows, so re-importing the same CSV doesn't double-deduct).
                     if product_id:
                         _decrement_stock(c, product_id, qty)
-            except Exception:
+                c.execute("RELEASE SAVEPOINT order_import_row")
+            except sqlite3.Error as exc:
+                c.execute("ROLLBACK TO SAVEPOINT order_import_row")
+                c.execute("RELEASE SAVEPOINT order_import_row")
+                errors.append(OrderImportError(
+                    row_index=row_index,
+                    order_id=order_id,
+                    sku=sku,
+                    code="database_error",
+                    message=str(exc),
+                ))
                 continue
 
+            if cursor.rowcount:
+                n_inserted += 1
+                inserted_rows.append((row_index, canonical))
+                customer_row = canonical
+            else:
+                n_skipped += 1
+                persisted = c.execute(
+                    """
+                    SELECT o.order_id, o.sku, o.platform, o.qty, o.unit_price,
+                           o.total_price, o.currency, o.order_date, o.status,
+                           o.buyer_name, o.buyer_phone, o.buyer_address,
+                           COALESCE(p.name, o.sku) AS product_name
+                    FROM orders o
+                    LEFT JOIN products p ON p.id = o.product_id
+                    WHERE o.platform = ? AND o.order_id = ? AND o.sku = ?
+                    """,
+                    (platform, order_id, sku),
+                ).fetchone()
+                customer_row = dict(persisted) if persisted else canonical
+            customer_sync_rows.append((row_index, customer_row))
+
     # v58: Auto-create/update customer records from order data
-    if n_inserted:
-        try:
-            import customers as cust
-            cust.init()
-            for _, r in df.iterrows():
-                buyer = str(r.get("buyer_name") or "").strip()
-                if not buyer:
-                    continue
-                phone = str(r.get("buyer_phone") or "").strip()
+    if customer_sync_rows:
+        import customers as cust
+        for row_index, row in customer_sync_rows:
+            if not row["buyer_name"]:
+                continue
+            try:
+                cust.init()
                 cid = cust.find_or_create(
-                    name=buyer, phone=phone, platform=r.get("platform", ""),
+                    name=row["buyer_name"],
+                    phone=row["buyer_phone"],
+                    platform=row["platform"],
                 )
-                total_val = 0
-                try:
-                    total_val = float(r.get("total_price") or 0)
-                except (TypeError, ValueError):
-                    pass
-                date_val = r.get("order_date")
-                date_str = ""
-                if pd.notna(date_val):
-                    try:
-                        date_str = pd.Timestamp(date_val).strftime("%Y-%m-%d")
-                    except Exception:
-                        date_str = str(date_val)[:10]
                 cust.record_order(
                     customer_id=cid,
-                    order_id=str(r.get("order_id", "")),
-                    platform=r.get("platform", ""),
-                    amount=total_val,
-                    order_date=date_str,
-                    product=str(r.get("product_name") or r.get("sku") or ""),
+                    order_id=row["order_id"],
+                    platform=row["platform"],
+                    amount=row["total_price"],
+                    order_date=row["order_date"][:10],
+                    product=row["product_name"],
                 )
-        except Exception:
-            pass
+            except Exception as exc:
+                errors.append(OrderImportError(
+                    row_index=row_index,
+                    order_id=row["order_id"],
+                    sku=row["sku"],
+                    code="customer_sync_error",
+                    message=str(exc),
+                ))
 
     # v50: Emit a single event for the batch — not one per order (would spam)
     if n_inserted:
@@ -287,8 +429,8 @@ def save_orders(df: pd.DataFrame) -> int:
             token = _us.get("line_notify_token", "")
             if token and _us.get("line_alert_orders", True):
                 import line_notify
-                total_rev = df["total_price"].sum() if "total_price" in df.columns else 0
-                platforms = ", ".join(df["platform"].unique()) if "platform" in df.columns else ""
+                total_rev = sum(row["total_price"] for _, row in inserted_rows)
+                platforms = ", ".join(sorted({row["platform"] for _, row in inserted_rows}))
                 line_notify.send(token,
                     "\n🛒 ออเดอร์ใหม่ " + str(n_inserted) + " รายการ!"
                     "\n🏪 " + platforms +
@@ -297,7 +439,19 @@ def save_orders(df: pd.DataFrame) -> int:
         except Exception:
             pass
 
-    return n_inserted
+    return OrderImportResult(
+        inserted=n_inserted,
+        skipped=n_skipped,
+        errors=tuple(errors),
+    )
+
+
+def save_orders(df: pd.DataFrame) -> int:
+    """Backward-compatible import that never hides rejected rows."""
+    result = save_orders_report(df)
+    if result.import_errors:
+        raise OrderImportRowsError(result.import_errors)
+    return result.inserted
 
 
 def _decrement_stock(c, product_id: int, qty: int) -> None:
