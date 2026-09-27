@@ -20,6 +20,14 @@ def init():
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             )
         """)
+        note_columns = {
+            row["name"] for row in c.execute("PRAGMA table_info(customer_notes)")
+        }
+        if "note_type" not in note_columns:
+            c.execute(
+                "ALTER TABLE customer_notes "
+                "ADD COLUMN note_type TEXT DEFAULT 'general'"
+            )
         c.execute("""
             CREATE TABLE IF NOT EXISTS customer_tags (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

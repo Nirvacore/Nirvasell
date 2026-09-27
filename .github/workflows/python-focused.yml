@@ -12,6 +12,8 @@ on:
       - "alerts.py"
       - "kpi_scorecard.py"
       - "customers.py"
+      - "customer_crm.py"
+      - "customer_segments.py"
       - "shop_settings.py"
       - "user_settings.py"
       - "supplier_mgmt.py"
@@ -38,6 +40,7 @@ on:
       - "pages/b_🏭_Suppliers.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
+      - "test_customer_notes_schema.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -81,6 +84,7 @@ jobs:
           python test_order_import_schema_extraction.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
+          python test_customer_notes_schema.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -106,6 +110,8 @@ jobs:
           python -m py_compile \
             db.py \
             customers.py \
+            customer_crm.py \
+            customer_segments.py \
             shop_settings.py \
             user_settings.py \
             supplier_mgmt.py \
@@ -134,6 +140,7 @@ jobs:
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
+            test_customer_notes_schema.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
