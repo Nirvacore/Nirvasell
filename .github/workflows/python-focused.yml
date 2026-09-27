@@ -6,6 +6,7 @@ on:
       - ".github/workflows/python-focused.yml"
       - "db.py"
       - "i18n_inline.py"
+      - "daily_briefing.py"
       - "expenses.py"
       - "budget_tracker.py"
       - "cash_flow.py"
@@ -45,6 +46,7 @@ on:
       - "pages/A5_🎖_Loyalty.py"
       - "pages/E3_👥_Customers.py"
       - "pages/F2_🔮_Forecast.py"
+      - "pages/G7_🌅_DailyBriefing.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -55,6 +57,7 @@ on:
       - "test_loyalty_page_reward_names.py"
       - "test_customers_page_kpis.py"
       - "test_forecast_page_contract.py"
+      - "test_daily_briefing_page_new_customers.py"
       - "test_settings_supplier_schema_migrations.py"
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
@@ -106,6 +109,7 @@ jobs:
           python test_loyalty_page_reward_names.py
           python test_customers_page_kpis.py
           python test_forecast_page_contract.py
+          python test_daily_briefing_page_new_customers.py
           python test_settings_supplier_schema_migrations.py
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
@@ -131,6 +135,7 @@ jobs:
           python -m py_compile \
             db.py \
             i18n_inline.py \
+            daily_briefing.py \
             customers.py \
             customer_crm.py \
             customer_segments.py \
@@ -165,6 +170,7 @@ jobs:
             "pages/A5_🎖_Loyalty.py" \
             "pages/E3_👥_Customers.py" \
             "pages/F2_🔮_Forecast.py" \
+            "pages/G7_🌅_DailyBriefing.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -176,6 +182,7 @@ jobs:
             test_loyalty_page_reward_names.py \
             test_customers_page_kpis.py \
             test_forecast_page_contract.py \
+            test_daily_briefing_page_new_customers.py \
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
