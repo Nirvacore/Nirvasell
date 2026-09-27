@@ -89,7 +89,12 @@ for ch in stats:
             st.metric(t("ch.d_net"), "฿{:,.0f}".format(ch["net_revenue"]))
 
         top_skus = cp.top_skus_by_channel(ch["platform"], days)
-        if top_skus:
+        if top_skus is None:
+            st.warning(
+                "⚠️ ข้อมูล SKU/จำนวน/ยอดรวมไม่ครบ · "
+                "Top-SKU evidence unavailable"
+            )
+        elif top_skus:
             st.markdown("**" + t("ch.top_skus") + "**")
             for sku_r in top_skus:
                 st.markdown(
