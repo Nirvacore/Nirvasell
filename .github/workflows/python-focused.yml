@@ -16,6 +16,7 @@ on:
       - "channel_perf.py"
       - "channel_performance.py"
       - "dead_stock.py"
+      - "stock_turnover.py"
       - "abc_analysis.py"
       - "customers.py"
       - "customer_crm.py"
@@ -60,6 +61,8 @@ on:
       - "pages/C5_📊_Channels.py"
       - "pages/H4_☠_DeadStock.py"
       - "pages/m_💀_DeadStock.py"
+      - "pages/H5_🔄_StockTurnover.py"
+      - "pages/q_🔄_Turnover.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -98,6 +101,8 @@ on:
       - "test_biz_health_page_incomplete_margin.py"
       - "test_dead_stock_canonical_evidence.py"
       - "test_dead_stock_page_contract.py"
+      - "test_stock_turnover_canonical_evidence.py"
+      - "test_stock_turnover_page_contract.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -160,6 +165,8 @@ jobs:
           python test_biz_health_page_incomplete_margin.py
           python test_dead_stock_canonical_evidence.py
           python test_dead_stock_page_contract.py
+          python test_stock_turnover_canonical_evidence.py
+          python test_stock_turnover_page_contract.py
 
       - name: Compile changed Python entry points
         env:
@@ -174,6 +181,7 @@ jobs:
             channel_perf.py \
             channel_performance.py \
             dead_stock.py \
+            stock_turnover.py \
             abc_analysis.py \
             customers.py \
             customer_crm.py \
@@ -219,6 +227,8 @@ jobs:
             "pages/C5_📊_Channels.py" \
             "pages/H4_☠_DeadStock.py" \
             "pages/m_💀_DeadStock.py" \
+            "pages/H5_🔄_StockTurnover.py" \
+            "pages/q_🔄_Turnover.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -257,4 +267,6 @@ jobs:
             test_biz_health_margin_evidence.py \
             test_biz_health_page_incomplete_margin.py \
             test_dead_stock_canonical_evidence.py \
-            test_dead_stock_page_contract.py
+            test_dead_stock_page_contract.py \
+            test_stock_turnover_canonical_evidence.py \
+            test_stock_turnover_page_contract.py

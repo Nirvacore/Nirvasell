@@ -31,17 +31,28 @@ page_header(icon="🔄", title=t("turn.title"), subtitle=t("turn.caption"))
 
 s = st_mod.summary()
 
+if not s.get("evidence_complete", True):
+    st.warning(
+        "Stock-turnover evidence is incomplete: "
+        + str(s.get("missing_order_evidence_rows", 0))
+        + " order row(s), "
+        + str(s.get("missing_product_evidence_rows", 0))
+        + " product row(s). Exact turnover is unavailable."
+    )
+    st.stop()
+
 if s["total_skus"] == 0:
     st.info(t("turn.empty"))
     st.stop()
 
 k1, k2, k3, k4 = st.columns(4)
 with k1:
+    avg_turnover = s["avg_turnover"]
     metric_with_hint(
         t("turn.kpi_avg_turnover"),
-        str(s["avg_turnover"]) + "x",
+        "—" if avg_turnover is None else str(avg_turnover) + "x",
         hint=t("turn.turnover_hint"),
-        hint_tone="ok" if s["avg_turnover"] >= 4 else "warn",
+        hint_tone="ok" if avg_turnover is not None and avg_turnover >= 4 else "warn",
     )
 with k2:
     metric_with_hint(
@@ -111,7 +122,7 @@ def _render_items(item_list):
         h_color = {"fast": "#4d6c5c", "good": "#4a7ab5", "slow": "#c5963d", "stuck": "#c54c4c"}.get(health, "#7a7569")
 
         doi_str = str(item["doi"]) + "d"
-        tr_str = str(item["turnover_rate"]) + "x"
+        tr_str = "—" if item["turnover_rate"] is None else str(item["turnover_rate"]) + "x"
         daily_str = str(item["daily_sales"])
         stock_str = str(item.get("stock") or 0)
         rp_str = str(item["reorder_point"])
