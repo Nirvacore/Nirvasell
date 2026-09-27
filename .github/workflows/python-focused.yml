@@ -21,6 +21,8 @@ on:
       - "supplier_score.py"
       - "order_import.py"
       - "pick_pack.py"
+      - "global_search.py"
+      - "pages/A2_🔎_Search.py"
       - "pages/F_📈_Dashboard.py"
       - "pages/b_🏭_Suppliers.py"
       - "test_expense_date_consistency.py"
@@ -29,6 +31,8 @@ on:
       - "test_tax_report_quarterly.py"
       - "test_supplier_score_logic.py"
       - "test_alerts_product_schema.py"
+      - "test_global_search_order_schema.py"
+      - "test_search_page_order_total.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -59,6 +63,8 @@ jobs:
           python test_tax_report_quarterly.py
           python test_supplier_score_logic.py
           python test_alerts_product_schema.py
+          python test_global_search_order_schema.py
+          python test_search_page_order_total.py
 
       - name: Compile changed Python entry points
         env:
@@ -77,6 +83,8 @@ jobs:
             alerts.py \
             order_import.py \
             pick_pack.py \
+            global_search.py \
+            "pages/A2_🔎_Search.py" \
             "pages/F_📈_Dashboard.py" \
             "pages/b_🏭_Suppliers.py" \
             test_order_import_schema_extraction.py \
@@ -85,4 +93,6 @@ jobs:
             test_settings_supplier_schema_migrations.py \
             test_tax_report_quarterly.py \
             test_supplier_score_logic.py \
-            test_alerts_product_schema.py
+            test_alerts_product_schema.py \
+            test_global_search_order_schema.py \
+            test_search_page_order_total.py
