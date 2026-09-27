@@ -20,9 +20,18 @@ days = st.segmented_control(t("ch.period"), [7,30,90],
 
 summary = cp.summary(days=int(days or 30))
 c1, c2, c3 = st.columns(3)
-c1.metric(t("ch.kpi_revenue"), "฿{:,.0f}".format(summary.get("total_revenue",0)))
+total_revenue = summary.get("total_revenue")
+c1.metric(
+    t("ch.kpi_revenue"),
+    "฿{:,.0f}".format(total_revenue) if total_revenue is not None else "—",
+)
 c2.metric(t("ch.kpi_orders"), summary.get("total_orders",0))
 c3.metric(t("ch.kpi_platforms"), summary.get("active_platforms",0))
+
+if not summary.get("evidence_complete", False):
+    st.warning(
+        "⚠️ ข้อมูลยอดขาย/ต้นทุนไม่ครบ · Revenue and profit metrics unavailable"
+    )
 
 st.divider()
 
@@ -33,25 +42,30 @@ with tab_compare:
     if not platforms:
         st.info(t("ch.empty"))
     else:
-        max_rev = max(p.get("revenue",0) for p in platforms) or 1
+        complete_revenues = [
+            p["revenue"] for p in platforms if p.get("revenue") is not None
+        ]
+        max_rev = max(complete_revenues, default=0) or 1
         for p in platforms:
-            rev   = p.get("revenue",0)
-            aov   = p.get("aov",0)
+            rev   = p.get("revenue")
+            aov   = p.get("aov")
             orders = p.get("orders",0)
             rr    = p.get("return_rate",0)
-            bar_w = int(rev / max_rev * 220)
-            color = "#4d6c5c" if rev == max_rev else "#3a4a4a"
+            bar_w = int(rev / max_rev * 220) if rev is not None else 0
+            color = "#4d6c5c" if rev is not None and rev == max_rev else "#3a4a4a"
+            revenue_text = "฿{:,.0f}".format(rev) if rev is not None else "—"
+            aov_text = "{:,.0f}".format(aov) if aov is not None else "—"
             p_html = (
                 "<div style='margin:6px 0'>"
                 "<div style='font-size:0.85rem;color:#d4d0c8'><b>" +
                 (p.get("platform") or t("common.platform_direct")) + "</b>"
                 " · " + str(orders) + t("ch.orders") +
-                " · " + t("chan.line_aov", amount="{:,.0f}".format(aov)) +
+                " · " + t("chan.line_aov", amount=aov_text) +
                 " · " + t("ch.return_rate", n=str(rr)) + "</div>"
                 "<div style='display:flex;align-items:center;gap:8px;margin-top:3px'>"
                 "<div style='background:" + color + ";width:" + str(bar_w) +
                 "px;height:14px'></div>"
-                "<span style='color:#d4d0c8;font-size:0.84rem'>฿{:,.0f}".format(rev) +
+                "<span style='color:#d4d0c8;font-size:0.84rem'>" + revenue_text +
                 "</span></div></div>"
             )
             st.html(p_html)
@@ -62,23 +76,31 @@ with tab_growth:
     if not growth:
         st.info(t("ch.empty"))
     else:
-        plats = list({r["platform"] for r in growth if r.get("platform")})
-        for plat in plats:
-            g_rows = [r for r in growth if r.get("platform") == plat]
-            if g_rows:
-                st.write("**" + (plat or t("common.platform_direct")) + "**")
-                for r in g_rows:
-                    grow_pct = r.get("growth_pct", 0)
-                    color = "#4d6c5c" if grow_pct >= 0 else "#c54c4c"
-                    g_html = (
-                        "<div style='margin:2px 0;font-size:0.83rem'>"
-                        "<span style='color:#9a9485;width:80px;display:inline-block'>" +
-                        (r.get("month", "") or "—") + "</span>"
-                        "฿{:,.0f}".format(r.get("revenue", 0)) +
-                        " <span style='color:" + color + ";margin-left:8px'>" +
-                        t("ch.growth_pct",
-                          sign="+" if grow_pct >= 0 else "",
-                          pct=str(grow_pct)) +
-                        "</span></div>"
-                    )
-                    st.html(g_html)
+        for row in growth:
+            plat = row.get("platform") or t("common.platform_direct")
+            st.write("**" + plat + "**")
+            grow_pct = row.get("growth_pct")
+            color = (
+                "#4d6c5c" if grow_pct is not None and grow_pct >= 0
+                else ("#c54c4c" if grow_pct is not None else "#9a9485")
+            )
+            growth_sign = "+" if grow_pct is not None and grow_pct >= 0 else ""
+            growth_text = str(grow_pct) if grow_pct is not None else "—"
+            months_data = row.get("months", {})
+            latest_month = max(months_data, default=None)
+            for month, revenue in sorted(months_data.items()):
+                revenue_text = (
+                    "฿{:,.0f}".format(revenue) if revenue is not None else "—"
+                )
+                growth_label = (
+                    t("ch.growth_pct", sign=growth_sign, pct=growth_text)
+                    if month == latest_month else ""
+                )
+                g_html = (
+                    "<div style='margin:2px 0;font-size:0.83rem'>"
+                    "<span style='color:#9a9485;width:80px;display:inline-block'>"
+                    + month + "</span>" + revenue_text
+                    + " <span style='color:" + color + ";margin-left:8px'>"
+                    + growth_label + "</span></div>"
+                )
+                st.html(g_html)
