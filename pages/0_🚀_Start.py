@@ -19,7 +19,7 @@ import onboarding as ob
 from _theme import apply as apply_theme
 from _sidebar import render as render_sidebar
 from _auth_gate import require_auth
-from _components import friendly_error
+from _components import friendly_error, page_header
 from i18n import t
 
 st.set_page_config(page_title="nirva.sell · Start", page_icon="🚀", layout="wide")

@@ -26,6 +26,7 @@ on:
       - "clv.py"
       - "export_center.py"
       - "pages/A2_🔎_Search.py"
+      - "pages/0_🚀_Start.py"
       - "pages/C9_🎯_Goals.py"
       - "pages/D9_🌟_Influencers.py"
       - "pages/E0_⚡_FlashSale.py"
@@ -53,6 +54,7 @@ on:
       - "test_abc_page_advice_render.py"
       - "test_sourcing_page_header.py"
       - "test_policies_page_header.py"
+      - "test_start_page_header.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -95,6 +97,7 @@ jobs:
           python test_abc_page_advice_render.py
           python test_sourcing_page_header.py
           python test_policies_page_header.py
+          python test_start_page_header.py
 
       - name: Compile changed Python entry points
         env:
@@ -118,6 +121,7 @@ jobs:
             clv.py \
             export_center.py \
             "pages/A2_🔎_Search.py" \
+            "pages/0_🚀_Start.py" \
             "pages/C9_🎯_Goals.py" \
             "pages/D9_🌟_Influencers.py" \
             "pages/E0_⚡_FlashSale.py" \
@@ -145,4 +149,5 @@ jobs:
             test_rfm_page_average_spent.py \
             test_abc_page_advice_render.py \
             test_sourcing_page_header.py \
-            test_policies_page_header.py
+            test_policies_page_header.py \
+            test_start_page_header.py
