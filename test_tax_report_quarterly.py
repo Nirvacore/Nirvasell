@@ -1,14 +1,12 @@
-"""Characterization tests for tax_report — VALID-quarter behavior only.
+"""Regression tests for tax_report quarter selection and totals.
 
 Scope (ME-02 / IMP-A-P1-004): this harness locks in current behavior of
 quarterly(), annual() and vat_check() for valid quarters (1-4) and valid
 years, against a temporary, isolated SQLite database — never the shared
 data/listo.db or any per-user database.
 
-It does NOT decide or implement the invalid-quarter policy tracked in
-Nirvasell issue #22 ("DRAFT: tax_report quarterly invalid-quarter policy").
-That issue is explicitly non-binding pending an owner decision (A/B/C) and
-is out of scope here.
+Invalid quarters fail closed before any database access, following the safe
+default tracked in Nirvasell issue #22.
 
 A follow-up slice fixed one narrow, orthogonal defect this harness first
 discovered: tax_report.py's expense query referenced a column
@@ -313,6 +311,28 @@ def test_stats_wraps_vat_check_for_current_year():
 # since the expense_date -> date column fix landed in tax_report.py.
 
 VALID_QUARTERS = (1, 2, 3, 4)
+
+
+def test_quarterly_rejects_invalid_quarters_before_database_access():
+    original_conn = db.conn
+    database_calls = []
+
+    def forbidden_conn():
+        database_calls.append(1)
+        raise AssertionError("invalid quarter must not open the database")
+
+    db.conn = forbidden_conn
+    try:
+        for quarter in (0, 5, None, True, False, "1", 1.0):
+            try:
+                tr.quarterly(2026, quarter)
+                raise AssertionError(f"quarter {quarter!r}: expected ValueError")
+            except ValueError as error:
+                assert str(error) == "quarter must be an integer from 1 to 4"
+    finally:
+        db.conn = original_conn
+
+    assert database_calls == []
 
 
 def test_quarterly_fresh_db_raises_missing_returns_table():

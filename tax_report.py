@@ -15,13 +15,15 @@ EXPENSE_CATEGORIES = [
 
 def quarterly(year: int, quarter: int) -> dict:
     """Revenue and expense summary for a quarter (Q1=1, Q4=4)."""
+    if type(quarter) is not int or quarter not in range(1, 5):
+        raise ValueError("quarter must be an integer from 1 to 4")
     q_months = {
         1: ("01", "02", "03"),
         2: ("04", "05", "06"),
         3: ("07", "08", "09"),
         4: ("10", "11", "12"),
     }
-    months = q_months.get(quarter, ("01",))
+    months = q_months[quarter]
     month_conditions = " OR ".join(
         "strftime('%m',order_date)='" + m + "'" for m in months
     )
