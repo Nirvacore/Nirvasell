@@ -52,7 +52,7 @@ with st.expander(t("goal.set_title"), expanded=s["total_active"] == 0):
         with gc2:
             period = st.selectbox(
                 t("goal.f_period"),
-                list(gt.PERIODS.keys()),
+                list(gt.PERIODS),
                 format_func=goal_period_label,
             )
         with gc3:
