@@ -6,6 +6,7 @@ on:
       - ".github/workflows/python-focused.yml"
       - "auth.py"
       - "db.py"
+      - "i18n.py"
       - "i18n_inline.py"
       - "daily_briefing.py"
       - "expenses.py"
@@ -73,6 +74,7 @@ on:
       - "pages/t_📊_Trends.py"
       - "pages/H0_💵_CashFlow.py"
       - "pages/C8_💵_CashFlow.py"
+      - "pages/B3_🛒_PurchaseOrders.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -122,6 +124,8 @@ on:
       - "test_auth_require_auth_compat.py"
       - "test_cash_flow_canonical_evidence.py"
       - "test_cash_flow_page_contract.py"
+      - "test_purchase_order_send_transition.py"
+      - "test_purchase_order_b3_send_page.py"
 
 permissions:
   contents: read
@@ -149,6 +153,8 @@ jobs:
           python test_auth_require_auth_compat.py
           python test_cash_flow_canonical_evidence.py
           python test_cash_flow_page_contract.py
+          python test_purchase_order_send_transition.py
+          python test_purchase_order_b3_send_page.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
@@ -201,6 +207,7 @@ jobs:
           python -m py_compile \
             auth.py \
             db.py \
+            i18n.py \
             i18n_inline.py \
             daily_briefing.py \
             biz_health.py \
@@ -265,11 +272,14 @@ jobs:
             "pages/t_📊_Trends.py" \
             "pages/H0_💵_CashFlow.py" \
             "pages/C8_💵_CashFlow.py" \
+            "pages/B3_🛒_PurchaseOrders.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
             test_cash_flow_canonical_evidence.py \
             test_cash_flow_page_contract.py \
+            test_purchase_order_send_transition.py \
+            test_purchase_order_b3_send_page.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \

@@ -86,12 +86,19 @@ def create(supplier: str, items: list, expected_date: str = "",
     return po_id
 
 
-def send(po_id: int) -> None:
+def send(po_id: int) -> bool:
+    """Mark one draft purchase order as sent.
+
+    This records a status transition only; it does not deliver an email, PDF,
+    webhook, or other message to the supplier.
+    """
     with db.conn() as c:
-        c.execute(
-            "UPDATE purchase_orders SET status = 'sent' WHERE id = ?",
+        result = c.execute(
+            """UPDATE purchase_orders SET status = 'sent'
+               WHERE id = ? AND status = 'draft'""",
             (po_id,)
         )
+        return result.rowcount == 1
 
 
 def receive_item(po_id: int, sku: str, qty_received: int,
