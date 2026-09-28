@@ -13,7 +13,7 @@ from __future__ import annotations
 import csv
 import io
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 import db
 
@@ -57,6 +57,9 @@ CARRIERS = {
     "dhl":       {"shopee": "DHL",       "lazada": "DHL",  "tiktok": "DHL"},
 }
 
+_MAX_SQLITE_ID = 2**63 - 1
+_TRACKING_NUMBER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]{0,99}$")
+
 
 def carrier_options() -> list[tuple[str, str]]:
     from i18n_inline import carrier_name
@@ -77,7 +80,9 @@ def platform_code(carrier_key: str, platform: str) -> str:
 def pending_orders(platform: str | None = None) -> list[dict]:
     """Orders that haven't been shipped yet."""
     init()
-    where = "WHERE tracking_number IS NULL OR tracking_number = ''"
+    where = """WHERE LOWER(TRIM(status)) IN ('paid', 'confirmed')
+               AND (tracking_number IS NULL OR TRIM(tracking_number) = '')
+               AND (shipped_at IS NULL OR TRIM(shipped_at) = '')"""
     params: tuple = ()
     if platform:
         where += " AND platform = ?"
@@ -113,7 +118,9 @@ def platforms_with_pending() -> list[str]:
     with db.conn() as c:
         rows = c.execute(
             """SELECT DISTINCT platform FROM orders
-               WHERE (tracking_number IS NULL OR tracking_number = '')
+               WHERE LOWER(TRIM(status)) IN ('paid', 'confirmed')
+                 AND (tracking_number IS NULL OR TRIM(tracking_number) = '')
+                 AND (shipped_at IS NULL OR TRIM(shipped_at) = '')
                ORDER BY platform"""
         ).fetchall()
     return [r["platform"] for r in rows if r["platform"]]
@@ -122,39 +129,39 @@ def platforms_with_pending() -> list[str]:
 # ---- Mark as shipped ----------------------------------------------------
 
 def mark_shipped(order_id_db: int, *, tracking_number: str,
-                 carrier: str, decrement_stock: bool = True) -> bool:
-    """Set tracking + shipped_at + status='shipped'. Optionally decrement stock."""
-    init()
-    if not tracking_number.strip():
+                 carrier: str) -> bool:
+    """Atomically transition one eligible, untracked order to shipped.
+
+    Stock is intentionally untouched here: the idempotent marketplace importer
+    solely owns inventory decrement when it inserts a new order.
+    """
+    if (isinstance(order_id_db, bool) or not isinstance(order_id_db, int)
+            or not 0 < order_id_db <= _MAX_SQLITE_ID):
         return False
-    now = datetime.utcnow().isoformat(timespec="seconds")
+    if not isinstance(tracking_number, str):
+        return False
+    normalized_tracking = tracking_number.strip()
+    if not _TRACKING_NUMBER.fullmatch(normalized_tracking):
+        return False
+    if not isinstance(carrier, str):
+        return False
+    normalized_carrier = carrier.strip().lower()
+    if normalized_carrier not in CARRIERS:
+        return False
+
+    init()
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     with db.conn() as c:
-        # Read the order to know qty + product_id for stock decrement
-        row = c.execute(
-            "SELECT product_id, qty FROM orders WHERE id = ?", (order_id_db,)
-        ).fetchone()
-        c.execute(
+        cursor = c.execute(
             """UPDATE orders SET tracking_number = ?, carrier = ?,
                                  shipped_at = ?, status = 'shipped'
-               WHERE id = ?""",
-            (tracking_number.strip(), carrier.strip().lower(), now, order_id_db),
+               WHERE id = ?
+                 AND LOWER(TRIM(status)) IN ('paid', 'confirmed')
+                 AND (tracking_number IS NULL OR TRIM(tracking_number) = '')
+                 AND (shipped_at IS NULL OR TRIM(shipped_at) = '')""",
+            (normalized_tracking, normalized_carrier, now, order_id_db),
         )
-        if decrement_stock and row and row["product_id"]:
-            # Stock is stored as a free-text string in products.stock — try to
-            # parse a number out and decrement. Leave non-numeric stock as-is.
-            stock_row = c.execute(
-                "SELECT stock FROM products WHERE id = ?", (row["product_id"],)
-            ).fetchone()
-            if stock_row and stock_row["stock"]:
-                m = re.search(r"\d+", str(stock_row["stock"]))
-                if m:
-                    new_n = max(0, int(m.group(0)) - int(row["qty"] or 1))
-                    new_stock = re.sub(r"\d+", str(new_n), str(stock_row["stock"]), count=1)
-                    c.execute(
-                        "UPDATE products SET stock = ? WHERE id = ?",
-                        (new_stock, row["product_id"]),
-                    )
-    return True
+    return cursor.rowcount == 1
 
 
 def mark_shipped_bulk(items: list[dict]) -> int:
@@ -162,10 +169,12 @@ def mark_shipped_bulk(items: list[dict]) -> int:
     Returns count of orders updated."""
     ok = 0
     for it in items:
+        if not isinstance(it, dict):
+            continue
         if mark_shipped(
-            it["id"],
-            tracking_number=it.get("tracking_number", "").strip(),
-            carrier=it.get("carrier", "").strip(),
+            it.get("id"),
+            tracking_number=it.get("tracking_number", ""),
+            carrier=it.get("carrier", ""),
         ):
             ok += 1
     return ok
@@ -321,7 +330,9 @@ def stats() -> dict:
     with db.conn() as c:
         pend = c.execute(
             """SELECT COUNT(*) FROM orders
-               WHERE tracking_number IS NULL OR tracking_number = ''"""
+               WHERE LOWER(TRIM(status)) IN ('paid', 'confirmed')
+                 AND (tracking_number IS NULL OR TRIM(tracking_number) = '')
+                 AND (shipped_at IS NULL OR TRIM(shipped_at) = '')"""
         ).fetchone()[0]
         ship = c.execute(
             """SELECT COUNT(*) FROM orders
@@ -329,7 +340,9 @@ def stats() -> dict:
         ).fetchone()[0]
         platforms = c.execute(
             """SELECT platform, COUNT(*) AS n FROM orders
-               WHERE tracking_number IS NULL OR tracking_number = ''
+               WHERE LOWER(TRIM(status)) IN ('paid', 'confirmed')
+                 AND (tracking_number IS NULL OR TRIM(tracking_number) = '')
+                 AND (shipped_at IS NULL OR TRIM(shipped_at) = '')
                GROUP BY platform"""
         ).fetchall()
     return {
