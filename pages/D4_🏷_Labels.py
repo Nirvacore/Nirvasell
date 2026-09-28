@@ -70,12 +70,16 @@ with tab_manual:
 
 with tab_order:
     st.subheader(t("lbl.order_title"))
+    order_platform = st.text_input(t("cod.f_platform"), placeholder="shopee")
     order_key = st.text_input(t("lbl.order_id_input"), placeholder=t("lbl.order_id_ph"))
     style2 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES),
                            format_func=label_style_label, key="style2")
-    if st.button(t("lbl.fetch_btn")) and order_key:
-        result2 = lg.from_order(order_key, style=style2)
-        st.code(result2, language=None)
+    if st.button(t("lbl.fetch_btn")):
+        result2 = lg.from_order(order_platform, order_key, style=style2)
+        if result2["ok"]:
+            st.code(result2["label"], language=None)
+        else:
+            st.error(result2["message"])
 
 with tab_bulk:
     st.subheader(t("lbl.bulk_title"))
@@ -88,26 +92,11 @@ with tab_bulk:
     style3 = st.selectbox(t("lbl.style"), list(lg.LABEL_STYLES),
                            format_func=label_style_label, key="style3")
     if st.button(t("lbl.bulk_btn")) and bulk_input:
-        lines = [l.strip() for l in bulk_input.strip().split("\n") if l.strip()]
-        if lines and "," in lines[0] and not lines[0][0].isdigit():
-            lines = lines[1:]  # skip header
-        all_labels = []
-        for line in lines:
-            parts = [p.strip() for p in line.split(",")]
-            while len(parts) < 6:
-                parts.append("")
-            try:
-                label = lg.generate_label(
-                    order_id=parts[0], buyer_name=parts[1],
-                    buyer_phone=parts[2], buyer_address=parts[3],
-                    total_price=float(parts[4] or 0),
-                    cod_amount=float(parts[5] or 0),
-                    style=style3,
-                )
-                all_labels.append(label)
-            except Exception:
-                pass
+        bulk_result = lg.generate_bulk_labels(bulk_input, style=style3)
+        all_labels = bulk_result["labels"]
         if all_labels:
             combined = ("\n" + "=" * 40 + "\n").join(all_labels)
             st.code(combined, language=None)
             st.success(str(len(all_labels)) + t("lbl.bulk_done"))
+        for error in bulk_result["errors"]:
+            st.error(error["message"])
