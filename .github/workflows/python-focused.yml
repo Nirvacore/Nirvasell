@@ -32,6 +32,7 @@ on:
       - "purchase_orders.py"
       - "price_optimizer.py"
       - "fulfillment.py"
+      - "product_score.py"
       - "tax_report.py"
       - "supplier_score.py"
       - "order_dates.py"
@@ -80,6 +81,7 @@ on:
       - "pages/F8_💡_PriceOpt.py"
       - "pages/7_💰_Pricing.py"
       - "pages/K_📦_Fulfillment.py"
+      - "pages/B7_🏅_ProductScore.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -135,6 +137,9 @@ on:
       - "test_price_optimizer_pages.py"
       - "test_fulfillment_transition.py"
       - "test_fulfillment_page_contract.py"
+      - "test_product_score_order_schema.py"
+      - "test_product_score_canonical_evidence.py"
+      - "test_product_score_page_contract.py"
 
 permissions:
   contents: read
@@ -168,6 +173,9 @@ jobs:
           python test_price_optimizer_pages.py
           python test_fulfillment_transition.py
           python test_fulfillment_page_contract.py
+          python test_product_score_order_schema.py
+          python test_product_score_canonical_evidence.py
+          python test_product_score_page_contract.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
@@ -242,6 +250,7 @@ jobs:
             purchase_orders.py \
             price_optimizer.py \
             fulfillment.py \
+            product_score.py \
             tax_report.py \
             supplier_score.py \
             order_dates.py \
@@ -291,6 +300,7 @@ jobs:
             "pages/F8_💡_PriceOpt.py" \
             "pages/7_💰_Pricing.py" \
             "pages/K_📦_Fulfillment.py" \
+            "pages/B7_🏅_ProductScore.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
@@ -302,6 +312,9 @@ jobs:
             test_price_optimizer_pages.py \
             test_fulfillment_transition.py \
             test_fulfillment_page_contract.py \
+            test_product_score_order_schema.py \
+            test_product_score_canonical_evidence.py \
+            test_product_score_page_contract.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \
