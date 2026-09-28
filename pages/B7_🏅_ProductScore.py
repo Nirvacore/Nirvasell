@@ -28,7 +28,11 @@ days = st.select_slider(
     value=30, key="_ps_days",
 )
 
-s = ps.summary()
+s = ps.summary(days)
+if not s.get("evidence_complete", False):
+    st.warning(t("pscore.incomplete"))
+    st.stop()
+
 quads = s.get("quadrants", {})
 
 k1, k2, k3, k4 = st.columns(4)
@@ -65,7 +69,7 @@ filter_quad = st.selectbox(
     key="_ps_filter",
 )
 
-scored = ps.calculate(days)
+scored = s["items"]
 if filter_quad != "all":
     scored = [p for p in scored if p["quadrant"] == filter_quad]
 

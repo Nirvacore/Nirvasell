@@ -18,6 +18,10 @@ st.caption(t("pscore.caption"))
 days = st.segmented_control(t("pscore.period"), [7, 30, 90], default=30,
     format_func=lambda d: str(d) + t("pscore.days"))
 summary = ps.summary()
+if not summary.get("evidence_complete", False):
+    st.warning(t("pscore.incomplete"))
+    st.stop()
+
 c1, c2, c3 = st.columns(3)
 c1.metric(t("pscore.kpi_stars"), summary.get("star_count",0))
 c2.metric(t("pscore.kpi_avg_score"), str(summary.get("avg_score",0)) + "/100")
