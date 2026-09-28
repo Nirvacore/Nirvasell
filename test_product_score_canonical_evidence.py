@@ -38,21 +38,26 @@ def isolated_database():
             db._resolve_path = original_resolve_path
 
 
-def add_product(connection, sku: str, *, cost=40.0, sell=100.0, stock=10):
+_DEFAULT_NAME = object()
+
+
+def add_product(connection, sku: str, *, name=_DEFAULT_NAME, cost=40.0,
+                sell=100.0, stock=10):
     connection.execute(
         """INSERT INTO products (sku,name,cost_price,sell_price,stock)
            VALUES (?,?,?,?,?)""",
-        (sku, sku, cost, sell, stock),
+        (sku, sku if name is _DEFAULT_NAME else name, cost, sell, stock),
     )
 
 
 def add_order(connection, order_id: str, sku: str, *, total=100.0, qty=1,
-              order_date=None, status="paid"):
+              order_date=None, status="paid", platform="shopee"):
     connection.execute(
         """INSERT INTO orders
            (order_id,sku,platform,qty,total_price,order_date,status)
-           VALUES (?,?,'shopee',?,?,?,?)""",
-        (order_id, sku, qty, total, order_date or TODAY.isoformat(), status),
+           VALUES (?,?,?,?,?,?,?)""",
+        (order_id, sku, platform, qty, total,
+         order_date or TODAY.isoformat(), status),
     )
 
 
@@ -117,6 +122,33 @@ def test_nonfinite_negative_or_unavailable_financial_evidence_fails_closed() -> 
         assert product_score.calculate(days=30) == []
 
 
+def test_null_or_blank_product_names_fail_closed_without_scores() -> None:
+    with isolated_database():
+        with db.conn() as connection:
+            add_product(connection, "NULL-NAME", name=None)
+            add_product(connection, "BLANK-NAME", name="   ")
+
+        summary = product_score.summary(days=30)
+        assert summary["evidence_complete"] is False
+        assert summary["missing_product_evidence_rows"] == 2
+        assert summary["items"] == []
+        assert product_score.calculate(days=30) == []
+
+
+def test_null_or_blank_order_platforms_fail_closed_without_scores() -> None:
+    with isolated_database():
+        with db.conn() as connection:
+            add_product(connection, "GOOD")
+            add_order(connection, "null-platform", "GOOD", platform=None)
+            add_order(connection, "blank-platform", "GOOD", platform="   ")
+
+        summary = product_score.summary(days=30)
+        assert summary["evidence_complete"] is False
+        assert summary["missing_order_evidence_rows"] == 2
+        assert summary["items"] == []
+        assert product_score.calculate(days=30) == []
+
+
 def test_zero_revenue_and_zero_stock_remain_valid_when_evidence_is_complete() -> None:
     with isolated_database():
         with db.conn() as connection:
@@ -159,6 +191,8 @@ if __name__ == "__main__":
     test_window_uses_bangkok_dates_and_excludes_non_revenue_statuses()
     test_future_and_malformed_dates_fail_closed_without_scores()
     test_nonfinite_negative_or_unavailable_financial_evidence_fails_closed()
+    test_null_or_blank_product_names_fail_closed_without_scores()
+    test_null_or_blank_order_platforms_fail_closed_without_scores()
     test_zero_revenue_and_zero_stock_remain_valid_when_evidence_is_complete()
     test_product_score_uses_only_the_active_per_user_database()
-    print("product score canonical evidence: 5 passed")
+    print("product score canonical evidence: 7 passed")

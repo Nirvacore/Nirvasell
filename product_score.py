@@ -74,6 +74,7 @@ def _analysis(days: int = 30) -> dict:
         )
         if (
             not sku
+            or not _nonblank(product["name"])
             or cost is None or cost < 0
             or sell is None or sell <= 0
             or stock is None or stock < 0
@@ -121,7 +122,10 @@ def _analysis(days: int = 30) -> dict:
         qty = _number(order["qty"])
         revenue = _number(order["total_price"])
         if (
-            not all(_nonblank(order[key]) for key in ("order_id", "sku"))
+            not all(
+                _nonblank(order[key])
+                for key in ("order_id", "platform", "sku")
+            )
             or sku not in product_by_sku
             or qty is None or qty < 0
             or revenue is None or revenue < 0

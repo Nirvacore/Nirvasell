@@ -32,8 +32,11 @@ def test_product_score_reads_orders_total_price() -> None:
                     ("SKU-1", "Fixture product", 40.0, 100.0, 10),
                 )
                 connection.execute(
-                    "INSERT INTO orders (order_id, sku, qty, total_price, order_date, status) VALUES (?,?,?,?,?,?)",
-                    ("order-1", "SKU-1", 2, 200.0, date.today().isoformat(), "paid"),
+                    """INSERT INTO orders
+                       (order_id, sku, platform, qty, total_price, order_date, status)
+                       VALUES (?,?,?,?,?,?,?)""",
+                    ("order-1", "SKU-1", "shopee", 2, 200.0,
+                     date.today().isoformat(), "paid"),
                 )
 
             result = product_score.calculate(days=30)
