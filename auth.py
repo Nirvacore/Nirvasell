@@ -431,3 +431,11 @@ def user_db_path() -> Path:
     if u:
         return DATA / "users" / f"{u['id']}.db"
     return DATA / "listo.db"
+
+
+# Legacy pages import this name from auth.  Keep the import inside the
+# function because _auth_gate imports this module to perform the real checks.
+def require_auth() -> dict:
+    from _auth_gate import require_auth as _require_auth
+
+    return _require_auth()
