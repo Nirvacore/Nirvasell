@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 PAGE = Path(__file__).parent / "pages" / "B7_🏅_ProductScore.py"
+LEGACY_PAGE = Path(__file__).parent / "pages" / "H8_⭐_ProductScore.py"
 
 
 class StopExecution(Exception):
@@ -84,6 +85,25 @@ def replacements(*, product_score, require_auth):
     }
 
 
+def legacy_replacements(*, product_score, require_auth):
+    st = module("streamlit")
+    st.title = lambda value: EVENTS.append(("title", value))
+    st.caption = lambda value: EVENTS.append(("caption", value))
+    st.segmented_control = lambda *_args, **_kwargs: 30
+    st.warning = lambda value: EVENTS.append(("warning", value))
+    st.stop = lambda: (_ for _ in ()).throw(StopExecution())
+    st.columns = lambda _count: EVENTS.append(("misleading", "columns"))
+    st.tabs = lambda _labels: EVENTS.append(("misleading", "tabs"))
+    return {
+        "streamlit": st,
+        "product_score": product_score,
+        "theme": module("theme", apply_theme=lambda: None),
+        "auth": module("auth", require_auth=require_auth),
+        "sidebar": module("sidebar", render_sidebar=lambda: None),
+        "i18n": module("i18n", t=lambda key, **_kwargs: key),
+    }
+
+
 def test_terminating_auth_prevents_database_and_score_calls() -> None:
     EVENTS.clear()
     product_score = module(
@@ -101,6 +121,25 @@ def test_terminating_auth_prevents_database_and_score_calls() -> None:
             pass
         else:
             raise AssertionError("authentication stop must terminate the page")
+    assert not any(kind == "call" for kind, _value in EVENTS)
+
+
+def test_legacy_terminating_auth_prevents_score_calls() -> None:
+    EVENTS.clear()
+    product_score = module(
+        "product_score",
+        summary=lambda *_args: EVENTS.append(("call", "summary")),
+    )
+    with replaced_modules(legacy_replacements(
+        product_score=product_score,
+        require_auth=lambda: (_ for _ in ()).throw(AuthStop()),
+    )):
+        try:
+            runpy.run_path(str(LEGACY_PAGE), run_name="__legacy_product_score_auth_test__")
+        except AuthStop:
+            pass
+        else:
+            raise AssertionError("authentication stop must terminate the legacy page")
     assert not any(kind == "call" for kind, _value in EVENTS)
 
 
@@ -133,6 +172,40 @@ def test_selected_window_drives_summary_and_incomplete_evidence_stops_kpis() -> 
     assert calls == [7]
     assert ("warning", "pscore.incomplete") in EVENTS
     assert not any(kind == "metric" for kind, _value in EVENTS)
+
+
+def test_legacy_incomplete_evidence_stops_before_metrics_and_tabs() -> None:
+    EVENTS.clear()
+    calls: list[str] = []
+
+    def summary():
+        calls.append("summary")
+        return {
+            "evidence_complete": False,
+            "missing_order_evidence_rows": 1,
+            "missing_product_evidence_rows": 1,
+            "items": [],
+            "total_skus": None,
+            "avg_score": None,
+            "quadrants": None,
+        }
+
+    stopped = False
+    with replaced_modules(legacy_replacements(
+        product_score=module("product_score", summary=summary),
+        require_auth=lambda: {},
+    )):
+        try:
+            runpy.run_path(
+                str(LEGACY_PAGE),
+                run_name="__legacy_product_score_incomplete_test__",
+            )
+        except StopExecution:
+            stopped = True
+    assert stopped is True
+    assert calls == ["summary"]
+    assert ("warning", "pscore.incomplete") in EVENTS
+    assert not any(kind == "misleading" for kind, _value in EVENTS)
 
 
 def test_complete_page_reuses_the_selected_window_summary_items() -> None:
@@ -186,7 +259,9 @@ def test_active_caption_names_only_the_four_weighted_dimensions() -> None:
 
 if __name__ == "__main__":
     test_terminating_auth_prevents_database_and_score_calls()
+    test_legacy_terminating_auth_prevents_score_calls()
     test_selected_window_drives_summary_and_incomplete_evidence_stops_kpis()
+    test_legacy_incomplete_evidence_stops_before_metrics_and_tabs()
     test_complete_page_reuses_the_selected_window_summary_items()
     test_active_caption_names_only_the_four_weighted_dimensions()
-    print("product score page contract: 4 passed")
+    print("product score page contract: 6 passed")

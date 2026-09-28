@@ -82,6 +82,7 @@ on:
       - "pages/7_💰_Pricing.py"
       - "pages/K_📦_Fulfillment.py"
       - "pages/B7_🏅_ProductScore.py"
+      - "pages/H8_⭐_ProductScore.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -301,6 +302,7 @@ jobs:
             "pages/7_💰_Pricing.py" \
             "pages/K_📦_Fulfillment.py" \
             "pages/B7_🏅_ProductScore.py" \
+            "pages/H8_⭐_ProductScore.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
