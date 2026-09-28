@@ -65376,6 +65376,18 @@ STRINGS: dict[str, dict[str, str]] = {
         "hi": "📤 भेजें PO",
         "ru": "📤 Отправьте PO",
     },
+    "po.mark_sent_btn": {
+        "th": "ทำเครื่องหมายว่าส่งแล้ว",
+        "en": "Mark as sent",
+    },
+    "po.mark_sent_success": {
+        "th": "ทำเครื่องหมาย Purchase Order ว่าส่งแล้ว",
+        "en": "Purchase order marked as sent.",
+    },
+    "po.mark_sent_stale": {
+        "th": "อัปเดตไม่ได้: อาจไม่พบ Purchase Order หรือไม่ได้เป็นฉบับร่างแล้ว",
+        "en": "Could not update: the purchase order was not found or is no longer a draft.",
+    },
     "po.cancel_btn": {
         "th": "❌ ยกเลิก",
         "en": "❌ Cancel",
