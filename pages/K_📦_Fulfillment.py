@@ -145,8 +145,14 @@ with tab_pending:
                     st.warning(t("fulfill.nothing_picked"))
                 else:
                     n = ff.mark_shipped_bulk(items)
-                    st.success(t("fulfill.shipped_n", n=n))
-                    st.rerun()
+                    if n == len(items):
+                        st.success(t("fulfill.shipped_n", n=n))
+                        st.rerun()
+                    elif n:
+                        st.warning(t("fulfill.shipped_n", n=n))
+                        st.rerun()
+                    else:
+                        st.error(t("fulfill.shipped_n", n=0))
 
 
 # ---- History tab --------------------------------------------------------
