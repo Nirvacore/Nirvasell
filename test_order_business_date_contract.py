@@ -173,8 +173,46 @@ def test_imported_datetimes_persist_one_business_date_for_every_consumer() -> No
             db._resolve_path = original_resolver
 
 
+def test_duplicate_legacy_order_normalizes_customer_history_date() -> None:
+    with tempfile.TemporaryDirectory(prefix="nirvasell-order-date-duplicate-") as temp:
+        original_resolver = db._resolve_path
+        db._resolve_path = lambda: Path(temp) / "fixture.db"
+        try:
+            db.init()
+            legacy_utc = _today_at(0, 30).astimezone(timezone.utc).isoformat()
+            with db.conn() as connection:
+                connection.execute(
+                    "INSERT INTO orders "
+                    "(order_id,sku,platform,qty,total_price,order_date,status,"
+                    "buyer_name,buyer_phone) VALUES (?,?,?,?,?,?,?,?,?)",
+                    ("legacy-duplicate", "SKU-1", "direct", 1, 125.0,
+                     legacy_utc, "paid", "Buyer", "0812345678"),
+                )
+
+            result = order_import.save_orders_report(_Rows([
+                (1, {
+                    "order_id": "legacy-duplicate",
+                    "sku": "SKU-1",
+                    "platform": "direct",
+                }),
+            ]))
+
+            assert result.inserted == 0
+            assert result.skipped == 1
+            assert result.errors == ()
+            with db.conn() as connection:
+                customer_date = connection.execute(
+                    "SELECT order_date FROM customer_orders WHERE order_id = ?",
+                    ("legacy-duplicate",),
+                ).fetchone()[0]
+            assert customer_date == date.today().isoformat()
+        finally:
+            db._resolve_path = original_resolver
+
+
 if __name__ == "__main__":
     test_legacy_iso_datetimes_use_the_bangkok_calendar_date()
     test_legacy_iso_datetime_is_included_in_bangkok_daily_briefing()
     test_imported_datetimes_persist_one_business_date_for_every_consumer()
-    print("order business date contract: 3 passed")
+    test_duplicate_legacy_order_normalizes_customer_history_date()
+    print("order business date contract: 4 passed")

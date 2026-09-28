@@ -389,12 +389,16 @@ def save_orders_report(df: pd.DataFrame) -> OrderImportResult:
                     phone=row["buyer_phone"],
                     platform=row["platform"],
                 )
+                customer_order_date = order_business_date(row["order_date"])
                 cust.record_order(
                     customer_id=cid,
                     order_id=row["order_id"],
                     platform=row["platform"],
                     amount=row["total_price"],
-                    order_date=row["order_date"],
+                    order_date=(
+                        customer_order_date.isoformat()
+                        if customer_order_date else ""
+                    ),
                     product=row["product_name"],
                 )
             except Exception as exc:
