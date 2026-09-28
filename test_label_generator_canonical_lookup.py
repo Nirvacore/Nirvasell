@@ -270,6 +270,18 @@ def test_bulk_csv_preserves_quoted_commas_first_row_and_each_error() -> None:
     ]
 
 
+def test_bulk_csv_skips_only_the_documented_normalized_header() -> None:
+    result = label_generator.generate_bulk_labels(
+        ' ORDER_ID , Buyer_Name , PHONE , ADDRESS , TOTAL , COD \n'
+        'ORDER-A,Alice,0812345678,"123 Main, Bangkok",100,0\n',
+        style="full",
+    )
+    assert len(result["labels"]) == 1
+    assert "ORDER-A" in result["labels"][0]
+    assert "123 Main, Bangkok" in result["labels"][0]
+    assert result["errors"] == []
+
+
 def test_lookup_preserves_active_per_user_database_isolation() -> None:
     original_resolver = db._resolve_path
     with tempfile.TemporaryDirectory(prefix="nirvasell_label_users_") as temp:
@@ -305,5 +317,6 @@ if __name__ == "__main__":
     test_explicit_cod_prepaid_absent_and_duplicate_evidence_are_truthful()
     test_invalid_numeric_and_date_evidence_fail_closed()
     test_bulk_csv_preserves_quoted_commas_first_row_and_each_error()
+    test_bulk_csv_skips_only_the_documented_normalized_header()
     test_lookup_preserves_active_per_user_database_isolation()
-    print("label generator canonical lookup: 9 passed")
+    print("label generator canonical lookup: 10 passed")

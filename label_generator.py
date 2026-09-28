@@ -16,6 +16,7 @@ from order_dates import order_business_date
 LABEL_STYLES = ("full", "compact", "cod")
 _PLATFORM = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
 _MAX_ORDER_ID = 160
+_BULK_HEADER = ("order_id", "buyer_name", "phone", "address", "total", "cod")
 
 
 def init() -> None:
@@ -305,6 +306,8 @@ def generate_bulk_labels(csv_text: str, *, style: str = "full") -> dict:
                     "code": "invalid_columns",
                     "message": f"row {row_number}: invalid columns",
                 })
+                continue
+            if tuple(str(value).strip().lower() for value in row) == _BULK_HEADER:
                 continue
             order_id, buyer_name, phone, address, raw_total, raw_cod = (
                 str(value).strip() for value in row
