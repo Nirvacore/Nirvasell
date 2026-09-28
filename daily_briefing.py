@@ -7,6 +7,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, date
 
 import db
+from order_dates import order_business_date
 
 
 def generate() -> dict:
@@ -29,20 +30,32 @@ def _yesterday_summary(yesterday: str) -> dict:
     import customers as customer_store
 
     customer_store.init()
+    target = order_business_date(yesterday)
     with db.conn() as c:
-        orders = c.execute(
-            "SELECT COUNT(*) AS cnt, COALESCE(SUM(total_price), 0) AS rev "
-            "FROM orders WHERE order_date = ?", (yesterday,)
-        ).fetchone()
+        candidates = []
+        if target is not None:
+            adjacent = tuple(
+                (target + timedelta(days=offset)).isoformat()
+                for offset in (-1, 0, 1)
+            )
+            candidates = c.execute(
+                "SELECT total_price, order_date FROM orders "
+                "WHERE substr(order_date, 1, 10) IN (?,?,?)",
+                adjacent,
+            ).fetchall()
 
         new_customers = c.execute(
             "SELECT COUNT(*) AS cnt FROM customers WHERE first_order = ?",
             (yesterday,),
         ).fetchone()
 
+    matching_orders = [
+        row for row in candidates
+        if order_business_date(row["order_date"]) == target
+    ]
     return {
-        "orders": orders["cnt"] if orders else 0,
-        "revenue": orders["rev"] if orders else 0,
+        "orders": len(matching_orders),
+        "revenue": sum(row["total_price"] or 0 for row in matching_orders),
         "new_customers": new_customers["cnt"] if new_customers else 0,
     }
 

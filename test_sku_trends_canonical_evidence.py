@@ -123,7 +123,7 @@ def test_in_window_blank_invalid_or_negative_order_evidence_fails_closed():
 
 
 def test_unparseable_order_date_has_unknown_membership_and_fails_closed():
-    for value in (None, "not-a-date", date.today().isoformat() + " 00:00:00"):
+    for value in (None, "not-a-date", date.today().isoformat() + " 00:00"):
         with isolated_database():
             with db.conn() as connection:
                 insert_product(connection)
@@ -135,9 +135,11 @@ def test_unparseable_order_date_has_unknown_membership_and_fails_closed():
             assert result["items"] == [], value
 
 
-def test_imported_iso_datetime_preserves_its_represented_calendar_date():
+def test_imported_iso_datetime_uses_its_bangkok_business_date():
     with isolated_database():
-        represented_today = date.today().isoformat() + "T23:45:00.123456+07:00"
+        represented_today = (
+            date.today() - timedelta(days=1)
+        ).isoformat() + "T17:30:00Z"
         with db.conn() as connection:
             insert_product(connection)
             insert_order(connection, "timestamped", order_date=represented_today,
@@ -218,6 +220,6 @@ if __name__ == "__main__":
     test_weekly_trend_uses_canonical_totals_includes_today_and_excludes_voided()
     test_in_window_blank_invalid_or_negative_order_evidence_fails_closed()
     test_unparseable_order_date_has_unknown_membership_and_fails_closed()
-    test_imported_iso_datetime_preserves_its_represented_calendar_date()
+    test_imported_iso_datetime_uses_its_bangkok_business_date()
     test_new_products_use_canonical_orders_and_fail_closed_only_for_relevant_rows()
     print("sku trends canonical evidence: 5 passed")

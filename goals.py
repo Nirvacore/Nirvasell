@@ -9,6 +9,7 @@ import math
 
 import db
 from i18n_inline import goal_type_label, goal_type_unit
+from order_dates import order_business_date
 
 
 def init():
@@ -117,15 +118,7 @@ def _nonblank(value) -> bool:
     return value is not None and str(value).strip() != ""
 
 
-def _canonical_date(value) -> date | None:
-    if not _nonblank(value):
-        return None
-    raw = str(value).strip()
-    try:
-        parsed = datetime.strptime(raw, "%Y-%m-%d").date()
-    except ValueError:
-        return None
-    return parsed if parsed.isoformat() == raw else None
+_canonical_date = order_business_date
 
 
 def _number(value) -> float | None:

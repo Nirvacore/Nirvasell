@@ -139,7 +139,7 @@ def test_in_window_incomplete_order_or_product_evidence_fails_closed():
 def test_invalid_date_is_unknown_membership_and_cost_must_be_finite_nonnegative():
     for name, order_date, cost in [
         ("bad-date", "not-a-date", 10.0),
-        ("noncanonical-date", date.today().isoformat() + " 00:00:00", 10.0),
+        ("noncanonical-date", date.today().isoformat() + " 00:00", 10.0),
         ("missing-date", None, 10.0),
         ("missing-cost", date.today().isoformat(), None),
         ("negative-cost", date.today().isoformat(), -1.0),
