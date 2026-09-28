@@ -24,6 +24,15 @@ render_sidebar()
 
 page_header(icon="📆", title=t("pcal.title"), subtitle=t("pcal.caption"))
 
+evidence = pc.daily_summary(days=6 * 31)
+if not evidence["evidence_complete"]:
+    st.warning(
+        "Profit calendar unavailable: incomplete order/product evidence "
+        f"({evidence['missing_order_evidence_rows']} order rows, "
+        f"{evidence['missing_product_evidence_rows']} product rows)."
+    )
+    st.stop()
+
 # ---- Monthly summary bars ---------------------------------------------------
 
 months = pc.monthly_summary(6)

@@ -15,6 +15,15 @@ render_sidebar()
 st.title(t("pcal.title"))
 st.caption(t("pcal.caption"))
 
+evidence = pc.daily_summary(days=6 * 31)
+if not evidence["evidence_complete"]:
+    st.warning(
+        "Profit calendar unavailable: incomplete order/product evidence "
+        f"({evidence['missing_order_evidence_rows']} order rows, "
+        f"{evidence['missing_product_evidence_rows']} product rows)."
+    )
+    st.stop()
+
 tab_daily, tab_weekly, tab_best = st.tabs([
     t("pcal.tab_daily"), t("pcal.tab_weekly"), t("pcal.tab_best")
 ])
@@ -26,10 +35,10 @@ with tab_daily:
     if not daily:
         st.info(t("pcal.empty"))
     else:
-        profits = [d.get("net_profit",0) for d in daily]
+        profits = [d.get("profit",0) for d in daily]
         max_abs = max(abs(p) for p in profits) or 1
         for d in daily:
-            profit = d.get("net_profit",0)
+            profit = d.get("profit",0)
             bar_color = "#4d6c5c" if profit >= 0 else "#c54c4c"
             bar_w = int(abs(profit) / max_abs * 180)
             dot = "🟢" if profit > 0 else ("🔴" if profit < 0 else "⚫")
@@ -53,16 +62,19 @@ with tab_weekly:
     if not weekly:
         st.info(t("pcal.empty"))
     else:
-        max_p = max(abs(w.get("net_profit",0)) for w in weekly) or 1
+        max_p = max(abs(w.get("profit",0)) for w in weekly) or 1
         for w in weekly:
-            profit = w.get("net_profit",0)
+            profit = w.get("profit",0)
             rev    = w.get("revenue",0)
             orders = w.get("orders",0)
+            week_label = " – ".join(
+                value for value in (w.get("start"), w.get("end")) if value
+            ) or "—"
             color  = "#4d6c5c" if profit >= 0 else "#c54c4c"
             bar_w  = int(abs(profit) / max_p * 160)
             w_html = (
                 "<div style='margin:4px 0;font-size:0.83rem'>"
-                "<div style='color:#9a9485'>" + (w.get("week") or "—") + "</div>"
+                "<div style='color:#9a9485'>" + week_label + "</div>"
                 "<div style='display:flex;align-items:center;gap:6px;margin-top:2px'>"
                 "<div style='background:" + color + ";width:" + str(bar_w) + "px;height:10px'></div>"
                 "<span style='color:" + color + "'>" +
@@ -80,12 +92,12 @@ with tab_best:
     bw = pc.best_worst_days(days=90, top=5)
     col1.subheader("🌟 " + t("pcal.best_days"))
     for d in bw.get("best",[]):
-        col1.metric(d.get("date","—"), "฿{:,.0f}".format(d.get("net_profit",0)))
+        col1.metric(d.get("date","—"), "฿{:,.0f}".format(d.get("profit",0)))
 
     col2.subheader("💀 " + t("pcal.worst_days"))
     for d in bw.get("worst",[]):
         col2.metric(d.get("date","—"),
-                    "฿{:,.0f}".format(d.get("net_profit",0)),
+                    "฿{:,.0f}".format(d.get("profit",0)),
                     delta_color="inverse")
 
     st.divider()
@@ -93,7 +105,7 @@ with tab_best:
     if monthly:
         st.subheader(t("pcal.monthly_summary"))
         for m in monthly:
-            profit_m = m.get("net_profit",0)
+            profit_m = m.get("profit",0)
             c_m      = "#4d6c5c" if profit_m >= 0 else "#c54c4c"
             m_html   = (
                 "<div style='margin:3px 0;font-size:0.83rem'>"
