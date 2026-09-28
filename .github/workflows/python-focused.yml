@@ -30,6 +30,7 @@ on:
       - "supplier_mgmt.py"
       - "supplier_directory.py"
       - "purchase_orders.py"
+      - "price_optimizer.py"
       - "tax_report.py"
       - "supplier_score.py"
       - "order_dates.py"
@@ -75,6 +76,8 @@ on:
       - "pages/H0_💵_CashFlow.py"
       - "pages/C8_💵_CashFlow.py"
       - "pages/B3_🛒_PurchaseOrders.py"
+      - "pages/F8_💡_PriceOpt.py"
+      - "pages/7_💰_Pricing.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -126,6 +129,8 @@ on:
       - "test_cash_flow_page_contract.py"
       - "test_purchase_order_send_transition.py"
       - "test_purchase_order_b3_send_page.py"
+      - "test_price_optimizer_contract.py"
+      - "test_price_optimizer_pages.py"
 
 permissions:
   contents: read
@@ -155,6 +160,8 @@ jobs:
           python test_cash_flow_page_contract.py
           python test_purchase_order_send_transition.py
           python test_purchase_order_b3_send_page.py
+          python test_price_optimizer_contract.py
+          python test_price_optimizer_pages.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
@@ -227,6 +234,7 @@ jobs:
             supplier_mgmt.py \
             supplier_directory.py \
             purchase_orders.py \
+            price_optimizer.py \
             tax_report.py \
             supplier_score.py \
             order_dates.py \
@@ -273,6 +281,8 @@ jobs:
             "pages/H0_💵_CashFlow.py" \
             "pages/C8_💵_CashFlow.py" \
             "pages/B3_🛒_PurchaseOrders.py" \
+            "pages/F8_💡_PriceOpt.py" \
+            "pages/7_💰_Pricing.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
@@ -280,6 +290,8 @@ jobs:
             test_cash_flow_page_contract.py \
             test_purchase_order_send_transition.py \
             test_purchase_order_b3_send_page.py \
+            test_price_optimizer_contract.py \
+            test_price_optimizer_pages.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \
