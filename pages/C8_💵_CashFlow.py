@@ -29,6 +29,9 @@ render_sidebar()
 page_header(icon="💵", title=t("cf.title"), subtitle=t("cf.caption"))
 
 forecast = cf.current_month_forecast()
+if not forecast["evidence_complete"]:
+    st.warning("Cash-flow evidence is incomplete; exact totals are unavailable.")
+    st.stop()
 k1, k2, k3, k4 = st.columns(4)
 with k1:
     metric_with_hint("📅 " + t("cf.kpi_so_far"),
@@ -63,7 +66,11 @@ view = st.segmented_control(
 )
 
 if view == "monthly":
-    months_data = cf.monthly(6)
+    month_result = cf.monthly_summary(6)
+    if not month_result["evidence_complete"]:
+        st.warning("Cash-flow evidence is incomplete; exact monthly totals are unavailable.")
+        st.stop()
+    months_data = month_result["months"]
     if not months_data:
         st.info(t("cf.empty"))
         st.stop()
@@ -75,6 +82,7 @@ if view == "monthly":
     else:
         for m in months_data:
             net_color = "#4d6c5c" if m["net"] >= 0 else "#c54c4c"
+            margin = "—" if m["margin_pct"] is None else str(m["margin_pct"]) + "%"
             st.markdown(
                 "<div style='display:flex;justify-content:space-between;"
                 "padding:8px 14px;border-bottom:0.5px solid rgba(40,30,20,0.05)'>"
@@ -83,7 +91,7 @@ if view == "monthly":
                 "<span style='color:#4d6c5c'>+฿{:,.0f}".format(m["income"]) + "</span>"
                 "<span style='color:#c54c4c'>-฿{:,.0f}".format(m["expenses"]) + "</span>"
                 "<span style='font-weight:600;color:" + net_color + "'>"
-                "= ฿{:,.0f}".format(m["net"]) + " (" + str(m["margin_pct"]) + "%)</span>"
+                "= ฿{:,.0f}".format(m["net"]) + " (" + margin + ")</span>"
                 "</span></div>",
                 unsafe_allow_html=True,
             )
@@ -91,7 +99,11 @@ if view == "monthly":
 else:
     days = st.select_slider(t("cf.f_days"),
                              options=[7, 14, 30, 60], value=30, key="_cf_d")
-    daily_data = cf.daily(days)
+    daily_result = cf.daily_summary(days)
+    if not daily_result["evidence_complete"]:
+        st.warning("Cash-flow evidence is incomplete; exact daily totals are unavailable.")
+        st.stop()
+    daily_data = daily_result["days"]
     if not daily_data:
         st.info(t("cf.empty"))
         st.stop()
@@ -119,6 +131,9 @@ else:
 # ---- Monthly summary --------------------------------------------------------
 st.divider()
 s = cf.summary()
+if not s["evidence_complete"]:
+    st.warning("Cash-flow evidence is incomplete; exact trend is unavailable.")
+    st.stop()
 st.caption(
     t("cf.avg_net_caption") + " ฿{:,.0f}".format(s["avg_monthly_net"]) +
     " · " + t("common.trend") + ": " + s["trend"]
