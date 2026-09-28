@@ -4,10 +4,11 @@ See at a glance which days made money, which days lost money.
 Spot patterns: weekend vs weekday, campaign days, seasonal trends."""
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 import math
 
 import db
+from order_dates import order_business_date
 
 
 def _nonblank(value) -> bool:
@@ -24,15 +25,7 @@ def _number(value) -> float | None:
     return number if math.isfinite(number) else None
 
 
-def _canonical_date(value) -> date | None:
-    if not _nonblank(value):
-        return None
-    raw = str(value).strip()
-    try:
-        parsed = datetime.strptime(raw, "%Y-%m-%d").date()
-    except ValueError:
-        return None
-    return parsed if parsed.isoformat() == raw else None
+_canonical_date = order_business_date
 
 
 def daily_summary(days: int = 90) -> dict:

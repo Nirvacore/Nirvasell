@@ -3,16 +3,10 @@ from __future__ import annotations
 
 from datetime import date, datetime, timedelta
 import math
-import re
 
 import db
+from order_dates import order_business_date
 
-
-_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-_ISO_DATETIME = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"
-    r"(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})?$"
-)
 
 
 def _nonblank(value) -> bool:
@@ -29,21 +23,7 @@ def _number(value) -> float | None:
     return number if math.isfinite(number) else None
 
 
-def _canonical_date(value) -> date | None:
-    if not _nonblank(value):
-        return None
-    raw = str(value).strip()
-    try:
-        if _ISO_DATE.fullmatch(raw):
-            parsed = date.fromisoformat(raw)
-            return parsed if parsed.isoformat() == raw else None
-        if _ISO_DATETIME.fullmatch(raw):
-            # Preserve the calendar date represented by the source timestamp;
-            # do not shift it into the runner's timezone.
-            return datetime.fromisoformat(raw).date()
-    except ValueError:
-        pass
-    return None
+_canonical_date = order_business_date
 
 
 def _created_date(value) -> date | None:

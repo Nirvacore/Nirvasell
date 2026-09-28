@@ -31,6 +31,7 @@ on:
       - "purchase_orders.py"
       - "tax_report.py"
       - "supplier_score.py"
+      - "order_dates.py"
       - "order_import.py"
       - "pick_pack.py"
       - "global_search.py"
@@ -115,6 +116,7 @@ on:
       - "test_sku_trends_canonical_evidence.py"
       - "test_sku_trends_page_contract.py"
       - "test_order_import_schema_extraction.py"
+      - "test_order_business_date_contract.py"
       - "test_auth_require_auth_compat.py"
 
 permissions:
@@ -139,6 +141,7 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
           python test_order_import_schema_extraction.py
+          python test_order_business_date_contract.py
           python test_auth_require_auth_compat.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
@@ -213,6 +216,7 @@ jobs:
             purchase_orders.py \
             tax_report.py \
             supplier_score.py \
+            order_dates.py \
             alerts.py \
             order_import.py \
             pick_pack.py \
@@ -254,6 +258,7 @@ jobs:
             "pages/H6_📈_SKUTrends.py" \
             "pages/t_📊_Trends.py" \
             test_order_import_schema_extraction.py \
+            test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \

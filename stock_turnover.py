@@ -9,10 +9,11 @@ Thai resellers with thin margins can't afford slow-moving stock.
 Fast turnover = more cash cycles per year = more profit."""
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date
 import math
 
 import db
+from order_dates import order_business_date
 
 
 def _nonblank(value) -> bool:
@@ -34,15 +35,7 @@ def _nonnegative_number(value) -> bool:
     return number is not None and number >= 0
 
 
-def _canonical_date(value) -> date | None:
-    if not _nonblank(value):
-        return None
-    raw = str(value).strip()
-    try:
-        parsed = datetime.strptime(raw, "%Y-%m-%d").date()
-    except ValueError:
-        return None
-    return parsed if parsed.isoformat() == raw else None
+_canonical_date = order_business_date
 
 
 def _analysis() -> dict:

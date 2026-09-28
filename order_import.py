@@ -18,6 +18,7 @@ from typing import Any
 import pandas as pd
 
 import db
+from order_dates import order_business_date
 
 
 # Per-marketplace column aliases (lowercase substring match)
@@ -297,12 +298,10 @@ def save_orders_report(df: pd.DataFrame) -> OrderImportResult:
             product_id = sku_to_id.get(sku)
 
             date_val = r.get("order_date")
-            order_date = ""
-            if pd.notna(date_val):
-                try:
-                    order_date = pd.Timestamp(date_val).isoformat()
-                except Exception:
-                    order_date = str(date_val)
+            parsed_order_date = (
+                order_business_date(date_val) if pd.notna(date_val) else None
+            )
+            order_date = parsed_order_date.isoformat() if parsed_order_date else ""
 
             canonical = {
                 "order_id": order_id,
@@ -390,12 +389,16 @@ def save_orders_report(df: pd.DataFrame) -> OrderImportResult:
                     phone=row["buyer_phone"],
                     platform=row["platform"],
                 )
+                customer_order_date = order_business_date(row["order_date"])
                 cust.record_order(
                     customer_id=cid,
                     order_id=row["order_id"],
                     platform=row["platform"],
                     amount=row["total_price"],
-                    order_date=row["order_date"][:10],
+                    order_date=(
+                        customer_order_date.isoformat()
+                        if customer_order_date else ""
+                    ),
                     product=row["product_name"],
                 )
             except Exception as exc:
