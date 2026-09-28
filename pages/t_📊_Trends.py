@@ -25,6 +25,16 @@ render_sidebar()
 page_header(icon="📊", title=t("trend.title"), subtitle=t("trend.caption"))
 
 s = skt.summary()
+new_evidence = skt.new_products_summary(14)
+
+if not s["evidence_complete"] or not new_evidence["evidence_complete"]:
+    st.warning(
+        "SKU trends unavailable: incomplete order/product evidence "
+        f"(trend orders {s['missing_order_evidence_rows']}; "
+        f"new-product orders {new_evidence['missing_order_evidence_rows']}; "
+        f"new products {new_evidence['missing_product_evidence_rows']})."
+    )
+    st.stop()
 
 if s["total_skus"] == 0:
     st.info(t("trend.empty"))
@@ -61,7 +71,7 @@ with k4:
 
 st.divider()
 
-trends = skt.weekly_trend()
+trends = s["items"]
 
 tab_all, tab_rising, tab_declining = st.tabs([
     "📋 " + t("trend.tab_all") + " (" + str(len(trends)) + ")",
@@ -121,7 +131,7 @@ with tab_declining:
 
 # ---- New products performance -----------------------------------------------
 
-new = skt.new_products(14)
+new = new_evidence["items"]
 if new:
     st.divider()
     st.markdown("### 🆕 " + t("trend.new_title"))
