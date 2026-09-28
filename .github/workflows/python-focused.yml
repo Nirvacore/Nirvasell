@@ -17,6 +17,7 @@ on:
       - "channel_performance.py"
       - "dead_stock.py"
       - "stock_turnover.py"
+      - "profit_calendar.py"
       - "abc_analysis.py"
       - "customers.py"
       - "customer_crm.py"
@@ -63,6 +64,8 @@ on:
       - "pages/m_💀_DeadStock.py"
       - "pages/H5_🔄_StockTurnover.py"
       - "pages/q_🔄_Turnover.py"
+      - "pages/H2_🗓_ProfitCalendar.py"
+      - "pages/r_📆_ProfitCal.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -103,6 +106,8 @@ on:
       - "test_dead_stock_page_contract.py"
       - "test_stock_turnover_canonical_evidence.py"
       - "test_stock_turnover_page_contract.py"
+      - "test_profit_calendar_canonical_evidence.py"
+      - "test_profit_calendar_page_contract.py"
       - "test_order_import_schema_extraction.py"
 
 permissions:
@@ -167,6 +172,8 @@ jobs:
           python test_dead_stock_page_contract.py
           python test_stock_turnover_canonical_evidence.py
           python test_stock_turnover_page_contract.py
+          python test_profit_calendar_canonical_evidence.py
+          python test_profit_calendar_page_contract.py
 
       - name: Compile changed Python entry points
         env:
@@ -182,6 +189,7 @@ jobs:
             channel_performance.py \
             dead_stock.py \
             stock_turnover.py \
+            profit_calendar.py \
             abc_analysis.py \
             customers.py \
             customer_crm.py \
@@ -229,6 +237,8 @@ jobs:
             "pages/m_💀_DeadStock.py" \
             "pages/H5_🔄_StockTurnover.py" \
             "pages/q_🔄_Turnover.py" \
+            "pages/H2_🗓_ProfitCalendar.py" \
+            "pages/r_📆_ProfitCal.py" \
             test_order_import_schema_extraction.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
@@ -269,4 +279,6 @@ jobs:
             test_dead_stock_canonical_evidence.py \
             test_dead_stock_page_contract.py \
             test_stock_turnover_canonical_evidence.py \
-            test_stock_turnover_page_contract.py
+            test_stock_turnover_page_contract.py \
+            test_profit_calendar_canonical_evidence.py \
+            test_profit_calendar_page_contract.py
