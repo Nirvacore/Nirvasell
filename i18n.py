@@ -26807,6 +26807,18 @@ STRINGS: dict[str, dict[str, str]] = {
         "hi": "लागत + लक्ष्य मार्जिन दर्ज करें → प्रति प्लेटफ़ॉर्म इष्टतम बिक्री मूल्य देखें।",
         "ru": "Введите стоимость + целевую прибыль → посмотрите оптимальную цену продажи для каждой платформы.",
     },
+    "pricing.target_adviser_title": {
+        "th": "คำนวณราคาเป้าหมาย",
+        "en": "Target-price adviser",
+    },
+    "pricing.target_adviser_help": {
+        "th": "คำนวณจากต้นทุน กำไรเป้าหมาย และสมมติฐานค่าธรรมเนียมที่ตั้งค่าไว้ ไม่ใช่ข้อมูลตลาดปัจจุบัน",
+        "en": "Advisory calculation from cost, target margin, and configured fee assumptions; it is not current market evidence.",
+    },
+    "pricing.advisory_unavailable": {
+        "th": "ไม่สามารถคำนวนคำแนะนำได้จากข้อมูลหรือสมมติฐานนี้",
+        "en": "Target-price advice is unavailable for this input or fee assumption.",
+    },
     "pricing.opt_cost": {
         "th": "ต้นทุน (฿)",
         "en": "Cost (฿)",
@@ -72510,6 +72522,42 @@ STRINGS: dict[str, dict[str, str]] = {
     },
 
     # ── v76 Price Optimizer ───────────────────────────────────────────────────
+    "popt.advisory_title": {
+        "th": "ผู้ช่วยคำนวณราคาเป้าหมาย",
+        "en": "Target-price adviser",
+    },
+    "popt.advisory_caption": {
+        "th": "คำแนะนำจากต้นทุน กำไรเป้าหมาย และสมมติฐานค่าธรรมเนียม ไม่ใช่ราคาตลาดปัจจุบัน",
+        "en": "Advisory calculation from configured fee assumptions, not current market prices.",
+    },
+    "popt.target_calc_title": {
+        "th": "ราคาขายเป้าหมาย",
+        "en": "Target selling price",
+    },
+    "popt.target_price": {
+        "th": "ราคาเป้าหมาย",
+        "en": "Target price",
+    },
+    "popt.advisory_unavailable": {
+        "th": "ไม่สามารถคำนวณคำแนะนำได้จากข้อมูลนี้",
+        "en": "Target-price advice is unavailable for these inputs.",
+    },
+    "popt.safe_psych_price": {
+        "th": "ปรับขึ้นเป็นราคาจิตวิทยา (ไม่ต่ำกว่าราคาเป้าหมาย)",
+        "en": "Round up to a psychological price (never below target)",
+    },
+    "popt.calculated_margin": {
+        "th": "มาร์จิ้นที่คำนวณได้",
+        "en": "Calculated margin",
+    },
+    "popt.estimated_platform_fees": {
+        "th": "ค่าธรรมเนียมแพลตฟอร์มโดยประมาณ",
+        "en": "Estimated platform fees",
+    },
+    "popt.net_after_listed_costs": {
+        "th": "ส่วนต่างหลังต้นทุนที่ระบุ",
+        "en": "Net after listed costs",
+    },
     "popt.title": {
         "th": "เครื่องคิดราคาขาย",
         "en": "Price Optimizer",

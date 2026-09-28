@@ -17,10 +17,10 @@ from i18n import t
 from i18n_inline import marketplace_fee_label
 from _components import page_header
 
-db.init()
 st.set_page_config(page_title="nirva · Pricing", page_icon="💰", layout="wide")
 apply_theme()
 require_auth()
+db.init()
 render_sidebar()
 
 page_header(icon="💰", title=t("pricing.title"), subtitle=t("pricing.caption"))
@@ -53,105 +53,93 @@ for line in raw.splitlines():
             pass
 
 
-# ----- Analysis -----------------------------------------------------------
+# ----- Competitor-price analysis ------------------------------------------
 
 if not prices:
     st.info(t("pricing.competitor_placeholder").split("\n")[0])
-    st.stop()
+else:
+    import statistics
+    avg = statistics.mean(prices)
+    lo = min(prices)
+    hi = max(prices)
 
-import statistics
-avg = statistics.mean(prices)
-lo = min(prices)
-hi = max(prices)
+    m1, m2, m3 = st.columns(3)
+    m1.metric(t("pricing.competitor_avg"), f"฿{avg:,.0f}")
+    m2.metric(t("pricing.competitor_min"), f"฿{lo:,.0f}")
+    m3.metric(t("pricing.competitor_max"), f"฿{hi:,.0f}")
 
-m1, m2, m3 = st.columns(3)
-m1.metric(t("pricing.competitor_avg"), f"฿{avg:,.0f}")
-m2.metric(t("pricing.competitor_min"), f"฿{lo:,.0f}")
-m3.metric(t("pricing.competitor_max"), f"฿{hi:,.0f}")
+    fees = fees_mod.load()
+    strategies = [
+        {
+            "name": t("pricing.strat_match"),
+            "price": int(round(avg / 10) * 10),
+        },
+        {
+            "name": t("pricing.strat_undercut"),
+            "price": int(round((lo - 50) / 10) * 10),
+        },
+        {
+            "name": t("pricing.strat_premium"),
+            "price": int(round(hi * 1.02 / 10) * 10),
+        },
+    ]
 
+    st.divider()
+    st.subheader(t("pricing.strategy"))
+    table_rows = []
+    warning = None
 
-# Strategies — three different price points the user can choose from.
-fees = fees_mod.load()
+    for strategy in strategies:
+        sell = strategy["price"]
+        per_platform = {
+            platform: fees_mod.net_profit(cost, sell, platform, fees)
+            for platform in fees
+        }
+        best = max(per_platform, key=lambda platform: per_platform[platform]["net"])
+        best_margin = per_platform[best]["margin_pct"]
 
-strategies = [
-    {
-        "name": t("pricing.strat_match"),
-        "price": int(round(avg / 10) * 10),
-        "note": t("pricing.strat_match_note"),
-    },
-    {
-        "name": t("pricing.strat_undercut"),
-        "price": int(round((lo - 50) / 10) * 10),
-        "note": t("pricing.strat_undercut_note"),
-    },
-    {
-        "name": t("pricing.strat_premium"),
-        "price": int(round(hi * 1.02 / 10) * 10),
-        "note": t("pricing.strat_premium_note"),
-    },
-]
+        row = {
+            t("pricing.strategy"): strategy["name"],
+            t("pricing.suggested"): sell,
+            t("pricing.competitor_avg") + " Δ": f"{(sell - avg) / avg * 100:+.1f}%",
+        }
+        for platform in fees:
+            net_profit = per_platform[platform]
+            label = marketplace_fee_label(platform)
+            row[f"{label}\nnet"] = int(net_profit["net"])
+            row[f"{label}\n%"] = f"{net_profit['margin_pct']:.1f}%"
+        table_rows.append(row)
 
-st.divider()
-st.subheader(t("pricing.strategy"))
+        if best_margin < min_margin and warning is None:
+            fee_config = fees[best]
+            base_pct = (
+                fee_config["commission_pct"]
+                + fee_config["payment_pct"]
+                + fee_config["transaction_pct"]
+            ) / 100
+            vat = fee_config["vat_on_fees"] / 100
+            denominator = 1 - base_pct * (1 + vat) - (min_margin / 100)
+            if denominator > 0:
+                warning = int(round((cost / denominator) / 10) * 10)
 
-table_rows = []
-warning = None
-
-for s in strategies:
-    sell = s["price"]
-    per_platform = {p: fees_mod.net_profit(cost, sell, p, fees) for p in fees}
-    best = max(per_platform, key=lambda p: per_platform[p]["net"])
-    best_net = per_platform[best]["net"]
-    best_margin = per_platform[best]["margin_pct"]
-
-    row = {
-        t("pricing.strategy"): s["name"],
-        t("pricing.suggested"): sell,
-        t("pricing.competitor_avg") + " Δ": f"{(sell - avg) / avg * 100:+.1f}%",
-    }
-    for p in fees:
-        np = per_platform[p]
-        label = marketplace_fee_label(p)
-        row[f"{label}\nnet"] = int(np["net"])
-        row[f"{label}\n%"] = f"{np['margin_pct']:.1f}%"
-    table_rows.append(row)
-
-    # Check min margin
-    if best_margin < min_margin and warning is None:
-        # Compute price needed to hit min margin on best platform
-        # net = sell - cost - fee(sell) - extra
-        # fee ≈ sell * base_pct, so sell - cost - sell*base_pct = sell*(min_margin/100)
-        # sell * (1 - base_pct - min_margin/100) = cost
-        f = fees[best]
-        base_pct = (f["commission_pct"] + f["payment_pct"] + f["transaction_pct"]) / 100
-        vat = f["vat_on_fees"] / 100
-        effective_fee_pct = base_pct * (1 + vat)
-        denom = 1 - effective_fee_pct - (min_margin / 100)
-        if denom > 0:
-            needed = cost / denom
-            warning = int(round(needed / 10) * 10)
-
-df = pd.DataFrame(table_rows)
-st.dataframe(
-    df,
-    width='stretch',
-    hide_index=True,
-    column_config={
-        t("pricing.suggested"): st.column_config.NumberColumn(format="฿%d"),
-    },
-)
-
-if warning:
-    st.warning(t("pricing.warning_below_min", price=warning))
-
-st.caption(t("ws.fee_note"))
+    st.dataframe(
+        pd.DataFrame(table_rows),
+        width="stretch",
+        hide_index=True,
+        column_config={
+            t("pricing.suggested"): st.column_config.NumberColumn(format="฿%d"),
+        },
+    )
+    if warning:
+        st.warning(t("pricing.warning_below_min", price=warning))
+    st.caption(t("ws.fee_note"))
 
 
-# ---- v58: AI Price Optimizer — find optimal price per platform -----------
+# ---- Advisory target prices from configured fee assumptions ---------------
 
 st.divider()
-st.subheader(f"🎯 {t('pricing.optimizer_title')}")
-st.caption(t("pricing.optimizer_help"))
+st.subheader(f"🎯 {t('pricing.target_adviser_title')}")
+st.caption(t("pricing.target_adviser_help"))
 
 import price_optimizer as po
 
@@ -174,23 +162,33 @@ with cO3:
 
 if opt_cost > 0:
     comparisons = po.compare_platforms(
-        cost=opt_cost, target_margin_pct=opt_margin, shipping=opt_ship,
+        cost=opt_cost,
+        target_margin_pct=opt_margin,
+        shipping=opt_ship,
+        psychological=True,
     )
 
     for r in comparisons:
         if r.get("error"):
+            if r["error"] == "margin_too_high":
+                message = t(
+                    "pricing.margin_too_high",
+                    max=r.get("max_margin", 0),
+                )
+            else:
+                message = t("pricing.advisory_unavailable")
             st.markdown(
                 "<div style='padding:10px 14px;background:rgba(197,76,76,0.06);"
                 "border-radius:8px;margin-bottom:6px;font-size:13px'>"
                 "❌ <strong>" + r.get("platform_label", r["platform"]) + "</strong> — "
-                + t("pricing.margin_too_high", max=r.get("max_margin", 0)) +
-                "</div>",
+                + message + "</div>",
                 unsafe_allow_html=True,
             )
             continue
 
-        suggested = r["suggested"]
-        actual_m = r["actual_margin_pct"]
+        selected = r["selected"]
+        suggested = selected["price"]
+        actual_m = selected["actual_margin_pct"]
         fee_pct = r["fee_rate_pct"]
         color = "#4d6c5c" if actual_m >= opt_margin else "#c5963d"
 
@@ -214,15 +212,18 @@ if opt_cost > 0:
     st.markdown(f"#### 🔍 {t('pricing.whatif_title')}")
     whatif_price = st.number_input(
         t("pricing.whatif_price"), min_value=0.0,
-        value=float(comparisons[0].get("suggested", 0)) if comparisons else 0.0,
+        value=float(comparisons[0].get("selected", {}).get("price", 0)) if comparisons else 0.0,
         step=10.0, key="_whatif",
     )
     if whatif_price > 0:
         wf_cols = st.columns(min(len(comparisons), 4))
         for i, r in enumerate(comparisons[:4]):
             m = po.margin_at_price(opt_cost, whatif_price, r["platform"], opt_ship)
-            tone = "#4d6c5c" if m["margin_pct"] >= 15 else (
-                "#c5963d" if m["margin_pct"] >= 5 else "#c54c4c")
+            if m.get("error"):
+                st.warning(t("pricing.advisory_unavailable"))
+                continue
+            tone = "#4d6c5c" if m["actual_margin_pct"] >= 15 else (
+                "#c5963d" if m["actual_margin_pct"] >= 5 else "#c54c4c")
             with wf_cols[i]:
                 st.markdown(
                     "<div style='text-align:center;padding:10px'>"
@@ -231,8 +232,8 @@ if opt_cost > 0:
                     + r.get("platform_label", r["platform"])[:12] + "</div>"
                     "<div style='font-family:Cormorant Garamond,serif;"
                     "font-size:1.6rem;color:" + tone + "'>"
-                    + "{:.1f}".format(m["margin_pct"]) + "%</div>"
+                    + "{:.1f}".format(m["actual_margin_pct"]) + "%</div>"
                     "<div style='font-size:12px;color:#7a7569'>" + t("pricing.net_label") +
-                    + "{:,.0f}".format(m["net"]) + "</div></div>",
+                    "{:,.0f}".format(m["net"]) + "</div></div>",
                     unsafe_allow_html=True,
                 )
