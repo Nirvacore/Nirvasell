@@ -71,6 +71,8 @@ on:
       - "pages/r_📆_ProfitCal.py"
       - "pages/H6_📈_SKUTrends.py"
       - "pages/t_📊_Trends.py"
+      - "pages/H0_💵_CashFlow.py"
+      - "pages/C8_💵_CashFlow.py"
       - "test_expense_date_consistency.py"
       - "test_customer_helper_rowid.py"
       - "test_customer_notes_schema.py"
@@ -118,6 +120,8 @@ on:
       - "test_order_import_schema_extraction.py"
       - "test_order_business_date_contract.py"
       - "test_auth_require_auth_compat.py"
+      - "test_cash_flow_canonical_evidence.py"
+      - "test_cash_flow_page_contract.py"
 
 permissions:
   contents: read
@@ -143,6 +147,8 @@ jobs:
           python test_order_import_schema_extraction.py
           python test_order_business_date_contract.py
           python test_auth_require_auth_compat.py
+          python test_cash_flow_canonical_evidence.py
+          python test_cash_flow_page_contract.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
@@ -257,9 +263,13 @@ jobs:
             "pages/r_📆_ProfitCal.py" \
             "pages/H6_📈_SKUTrends.py" \
             "pages/t_📊_Trends.py" \
+            "pages/H0_💵_CashFlow.py" \
+            "pages/C8_💵_CashFlow.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
             test_auth_require_auth_compat.py \
+            test_cash_flow_canonical_evidence.py \
+            test_cash_flow_page_contract.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \
