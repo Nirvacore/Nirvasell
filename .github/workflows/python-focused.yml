@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/python-focused.yml"
+      - "auth.py"
       - "db.py"
       - "i18n_inline.py"
       - "daily_briefing.py"
@@ -116,6 +117,7 @@ on:
       - "test_sku_trends_page_contract.py"
       - "test_order_import_schema_extraction.py"
       - "test_order_business_date_contract.py"
+      - "test_auth_require_auth_compat.py"
 
 permissions:
   contents: read
@@ -140,6 +142,7 @@ jobs:
         run: |
           python test_order_import_schema_extraction.py
           python test_order_business_date_contract.py
+          python test_auth_require_auth_compat.py
           python test_expense_date_consistency.py
           python test_customer_helper_rowid.py
           python test_customer_notes_schema.py
@@ -190,6 +193,7 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
           python -m py_compile \
+            auth.py \
             db.py \
             i18n_inline.py \
             daily_briefing.py \
@@ -255,6 +259,7 @@ jobs:
             "pages/t_📊_Trends.py" \
             test_order_import_schema_extraction.py \
             test_order_business_date_contract.py \
+            test_auth_require_auth_compat.py \
             test_expense_date_consistency.py \
             test_customer_helper_rowid.py \
             test_customer_notes_schema.py \
